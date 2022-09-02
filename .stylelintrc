@@ -1,8 +1,14 @@
 {
   "extends": [
-    "stylelint-config-standard",
+    "stylelint-config-recommended",
     "stylelint-config-prettier",
-    "stylelint-config-css-modules"
+    "stylelint-config-css-modules",
+    "stylelint-config-rational-order"
+  ],
+  "plugins": [
+    "stylelint-config-rational-order/plugin",
+    "stylelint-order",
+    "stylelint-no-unsupported-browser-features"
   ],
   "rules": {
     "string-quotes": "single",
@@ -11,7 +17,7 @@
     "custom-media-pattern": "^[a-z][a-zA-Z0-9]+$",
     "keyframes-name-pattern": "^[a-z][a-zA-Z0-9]+$",
     "selector-id-pattern": null,
-    "declaration-block-no-redundant-longhand-properties": null,
+    "declaration-block-no-redundant-longhand-properties": true,
     "value-keyword-case": ["lower", { "camelCaseSvgKeywords": true }],
     "alpha-value-notation": "number",
     "no-descending-specificity": null,
@@ -20,6 +26,28 @@
       {
         "ignorePseudoClasses": ["global"]
       }
-    ]
+    ],
+    "declaration-block-trailing-semicolon": null,
+    "function-parentheses-space-inside": null,
+    "plugin/no-unsupported-browser-features": [
+      true,
+      {
+        "severity": "warning",
+        "ignore": [
+          "css-gradients",
+          "css-filters",
+          "user-select-none",
+          "object-fit",
+          "css-sticky"
+        ]
+      }
+    ],
+    "max-nesting-depth": [
+      3,
+      {
+        "ignore": ["pseudo-classes", "blockless-at-rules"]
+      }
+    ],
+    "order/properties-alphabetical-order": null
   }
 }
