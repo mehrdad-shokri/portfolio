@@ -6,33 +6,39 @@
   --buttonTextColor: rgb(var(--rgbBackground));
   --buttonTextOpacity: 1;
   --buttonLoaderDelay: 0s;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
 
   height: var(--buttonSize);
   padding: var(--buttonPadding);
-  cursor: pointer;
-  transition-property: opacity, color, background;
-  transition-duration: var(--durationS);
-  transition-timing-function: var(--bezierFastoutSlowin);
-  display: inline-flex;
-  align-items: center;
   color: var(--buttonTextColor);
-  position: relative;
+  cursor: pointer;
   isolation: isolate;
+  transition-timing-function: var(--bezierFastoutSlowin);
+  transition-duration: var(--durationS);
+  transition-property: opacity, color, background;
 
   &:active {
     transition-duration: calc(var(--durationXS) / 2);
   }
 
   &::after {
-    content: '';
-    transition-property: opacity, color, background;
-    transition-duration: var(--durationM);
-    transition-timing-function: var(--bezierFastoutSlowin);
-    background: rgb(var(--rgbPrimary));
     position: absolute;
-    inset: 0;
     z-index: -1;
-    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+    background: rgb(var(--rgbPrimary));
+    transition-timing-function: var(--bezierFastoutSlowin);
+    transition-duration: var(--durationM);
+    transition-property: opacity, color, background;
+    content: '';
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% calc(100% - 8px),
+      calc(100% - 8px) 100%,
+      0 100%
+    );
+    inset: 0;
   }
 
   @media (--mediaUseMotion) {
@@ -50,28 +56,27 @@
   &[data-secondary='true'] {
     --buttonSpace: 10px;
     --buttonTextColor: rgb(var(--rgbPrimary));
-
-    background: none;
-    padding-left: var(--buttonSpace);
-    padding-right: var(--buttonSpace);
     position: relative;
     left: calc(var(--buttonSpace) * -1);
     height: calc((32 / 16) * 1rem);
+    padding-right: var(--buttonSpace);
+    padding-left: var(--buttonSpace);
+    background: none;
 
     &::after {
-      content: '';
-      height: calc((32 / 16) * 1rem);
       position: absolute;
-      inset: 0;
+      height: calc((32 / 16) * 1rem);
       background-color: rgb(var(--rgbPrimary) / 0.2);
       transform: scale3d(0, 1, 1);
       transform-origin: right;
+      content: '';
       clip-path: none;
+      inset: 0;
     }
 
     &:hover {
-      transform: none;
       background: transparent;
+      transform: none;
     }
 
     &:hover::after {
@@ -97,10 +102,10 @@
   &[data-icon-only='true'] {
     --buttonPadding: 0;
     --buttonTextColor: var(--colorTextBody);
-
-    width: var(--buttonSize);
     align-items: center;
     justify-content: center;
+
+    width: var(--buttonSize);
     padding: 0;
 
     &:hover {
@@ -117,29 +122,29 @@
   }
 
   &[disabled] {
-    pointer-events: none;
     opacity: 0.4;
+    pointer-events: none;
   }
 }
 
 .text {
-  font-size: var(--buttonFontSize);
-  font-weight: var(--fontWeightMedium);
-  opacity: var(--buttonTextOpacity);
   position: relative;
-  line-height: 1;
-  flex: 1 1 auto;
   display: flex;
+  flex: 1 1 auto;
   align-items: center;
   justify-content: center;
+  font-weight: var(--fontWeightMedium);
+  font-size: var(--buttonFontSize);
+  line-height: 1;
+  opacity: var(--buttonTextOpacity);
   transition: opacity var(--durationM) var(--bezierFastoutSlowin);
 }
 
 .loader {
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
   color: rgb(var(--rgbBackground));
+  transform: translateX(-50%);
   opacity: 0;
   transition: opacity var(--durationM) ease var(--buttonLoaderDelay);
 
@@ -149,9 +154,9 @@
 }
 
 .icon {
-  transition-property: opacity, fill;
-  transition-duration: var(--durationS);
   transition-timing-function: var(--bezierFastoutSlowin);
+  transition-duration: var(--durationS);
+  transition-property: opacity, fill;
 
   @media (--mediaUseMotion) {
     transition-property: transform, opacity, fill;

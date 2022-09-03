@@ -1,57 +1,57 @@
 @font-face {
-  font-family: Gotham;
   font-weight: 400;
+  font-family: Gotham;
+  font-style: normal;
   src: url('../../assets/fonts/gotham-book.woff2') format('woff2');
   font-display: block;
-  font-style: normal;
 }
 
 @font-face {
-  font-family: Gotham;
   font-weight: 500;
+  font-family: Gotham;
+  font-style: normal;
   src: url('../../assets/fonts/gotham-medium.woff2') format('woff2');
   font-display: block;
-  font-style: normal;
 }
 
 @font-face {
-  font-family: Gotham;
   font-weight: 700;
+  font-family: Gotham;
+  font-style: normal;
   src: url('../../assets/fonts/gotham-bold.woff2') format('woff2');
   font-display: block;
-  font-style: normal;
 }
 
 :root {
   --rgbBackground: 17 17 17;
   --rgbText: 255 255 255;
   --rgbPrimary: 0 229 255;
+  color: rgb(var(--rgbText));
 
   font-family: Gotham, system-ui;
   background-color: rgb(var(--rgbBackground));
-  color: rgb(var(--rgbText));
 }
 
 .container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  padding: 80px;
   background-image: linear-gradient(
       90deg,
       rgb(var(--rgbBackground) / 0.95),
       rgb(var(--rgbBackground) / 0.76)
     ),
     var(--url);
-  background-size: cover;
   background-position: center;
-  position: absolute;
+  background-size: cover;
   inset: 0;
-  display: flex;
-  flex-direction: column;
-  padding: 80px;
 }
 
 .header {
   display: flex;
-  align-items: center;
   gap: 24px;
+  align-items: center;
   margin-top: 32px;
 }
 
@@ -68,8 +68,8 @@
 
 .divider::before,
 .divider::after {
-  content: '';
   display: block;
+  content: '';
 }
 
 .divider::before {
@@ -79,59 +79,65 @@
 }
 
 .divider::after {
-  background-color: rgb(var(--rgbPrimary));
   position: absolute;
-  clip-path: polygon(0 -1px, 100% -1px, calc(100% - 10px) 100%, 10px 100%);
+  top: var(--lineHeight);
   width: var(--notchWidth);
   height: var(--notchHeight);
-  top: var(--lineHeight);
+  background-color: rgb(var(--rgbPrimary));
+  clip-path: polygon(0 -1px, 100% -1px, calc(100% - 10px) 100%, 10px 100%);
 }
 
 .date {
-  font-size: calc(24 / 16 * 1rem);
-  font-weight: 500;
   color: rgb(var(--rgbPrimary));
+  font-weight: 500;
+  font-size: calc(24 / 16 * 1rem);
 }
 
 .title {
+  max-width: 80%;
+  margin-top: 48px;
   font-size: calc(86 / 16 * 1rem);
   line-height: 1.1;
   letter-spacing: -0.05em;
-  max-width: 80%;
-  margin-top: 48px;
 }
 
 .footer {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   margin-top: auto;
   color: rgb(var(--rgbText) / 0.7);
 }
 
 .author {
   display: flex;
-  align-items: center;
   gap: 24px;
-  font-size: calc(40 / 16 * 1rem);
+  align-items: center;
   font-weight: 500;
+  font-size: calc(40 / 16 * 1rem);
 }
 
 .avatar {
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%);
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 16px),
+    calc(100% - 16px) 100%,
+    0 100%
+  );
 }
 
 .timecode {
-  font-size: calc(32 / 16 * 1rem);
   display: flex;
   gap: 24px;
   align-items: center;
+  font-size: calc(32 / 16 * 1rem);
 }
 
 .timecode::before {
-  content: '';
   display: block;
-  height: 4px;
   width: 100px;
+  height: 4px;
   background-color: rgb(var(--rgbText) / 0.4);
+  content: '';
 }

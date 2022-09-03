@@ -1,2 +1,2 @@
-export * from './Post';
-export * from './PostMarkdown';
+export * from './Post'
+export * from './PostMarkdown'

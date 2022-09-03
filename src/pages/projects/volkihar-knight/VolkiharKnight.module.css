@@ -1,15 +1,15 @@
 .textSection {
   display: flex;
-  justify-content: center;
   flex-direction: column;
+  justify-content: center;
 }
 
 .logoContainer {
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 0 80px;
+  justify-content: center;
   width: 100%;
+  padding: 0 80px;
   overflow: hidden;
 
   & svg {
@@ -19,8 +19,8 @@
 }
 
 .armor {
-  aspect-ratio: 1 / 2;
   display: grid;
-  grid-template-columns: 100%;
   grid-template-rows: 100%;
+  grid-template-columns: 100%;
+  aspect-ratio: 1 / 2;
 }

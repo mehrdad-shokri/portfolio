@@ -1,16 +1,16 @@
 .project {
   position: relative;
-  width: 100%;
   display: flex;
-  justify-content: center;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .section {
-  width: 100%;
   position: relative;
   display: grid;
+  width: 100%;
   place-content: stretch;
 
   &[data-full-height='true'] {
@@ -24,15 +24,15 @@
 
 .sectionInner {
   --sectionPadding: calc(var(--space5XL) + var(--space3XL));
-
-  grid-area: 1 / 1;
+  position: relative;
   display: flex;
   flex-direction: column;
+
+  grid-area: 1 / 1;
   align-items: center;
   justify-content: center;
   padding-top: var(--sectionPadding);
   padding-bottom: var(--sectionPadding);
-  position: relative;
 
   &[data-padding='none'] {
     padding-top: 0;
@@ -68,24 +68,21 @@
 }
 
 .sectionBackground {
-  grid-area: 1 / 1;
   display: grid;
+  grid-area: 1 / 1;
   place-content: stretch;
 
   & img {
-    object-fit: cover;
-    justify-self: stretch;
     align-self: stretch;
+    justify-self: stretch;
+    object-fit: cover;
   }
 
   &::after {
     --background1: rgb(var(--rgbBackground) / 1);
     --background2: rgb(var(--rgbBackground) / var(--opacity));
     --background3: rgb(var(--rgbBackground) / 0);
-
-    content: '';
     position: absolute;
-    inset: 0;
     background: linear-gradient(
         var(--background1) 0%,
         var(--background2) 20%,
@@ -96,6 +93,8 @@
         var(--background2) 80%,
         var(--background1) 100%
       );
+    content: '';
+    inset: 0;
   }
 }
 
@@ -108,10 +107,10 @@
   left: 0;
   height: var(--imageHeight);
   overflow: hidden;
-  opacity: 0;
-  transition: opacity 2s ease;
   transform: translateZ(0);
+  opacity: 0;
   isolation: isolate;
+  transition: opacity 2s ease;
 
   &[data-visible='true'] {
     opacity: 1;
@@ -119,13 +118,13 @@
 }
 
 .backgroundImageElement {
-  z-index: var(--zIndex0);
   position: absolute;
-  inset: 0;
+  z-index: var(--zIndex0);
+  display: grid;
   height: var(--imageHeight);
   overflow: hidden;
   will-change: transform;
-  display: grid;
+  inset: 0;
 
   & img {
     width: 100%;
@@ -196,13 +195,13 @@
 
 @keyframes projectFadeSlide {
   0% {
-    opacity: 0;
     transform: translate3d(0, var(--space3XL), 0);
+    opacity: 0;
   }
 
   100% {
-    opacity: 1;
     transform: translate3d(0, 0, 0);
+    opacity: 1;
   }
 }
 
@@ -223,7 +222,8 @@
 
   @media (--mediaUseMotion) {
     opacity: 0;
-    animation: projectFadeSlide 1.4s var(--bezierFastoutSlowin) var(--initDelay) forwards;
+    animation: projectFadeSlide 1.4s var(--bezierFastoutSlowin) var(--initDelay)
+      forwards;
   }
 }
 
@@ -248,10 +248,10 @@
 }
 
 .meta {
-  list-style-type: none;
   margin: 0;
-  padding: 0;
   margin-top: var(--spaceM);
+  padding: 0;
+  list-style-type: none;
 
   @media (--mediaLaptop) {
     margin-top: 0;
@@ -264,13 +264,14 @@
 
 .metaItem {
   padding: var(--spaceL) 0;
-  font-size: var(--fontSizeBodyS);
   font-weight: var(--fontWeightRegular);
+  font-size: var(--fontSizeBodyS);
   border-top: 1px solid rgb(var(--rgbText) / 0.2);
 
   @media (--mediaUseMotion) {
     opacity: 0;
-    animation: projectFadeSlide 1.5s var(--bezierFastoutSlowin) var(--delay) forwards;
+    animation: projectFadeSlide 1.5s var(--bezierFastoutSlowin) var(--delay)
+      forwards;
   }
 
   @media (--mediaMobile) {
@@ -285,16 +286,16 @@
 .image {
   position: relative;
   display: grid;
-  transform: translate3d(0, 0, 0);
-  max-width: 100%;
   width: 100%;
+  max-width: 100%;
+  transform: translate3d(0, 0, 0);
 }
 
 .sectionContent {
-  max-width: var(--maxWidthL);
-  width: 100%;
   display: grid;
   gap: var(--space4XL);
+  width: 100%;
+  max-width: var(--maxWidthL);
 
   @media (--mediaLaptop) {
     gap: var(--space3XL);
@@ -325,16 +326,16 @@
 }
 
 .textRow {
-  align-self: center;
-  text-align: left;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  align-self: center;
+  text-align: left;
 
   @media (--mediaMobile) {
-    text-align: left;
     align-items: flex-start;
+    text-align: left;
   }
 
   &[data-width='s'] {
@@ -382,9 +383,9 @@
 
 .sectionColumns {
   display: grid;
-  align-items: center;
   grid-template-columns: 1fr 1fr;
   gap: var(--space3XL);
+  align-items: center;
   margin: 0;
 
   & p {

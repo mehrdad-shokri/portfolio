@@ -1,15 +1,15 @@
 .text {
   &::after {
-    content: '_';
     visibility: hidden;
+    content: '_';
   }
 }
 
 .glyph {
-  opacity: 0.8;
   font-weight: var(--fontWeightRegular);
   font-family: var(--japaneseFontStack);
   line-height: 0;
+  opacity: 0.8;
 }
 
 .value {

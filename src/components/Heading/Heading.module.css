@@ -1,15 +1,15 @@
 .heading {
-  line-height: var(--lineHeightTitle);
   color: var(--colorTextTitle);
+  line-height: var(--lineHeightTitle);
 
   &[data-level='0'] {
-    letter-spacing: -0.05em;
     font-size: var(--fontSizeH0);
+    letter-spacing: -0.05em;
   }
 
   &[data-level='1'] {
-    letter-spacing: -0.05em;
     font-size: var(--fontSizeH1);
+    letter-spacing: -0.05em;
   }
 
   &[data-level='2'] {

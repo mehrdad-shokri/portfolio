@@ -22,11 +22,11 @@
 
 .canvasWrapper {
   position: relative;
-  grid-column: 1;
   grid-row: 1;
+  grid-column: 1;
+  isolation: isolate;
   user-select: none;
   aspect-ratio: var(--aspectRatio);
-  isolation: isolate;
 }
 
 .canvas {
@@ -34,14 +34,14 @@
 }
 
 .placeholder {
-  grid-column: 1;
-  grid-row: 1;
-  width: 100%;
-  transition: opacity 1s ease;
-  opacity: 1;
-  pointer-events: none;
   position: relative;
   z-index: var(--zIndex1);
+  grid-row: 1;
+  grid-column: 1;
+  width: 100%;
+  opacity: 1;
+  transition: opacity 1s ease;
+  pointer-events: none;
 
   &[data-loaded='true'] {
     opacity: 0;
@@ -49,25 +49,24 @@
 }
 
 .button {
-  border: 0;
-  margin: 0;
-  background: none;
-  width: 70px;
-  aspect-ratio: 1 / 1;
-  grid-area: 1 / 1;
   position: absolute;
   z-index: var(--zIndex3);
-  cursor: pointer;
   display: grid;
+  grid-area: 1 / 1;
+  width: 70px;
+  margin: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  aspect-ratio: 1 / 1;
   place-items: center;
 
   &::before {
-    content: '';
     position: absolute;
-    inset: 0;
-    transition-property: background, box-shadow;
-    transition-duration: var(--durationM);
     transition-timing-function: var(--bezierFastoutSlowin);
+    transition-duration: var(--durationM);
+    transition-property: background, box-shadow;
+    content: '';
     clip-path: polygon(
       0 0,
       100% 0,
@@ -75,6 +74,7 @@
       calc(100% - 12px) 100%,
       0 100%
     );
+    inset: 0;
   }
 
   &:hover::before {
@@ -114,11 +114,10 @@
 .navButton {
   --navButtonSize: 10px;
   --buttonColor: rgb(var(--rgbText) / 0.2);
-
-  background: none;
-  border: 0;
   margin: 0;
   padding: var(--spaceM);
+  background: none;
+  border: 0;
   cursor: pointer;
 
   &[aria-pressed='true'] {
@@ -126,14 +125,14 @@
   }
 
   &::after {
-    content: '';
     display: block;
-    border-radius: 50%;
     width: var(--navButtonSize);
     height: var(--navButtonSize);
     background: var(--buttonColor);
-    transition-property: background, box-shadow;
-    transition-duration: var(--durationL);
+    border-radius: 50%;
     transition-timing-function: var(--bezierFastoutSlowin);
+    transition-duration: var(--durationL);
+    transition-property: background, box-shadow;
+    content: '';
   }
 }

@@ -3,10 +3,10 @@
 }
 
 .section {
-  opacity: 0;
+  margin-top: var(--space2XL);
   padding-top: var(--space2XL);
   padding-bottom: var(--space2XL);
-  margin-top: var(--space2XL);
+  opacity: 0;
 
   &:global {
     animation: fadeIn 1s ease 1s forwards;

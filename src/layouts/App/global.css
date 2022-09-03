@@ -14,13 +14,13 @@
 }
 
 body {
-  font-family: var(--fontStack);
-  font-weight: var(--fontWeightRegular);
-  background-color: rgb(var(--rgbBackground));
-  transition: background var(--durationM) ease;
-  color: var(--colorTextBody);
   width: 100vw;
   overflow-x: hidden;
+  color: var(--colorTextBody);
+  font-weight: var(--fontWeightRegular);
+  font-family: var(--fontStack);
+  background-color: rgb(var(--rgbBackground));
+  transition: background var(--durationM) ease;
 
   &:focus {
     outline: none;
@@ -32,8 +32,8 @@ body {
 }
 
 ::selection {
-  background: rgb(var(--rgbAccent));
   color: rgb(var(--rgbBlack));
+  background: rgb(var(--rgbAccent));
 }
 
 :focus {

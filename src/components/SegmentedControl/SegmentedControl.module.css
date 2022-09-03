@@ -8,10 +8,9 @@
   padding: var(--inset);
 
   &::before {
-    content: '';
-    background-color: rgb(var(--rgbText) / 0.05);
     position: absolute;
-    inset: 0;
+    background-color: rgb(var(--rgbText) / 0.05);
+    content: '';
     clip-path: polygon(
       0 0,
       100% 0,
@@ -19,6 +18,7 @@
       calc(100% - 10px) 100%,
       0 100%
     );
+    inset: 0;
   }
 }
 
@@ -27,18 +27,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: transparent;
-  color: var(--colorTextLight);
-  transition-property: color, background;
-  transition-duration: var(--durationM);
-  transition-timing-function: ease;
-  border: 0;
-  padding: 0 24px;
   height: 56px;
+  padding: 0 24px;
+  color: var(--colorTextLight);
+  font-weight: var(--fontWeightMedium);
   font-size: inherit;
   font-family: inherit;
-  font-weight: var(--fontWeightMedium);
+  background-color: transparent;
+  border: 0;
   cursor: pointer;
+  transition-timing-function: ease;
+  transition-duration: var(--durationM);
+  transition-property: color, background;
 
   &[aria-checked='true'] {
     color: var(--colorTextBody);
@@ -46,16 +46,15 @@
 
   &::before {
     --inset: 12px;
-
-    content: '';
     position: absolute;
     top: var(--inset);
     bottom: var(--inset);
     left: 0;
     width: 1px;
     background-color: rgb(var(--rgbText) / 0.1);
-    transition: opacity var(--durationM) var(--bezierFastoutSlowin);
     opacity: 0;
+    transition: opacity var(--durationM) var(--bezierFastoutSlowin);
+    content: '';
   }
 
   &:not([aria-checked='true']) + &:not([aria-checked='true'])::before {
@@ -68,23 +67,23 @@
   top: var(--inset);
   bottom: var(--inset);
   left: 0;
-  filter: drop-shadow(0 6px 12px rgb(var(--rgbBlack) / 0.2));
-  transform: translate3d(var(--left), 0, 0);
   width: var(--width);
+  transform: translate3d(var(--left), 0, 0);
+  filter: drop-shadow(0 6px 12px rgb(var(--rgbBlack) / 0.2));
 
   @media (--mediaUseMotion) {
-    transition-property: width, transform;
-    transition-duration: var(--durationM);
     transition-timing-function: var(--bezierFastoutSlowin);
+    transition-duration: var(--durationM);
+    transition-property: width, transform;
   }
 
   &::before {
-    content: '';
     position: absolute;
-    inset: 0;
     background-color: rgb(var(--rgbBackgroundLight));
     filter: brightness(2.2);
+    content: '';
     clip-path: polygon(0 0, 100% 0, 100% 100%, 100% 100%, 0 100%);
+    inset: 0;
 
     @media (--mediaUseMotion) {
       transition: clip-path var(--durationM) var(--bezierFastoutSlowin);
@@ -92,6 +91,12 @@
   }
 
   &[data-last='true']::before {
-    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% calc(100% - 8px),
+      calc(100% - 8px) 100%,
+      0 100%
+    );
   }
 }

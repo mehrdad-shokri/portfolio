@@ -2,9 +2,9 @@
 
 .articles {
   display: grid;
+  grid-template-rows: 1fr auto;
   align-items: start;
   justify-items: center;
-  grid-template-rows: 1fr auto;
   min-height: 100%;
 
   @media (--singleColumnWidth), (--mediaMobileLS) {
@@ -14,17 +14,17 @@
 
 .grid {
   --verticalPadding: var(--space4XL);
+  display: grid;
+  grid-template-columns: 1fr 55%;
+  gap: var(--space5XL);
+  align-items: start;
 
   max-width: 1800px;
-  display: grid;
-  align-items: start;
-  grid-template-columns: 1fr 55%;
+  height: 100%;
   padding-top: var(--verticalPadding);
+  padding-right: var(--spaceL);
   padding-bottom: var(--space4XL);
   padding-left: var(--space3XL);
-  padding-right: var(--spaceL);
-  gap: var(--space5XL);
-  height: 100%;
 
   @media (--mediaDesktop) {
     --verticalPadding: var(--spaceOuter);
@@ -39,23 +39,23 @@
   }
 
   @media (--singleColumnWidth), (--mediaMobileLS) {
-    padding-right: 0;
     grid-template-columns: 100%;
+    padding-right: 0;
   }
 
   @media (--mediaMobile), (--mediaMobileLS) {
     gap: var(--space2XL);
-    padding-bottom: var(--spaceXL);
     padding-top: var(--mobileNavOffset);
+    padding-bottom: var(--spaceXL);
   }
 }
 
 .header {
-  padding-top: var(--spaceS);
-  padding-bottom: var(--space2XL);
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
+  padding-top: var(--spaceS);
+  padding-bottom: var(--space2XL);
 
   @media (--singleColumnWidth) {
     padding-top: calc(var(--spaceM) - var(--spaceXS));
@@ -69,8 +69,8 @@
 }
 
 .heading {
-  white-space: nowrap;
   overflow: hidden;
+  white-space: nowrap;
 }
 
 .list {
@@ -97,12 +97,18 @@
 
 .post {
   --featuredPostPadding: var(--space5XL);
-  --featuredPostClip: polygon(0 0, calc(100% - 32px) 0, 100% 32px, 100% 100%, 0 100%);
+  --featuredPostClip: polygon(
+    0 0,
+    calc(100% - 32px) 0,
+    100% 32px,
+    100% 100%,
+    0 100%
+  );
   --postBorder: 1px solid rgb(var(--rgbText) / 0.1);
 
   position: relative;
-  isolation: isolate;
   border-top: var(--postBorder);
+  isolation: isolate;
 
   &:last-child {
     border-bottom: var(--postBorder);
@@ -125,17 +131,17 @@
   }
 
   &[data-featured='true'] {
-    margin: 0;
-    border: 0;
     position: sticky;
     top: var(--verticalPadding);
-    height: calc(100vh - (var(--verticalPadding) * 2));
     display: grid;
+    height: calc(100vh - (var(--verticalPadding) * 2));
+    margin: 0;
+    border: 0;
 
     @media (--singleColumnWidth) {
       position: relative;
-      height: auto;
       top: 0;
+      height: auto;
     }
   }
 
@@ -150,10 +156,10 @@
   --labelTagPadding: var(--spaceM);
 
   position: absolute;
-  background-color: rgb(var(--rgbBackground));
-  padding: var(--spaceXS) var(--labelTagPadding);
   z-index: var(--zIndex1);
+  padding: var(--spaceXS) var(--labelTagPadding);
   color: transparent;
+  background-color: rgb(var(--rgbBackground));
 
   @media (--mediaMobile) {
     --labelTagPadding: var(--spaceS);
@@ -222,9 +228,8 @@
 
 .postLink {
   --linkPadding: var(--space3XL);
-
-  display: flex;
   position: relative;
+  display: flex;
   align-items: flex-end;
   padding: var(--linkPadding) 0;
 
@@ -234,13 +239,13 @@
 
   @nest [data-featured='false'] & {
     &::before {
-      content: '';
       position: absolute;
-      inset: var(--spaceXL) calc(var(--spaceXL) * -1);
+      background-color: rgb(var(--rgbBackgroundLight));
       transform: scale3d(0, 1, 1);
       transform-origin: right;
-      background-color: rgb(var(--rgbBackgroundLight));
       transition: transform var(--durationM) var(--bezierFastoutSlowin);
+      content: '';
+      inset: var(--spaceXL) calc(var(--spaceXL) * -1);
     }
 
     &:hover::before {
@@ -260,13 +265,13 @@
     }
 
     &::after {
-      content: '';
       position: absolute;
-      inset: 0;
-      background-color: rgb(var(--rgbAccent));
       z-index: var(--zIndex2);
-      pointer-events: none;
+      background-color: rgb(var(--rgbAccent));
       transform: scale3d(0, 1, 1);
+      content: '';
+      pointer-events: none;
+      inset: 0;
 
       @media (--mediaUseMotion) {
         &:global {
@@ -282,35 +287,35 @@
   grid-template-columns: 128px 1fr;
   gap: var(--spaceM);
   align-items: center;
-  color: rgb(var(--rgbPrimary));
   justify-self: stretch;
   margin-bottom: var(--spaceS);
+  color: rgb(var(--rgbPrimary));
 }
 
 .postImage {
   position: absolute;
-  inset: 0;
   display: grid;
-  place-content: stretch;
   overflow: hidden;
+  opacity: 0;
   isolation: isolate;
   clip-path: var(--featuredPostClip);
-  opacity: 0;
+  inset: 0;
+  place-content: stretch;
 
   &:global {
     animation: fadeIn 1s var(--bezierFastoutSlowin) forwards 0.9s;
   }
 
   &::after {
-    content: '';
     position: absolute;
-    inset: 0;
     background-image: linear-gradient(
       -135deg,
       rgb(var(--rgbBackgroundLight) / 0.5) 0%,
       rgb(var(--rgbBackgroundLight) / 0.86) 60%,
       rgb(var(--rgbBackgroundLight) / 0.9) 100%
     );
+    content: '';
+    inset: 0;
   }
 
   @media (--mediaUseMotion) {
@@ -321,17 +326,17 @@
 
   & img,
   & video {
-    transition: transform var(--durationXL) var(--bezierFastoutSlowin);
-    object-fit: cover;
     height: 100%;
+    object-fit: cover;
+    transition: transform var(--durationXL) var(--bezierFastoutSlowin);
   }
 }
 
 .postDetails {
   position: relative;
   display: grid;
-  justify-items: start;
   gap: var(--spaceL);
+  justify-items: start;
   width: 100%;
 
   @nest [data-featured='true'] & {
@@ -345,11 +350,11 @@
 
 .postFooter {
   display: flex;
+  flex-wrap: wrap;
   grid-auto-flow: column;
+  gap: var(--spaceS);
   justify-content: space-between;
   justify-self: stretch;
-  flex-wrap: wrap;
-  gap: var(--spaceS);
 
   & button {
     position: relative;
@@ -359,13 +364,13 @@
 
 .timecode {
   display: flex;
-  align-items: center;
   gap: var(--spaceM);
+  align-items: center;
 
   &::before {
-    content: '';
     width: 42px;
     height: 2px;
     background-color: rgb(var(--rgbText) / 0.2);
+    content: '';
   }
 }

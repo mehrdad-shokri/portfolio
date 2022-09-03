@@ -7,6 +7,7 @@
   "author": "Hamish Williams <hello@hamishw.com>",
   "devDependencies": {
     "@mapbox/rehype-prism": "^0.8.0",
+    "@next/bundle-analyzer": "^12.2.5",
     "@storybook/addon-a11y": "^6.5.10",
     "@storybook/addon-actions": "^6.5.10",
     "@storybook/addon-controls": "^6.5.10",
@@ -16,8 +17,16 @@
     "@storybook/react": "^6.5.10",
     "@svgr/webpack": "^6.3.1",
     "esbuild": "^0.15.2",
-    "eslint": "^8.21.0",
+    "eslint": "8.22",
     "eslint-config-next": "^12.2.5",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-compat": "^4.0.2",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "fs-extra": "^10.1.0",
     "globby": "^13.1.2",
     "postcss": "^8.4.16",
@@ -34,7 +43,10 @@
     "stylelint": "^14.9.1",
     "stylelint-config-css-modules": "^4.1.0",
     "stylelint-config-prettier": "^9.0.3",
-    "stylelint-config-standard": "^26.0.0"
+    "stylelint-config-rational-order": "^0.1.2",
+    "stylelint-config-recommended": "^9.0.0",
+    "stylelint-no-unsupported-browser-features": "^5.0.3",
+    "stylelint-order": "^5.0.0"
   },
   "dependencies": {
     "fathom-client": "^3.5.0",
@@ -55,11 +67,15 @@
     "deploy:functions": "cd functions && npm run deploy",
     "start": "next start",
     "test": "echo 'write some tests'",
-    "storybook": "start-storybook -p 9009 -h localhost"
+    "storybook": "start-storybook -p 9009 -h localhost",
+    "prettier": "prettier '**/*.{js,jsx,ts,tsx,css,md}' --check --write",
+    "lint": "yarn lint:scripts; yarn lint:styles",
+    "lint:scripts": "eslint '**/*.{js,jsx,ts,tsx}' --config .eslintrc --fix",
+    "lint:styles": "stylelint '**/*.{css,scss,ts,tsx}' --config .stylelintrc --fix"
   },
   "browserslist": {
     "production": [
-      ">10%",
+      ">0.3%",
       "not dead",
       "not ie 11",
       "not op_mini all"

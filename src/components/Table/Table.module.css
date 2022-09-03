@@ -1,6 +1,6 @@
 .table {
-  border-collapse: collapse;
   width: 100%;
+  border-collapse: collapse;
 }
 
 .row {
@@ -24,8 +24,8 @@
 
 .cell,
 .headCell {
-  padding-right: var(--spaceXL);
   padding-top: var(--spaceM);
+  padding-right: var(--spaceXL);
   padding-bottom: var(--spaceM);
 
   &:last-child {

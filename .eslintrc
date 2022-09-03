@@ -1,13 +1,75 @@
 {
   "env": {
-    "es6": true
+    "es6": true,
+    "browser": true,
+    "node": true
   },
-  "extends": ["eslint:recommended", "next/core-web-vitals"],
+  "extends": [
+    "next",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    //    "plugin:compat/recommended",
+    "plugin:jsx-a11y/recommended",
+    "next/core-web-vitals"
+  ],
+  "plugins": [
+    "react",
+    "unused-imports",
+    "import",
+    "prettier"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "rules": {
-    "semi": "error",
+    "semi": 0,
     "no-unused-vars": "warn",
-    "import/no-anonymous-default-export": "off",
+    "import/no-anonymous-default-export": 0,
+    "import/prefer-default-export": 0,
     "react/display-name": "off",
-    "@next/next/no-img-element": "off"
+    "@next/next/no-img-element": "error",
+    "no-console": "warn",
+    "react/prop-types": "off",
+    "jsx-a11y/anchor-is-valid": [
+      "error",
+      {
+        "components": [
+          "Link"
+        ],
+        "specialLink": [
+          "hrefLeft",
+          "hrefRight"
+        ],
+        "aspects": [
+          "invalidHref",
+          "preferButton"
+        ]
+      }
+    ],
+    "unused-imports/no-unused-vars": [
+      "error",
+      {
+        "vars": "all",
+        "argsIgnorePattern": "_",
+        "varsIgnorePattern": "_"
+      }
+    ],
+    "jsx-a11y/no-autofocus": [
+      2,
+      {
+        "ignoreNonDOM": true
+      }
+    ],
+    "prettier/prettier": ["error"]
   }
 }

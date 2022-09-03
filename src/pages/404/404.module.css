@@ -5,12 +5,12 @@
   padding-left: 140px;
 
   @media (--mediaTablet) {
+    grid-template-columns: 100%;
+    height: auto;
+    min-height: 100vh;
     padding-top: 80px;
     padding-bottom: 80px;
     padding-left: 80px;
-    grid-template-columns: 100%;
-    min-height: 100vh;
-    height: auto;
   }
 
   @media (--mediaMobile) {
@@ -19,22 +19,22 @@
 }
 
 .videoContainer {
+  position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  position: relative;
   border: var(--space2XL) solid transparent;
 
   &::after {
-    content: '';
-    background: rgb(var(--rgbAccent));
-    animation-duration: 1.8s;
-    animation-timing-function: var(--bezierFastoutSlowin);
     position: absolute;
-    inset: 0;
+    z-index: var(--zIndex2);
+    background: rgb(var(--rgbAccent));
     transform: scale3d(0, 1, 1);
     transform-origin: left;
-    z-index: var(--zIndex2);
+    animation-duration: 1.8s;
+    animation-timing-function: var(--bezierFastoutSlowin);
+    content: '';
+    inset: 0;
   }
 
   @media (--mediaLaptop) {
@@ -46,8 +46,8 @@
   }
 
   @media (--mediaMobile) {
-    min-height: 240px;
     grid-row: 1;
+    min-height: 240px;
     border-width: var(--spaceOuter);
     border-top: 0;
   }
@@ -60,14 +60,14 @@
 }
 
 .video {
-  object-fit: cover;
+  position: relative;
   width: 100%;
   height: 100%;
-  position: relative;
+  object-fit: cover;
   opacity: 0;
-  transition-property: opacity;
   transition-delay: 0.8s;
   transition-duration: var(--durationXL);
+  transition-property: opacity;
 
   @media (--mediaMobile) {
     left: 0;
@@ -79,17 +79,18 @@
 }
 
 .credit {
-  color: rgb(var(--rgbWhite) / 0.4);
-  background: rgb(var(--rgbBlack) / 0.6);
-  padding: var(--spaceXS) var(--spaceS);
-  font-size: var(--fontSizeBodyS);
   position: absolute;
   bottom: var(--spaceS);
   left: var(--spaceS);
-  transform: none;
+  padding: var(--spaceXS) var(--spaceS);
+  color: rgb(var(--rgbWhite) / 0.4);
+  font-size: var(--fontSizeBodyS);
   text-decoration: none;
-  transition: opacity var(--durationM) ease var(--durationXL), color var(--durationM) ease;
+  background: rgb(var(--rgbBlack) / 0.6);
+  transform: none;
   opacity: 0;
+  transition: opacity var(--durationM) ease var(--durationXL),
+    color var(--durationM) ease;
 
   &:hover,
   &:focus {
@@ -105,8 +106,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 var(--spaceXL);
   height: 100%;
+  padding: 0 var(--spaceXL);
 
   @media (--mediaMobile) {
     grid-row: 2;
@@ -117,21 +118,21 @@
 .text {
   display: flex;
   flex-direction: column;
-  max-width: 480px;
   width: 100%;
+  max-width: 480px;
 }
 
 .title {
   margin-bottom: var(--spaceM);
-  transition-property: opacity;
+  opacity: 0;
+  transition-delay: 0.1s;
   transition-timing-function: var(--bezierFastoutSlowin);
   transition-duration: var(--durationXL);
-  transition-delay: 0.1s;
-  opacity: 0;
+  transition-property: opacity;
 
   @media (--mediaUseMotion) {
-    transition-property: transform, opacity;
     transform: translate3d(0, var(--spaceL), 0);
+    transition-property: transform, opacity;
   }
 
   &[data-visible='true'] {
@@ -141,27 +142,27 @@
 }
 
 .subheading {
+  flex: 0 0 auto;
+  max-width: 100%;
   padding-bottom: var(--spaceL);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  overflow: hidden;
   color: rgb(var(--rgbText) / 0.4);
-  transition-property: opacity;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  text-transform: uppercase;
+  opacity: 0;
+  transition-delay: 0.2s;
   transition-timing-function: var(--bezierFastoutSlowin);
   transition-duration: var(--durationXL);
-  transition-delay: 0.2s;
-  opacity: 0;
-  max-width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  flex: 0 0 auto;
+  transition-property: opacity;
 
   @media (--mediaMobile) {
     font-size: calc((18 / 16) * 1rem);
   }
 
   @media (--mediaUseMotion) {
-    transition-property: transform, opacity;
     transform: translate3d(0, var(--spaceL), 0);
+    transition-property: transform, opacity;
   }
 
   &[data-visible='true'] {
@@ -172,15 +173,15 @@
 
 .description {
   padding-bottom: var(--spaceL);
-  transition-property: opacity;
+  opacity: 0;
+  transition-delay: 0.3s;
   transition-timing-function: var(--bezierFastoutSlowin);
   transition-duration: var(--durationXL);
-  transition-delay: 0.3s;
-  opacity: 0;
+  transition-property: opacity;
 
   @media (--mediaUseMotion) {
-    transition-property: transform, opacity;
     transform: translate3d(0, var(--spaceL), 0);
+    transition-property: transform, opacity;
   }
 
   &[data-visible='true'] {
@@ -190,17 +191,17 @@
 }
 
 .button {
-  transition-property: opacity;
-  transition-timing-function: var(--bezierFastoutSlowin);
-  transition-duration: var(--durationXL);
-  transition-delay: var(--durationM);
-  opacity: 0;
   align-self: flex-start;
   padding-left: var(--spaceXXS);
+  opacity: 0;
+  transition-delay: var(--durationM);
+  transition-timing-function: var(--bezierFastoutSlowin);
+  transition-duration: var(--durationXL);
+  transition-property: opacity;
 
   @media (--mediaUseMotion) {
-    transition-property: transform, opacity;
     transform: translate3d(0, var(--spaceL), 0);
+    transition-property: transform, opacity;
   }
 
   &[data-visible='true'] {

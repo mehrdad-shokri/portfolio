@@ -1,6 +1,6 @@
 .text {
-  line-height: var(--lineHeightBody);
   color: var(--colorTextBody);
+  line-height: var(--lineHeightBody);
 
   &[data-size='s'] {
     font-size: var(--fontSizeBodyS);

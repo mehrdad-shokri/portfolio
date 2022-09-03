@@ -15,7 +15,7 @@ export const navLinks = [
     label: 'Contact',
     pathname: '/contact',
   },
-];
+]
 
 export const socialLinks = [
   {
@@ -33,4 +33,4 @@ export const socialLinks = [
     url: 'https://github.com/HamishMW',
     icon: 'github',
   },
-];
+]

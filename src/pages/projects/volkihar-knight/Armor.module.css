@@ -5,8 +5,8 @@
 }
 
 .loader {
-  transition: opacity var(--durationL) var(--bezierFastoutSlowin);
   opacity: 0;
+  transition: opacity var(--durationL) var(--bezierFastoutSlowin);
 
   &[data-visible='true'] {
     opacity: 1;
@@ -14,9 +14,9 @@
 }
 
 .canvas {
-  transition: opacity var(--durationXL) var(--bezierFastoutSlowin);
   position: absolute;
   opacity: 0;
+  transition: opacity var(--durationXL) var(--bezierFastoutSlowin);
   inset: 0;
 
   &[data-loaded='true'] {

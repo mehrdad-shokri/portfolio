@@ -17,7 +17,7 @@
     "custom-media-pattern": "^[a-z][a-zA-Z0-9]+$",
     "keyframes-name-pattern": "^[a-z][a-zA-Z0-9]+$",
     "selector-id-pattern": null,
-    "declaration-block-no-redundant-longhand-properties": true,
+    "declaration-block-no-redundant-longhand-properties": null,
     "value-keyword-case": ["lower", { "camelCaseSvgKeywords": true }],
     "alpha-value-notation": "number",
     "no-descending-specificity": null,
@@ -29,19 +29,6 @@
     ],
     "declaration-block-trailing-semicolon": null,
     "function-parentheses-space-inside": null,
-    "plugin/no-unsupported-browser-features": [
-      true,
-      {
-        "severity": "warning",
-        "ignore": [
-          "css-gradients",
-          "css-filters",
-          "user-select-none",
-          "object-fit",
-          "css-sticky"
-        ]
-      }
-    ],
     "max-nesting-depth": [
       3,
       {

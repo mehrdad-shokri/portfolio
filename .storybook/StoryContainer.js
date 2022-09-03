@@ -1,4 +1,4 @@
-import './StoryContainer.css';
+import './StoryContainer.css'
 
 export const StoryContainer = ({
   padding = 32,
@@ -9,7 +9,7 @@ export const StoryContainer = ({
   style,
 }) => (
   <div
-    className="storyContainer"
+    className='storyContainer'
     style={{
       padding,
       gap: gutter,
@@ -21,4 +21,4 @@ export const StoryContainer = ({
   >
     {children}
   </div>
-);
+)

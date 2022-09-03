@@ -17,22 +17,22 @@ button.toggle {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
   width: 100%;
+  height: 100%;
 }
 
 .icon {
   --iconSize: var(--spaceXL);
 
   position: absolute;
-  transition-property: opacity, fill;
-  transition-duration: var(--durationM);
-  transition-timing-function: var(--bezierFastoutSlowin);
-  opacity: 1;
-  transform: rotate(0deg);
-  fill: var(--colorTextBody);
   width: var(--iconSize);
   height: var(--iconSize);
+  transform: rotate(0deg);
+  opacity: 1;
+  transition-timing-function: var(--bezierFastoutSlowin);
+  transition-duration: var(--durationM);
+  transition-property: opacity, fill;
+  fill: var(--colorTextBody);
 
   @media (--mediaUseMotion) {
     transition-delay: 0.1s;
@@ -43,8 +43,8 @@ button.toggle {
     opacity: 0;
 
     @media (--mediaUseMotion) {
-      transition-delay: 0s;
       transform: rotate(45deg);
+      transition-delay: 0s;
     }
   }
 
@@ -52,8 +52,8 @@ button.toggle {
     opacity: 0;
 
     @media (--mediaUseMotion) {
-      transition-delay: 0s;
       transform: rotate(-45deg);
+      transition-delay: 0s;
     }
   }
 
@@ -61,8 +61,8 @@ button.toggle {
     opacity: 1;
 
     @media (--mediaUseMotion) {
-      transition-delay: 0.1s;
       transform: rotate(0deg);
+      transition-delay: 0.1s;
     }
   }
 }

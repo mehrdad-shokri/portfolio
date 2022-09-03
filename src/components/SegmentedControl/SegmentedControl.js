@@ -1,4 +1,4 @@
-import { VisuallyHidden } from 'components/VisuallyHidden';
+import {VisuallyHidden} from 'components/VisuallyHidden'
 import {
   createContext,
   useCallback,
@@ -7,11 +7,11 @@ import {
   useId,
   useRef,
   useState,
-} from 'react';
-import { cssProps } from 'utils/style';
-import styles from './SegmentedControl.module.css';
+} from 'react'
+import {cssProps} from 'utils/style'
+import styles from './SegmentedControl.module.css'
 
-const SegmentedControlContext = createContext({});
+const SegmentedControlContext = createContext({})
 
 export const SegmentedControl = ({
   children,
@@ -20,61 +20,68 @@ export const SegmentedControl = ({
   label,
   ...props
 }) => {
-  const id = useId();
-  const labelId = `${id}segmented-control-label`;
-  const optionRefs = useRef([]);
-  const [indicator, setIndicator] = useState();
+  const id = useId()
+  const labelId = `${id}segmented-control-label`
+  const optionRefs = useRef([])
+  const [indicator, setIndicator] = useState()
 
   const handleKeyDown = event => {
-    const { length } = optionRefs.current;
-    const prevIndex = (currentIndex - 1 + length) % length;
-    const nextIndex = (currentIndex + 1) % length;
+    const {length} = optionRefs.current
+    const prevIndex = (currentIndex - 1 + length) % length
+    const nextIndex = (currentIndex + 1) % length
 
     if (['ArrowLeft', 'ArrowUp'].includes(event.key)) {
-      onChange(prevIndex);
-      optionRefs.current[prevIndex].current.focus();
+      onChange(prevIndex)
+      optionRefs.current[prevIndex].current.focus()
     } else if (['ArrowRight', 'ArrowDown'].includes(event.key)) {
-      onChange(nextIndex);
-      optionRefs.current[nextIndex].current.focus();
+      onChange(nextIndex)
+      optionRefs.current[nextIndex].current.focus()
     }
-  };
+  }
 
   const registerOption = useCallback(optionRef => {
-    optionRefs.current = [...optionRefs.current, optionRef];
-  }, []);
+    optionRefs.current = [...optionRefs.current, optionRef]
+  }, [])
 
   const unRegisterOption = useCallback(optionRef => {
-    optionRefs.current = optionRefs.current.filter(ref => ref !== optionRef);
-  }, []);
+    optionRefs.current = optionRefs.current.filter(ref => ref !== optionRef)
+  }, [])
 
   useEffect(() => {
-    const currentOption = optionRefs.current[currentIndex]?.current;
+    const currentOption = optionRefs.current[currentIndex]?.current
 
     const resizeObserver = new ResizeObserver(() => {
-      const rect = currentOption?.getBoundingClientRect();
-      const left = currentOption?.offsetLeft;
-      setIndicator({ width: rect?.width, left });
-    });
+      const rect = currentOption?.getBoundingClientRect()
+      const left = currentOption?.offsetLeft
+      setIndicator({width: rect?.width, left})
+    })
 
-    resizeObserver.observe(currentOption);
+    resizeObserver.observe(currentOption)
 
     return () => {
-      resizeObserver.disconnect();
-    };
-  }, [currentIndex]);
+      resizeObserver.disconnect()
+    }
+  }, [currentIndex])
 
   return (
     <SegmentedControlContext.Provider
-      value={{ optionRefs, currentIndex, onChange, registerOption, unRegisterOption }}
+      value={{
+        optionRefs,
+        currentIndex,
+        onChange,
+        registerOption,
+        unRegisterOption,
+      }}
     >
       <div
         className={styles.container}
-        role="radiogroup"
+        role='radiogroup'
         aria-labelledby={labelId}
         onKeyDown={handleKeyDown}
+        tabIndex={-1}
         {...props}
       >
-        <VisuallyHidden as="label" id={labelId}>
+        <VisuallyHidden as='label' id={labelId}>
           {label}
         </VisuallyHidden>
         <div className={styles.options}>
@@ -89,29 +96,29 @@ export const SegmentedControl = ({
         </div>
       </div>
     </SegmentedControlContext.Provider>
-  );
-};
+  )
+}
 
-export const SegmentedControlOption = ({ children, ...props }) => {
-  const { optionRefs, currentIndex, onChange, registerOption, unRegisterOption } =
-    useContext(SegmentedControlContext);
-  const optionRef = useRef();
-  const index = optionRefs.current.indexOf(optionRef);
-  const isSelected = currentIndex === index;
+export const SegmentedControlOption = ({children, ...props}) => {
+  const {optionRefs, currentIndex, onChange, registerOption, unRegisterOption} =
+    useContext(SegmentedControlContext)
+  const optionRef = useRef()
+  const index = optionRefs.current.indexOf(optionRef)
+  const isSelected = currentIndex === index
 
   useEffect(() => {
-    registerOption(optionRef);
+    registerOption(optionRef)
 
     return () => {
-      unRegisterOption(optionRef);
-    };
-  }, [registerOption, unRegisterOption]);
+      unRegisterOption(optionRef)
+    }
+  }, [registerOption, unRegisterOption])
 
   return (
     <button
       className={styles.button}
       tabIndex={isSelected ? 0 : -1}
-      role="radio"
+      role='radio'
       aria-checked={isSelected}
       onClick={() => onChange(index)}
       ref={optionRef}
@@ -119,5 +126,5 @@ export const SegmentedControlOption = ({ children, ...props }) => {
     >
       {children}
     </button>
-  );
-};
+  )
+}

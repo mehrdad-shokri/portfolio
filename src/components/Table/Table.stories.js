@@ -1,10 +1,10 @@
-import { Table, TableCell, TableRow } from 'components/Table';
-import { StoryContainer } from '../../../.storybook/StoryContainer';
-import { TableBody, TableHead, TableHeadCell } from './Table';
+import {Table, TableCell, TableRow} from 'components/Table'
+import {StoryContainer} from '../../../.storybook/StoryContainer'
+import {TableBody, TableHead, TableHeadCell} from './Table'
 
 export default {
   title: 'Table',
-};
+}
 
 export const Default = () => (
   <StoryContainer>
@@ -30,4 +30,4 @@ export const Default = () => (
       </TableBody>
     </Table>
   </StoryContainer>
-);
+)

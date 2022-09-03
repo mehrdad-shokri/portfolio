@@ -24,7 +24,9 @@
 
 .header {
   display: grid;
-  grid-template-columns: 1fr var(--gutterWidth) var(--contentWidth) var(--gutterWidth) 1fr;
+  grid-template-columns:
+    1fr var(--gutterWidth) var(--contentWidth) var(--gutterWidth)
+    1fr;
   gap: var(--gutter);
   align-items: center;
 
@@ -34,17 +36,17 @@
 }
 
 .headerText {
-  height: 100%;
-  width: 100%;
   position: relative;
   display: flex;
-  justify-self: flex-end;
-  justify-content: center;
   flex-direction: column;
-  padding-top: var(--space5XL);
-  gap: var(--space2XL);
-  max-width: 800px;
   grid-column: 3;
+  gap: var(--space2XL);
+  justify-content: center;
+  justify-self: flex-end;
+  width: 100%;
+  max-width: 800px;
+  height: 100%;
+  padding-top: var(--space5XL);
 
   @media (--mediaTablet) {
     grid-column: 1;
@@ -58,11 +60,11 @@
 }
 
 .date {
+  position: relative;
   display: grid;
   grid-template-columns: 100px 1fr;
   gap: var(--spaceM);
   align-items: center;
-  position: relative;
 
   @media (--mediaTablet) {
     gap: var(--spaceS);
@@ -71,8 +73,8 @@
 
 .dateText {
   color: rgb(var(--rgbPrimary));
-  opacity: 0;
   transform: translate3d(-5%, 0, 0);
+  opacity: 0;
   transition: opacity var(--durationXL) ease;
 
   @media (--mediaUseMotion) {
@@ -81,8 +83,8 @@
   }
 
   &[data-visible='true'] {
-    opacity: 1;
     transform: none;
+    opacity: 1;
   }
 }
 
@@ -97,9 +99,9 @@
 }
 
 .titleWordWrapper {
-  overflow: hidden;
   position: relative;
   display: inline-flex;
+  overflow: hidden;
 }
 
 .titleWord {
@@ -109,8 +111,8 @@
   @media (--mediaUseMotion) {
     transform: translate3d(0, 110%, 0);
     animation-name: postTitleWord;
-    animation-timing-function: var(--bezierFastoutSlowin);
     animation-duration: var(--durationXL);
+    animation-timing-function: var(--bezierFastoutSlowin);
     animation-delay: var(--delay);
     animation-fill-mode: forwards;
   }
@@ -118,11 +120,11 @@
 
 .banner {
   position: absolute;
-  inset: calc(var(--gutterWidth) * -1);
   top: 0;
   height: 70vh;
-  isolation: isolate;
   overflow: hidden;
+  isolation: isolate;
+  inset: calc(var(--gutterWidth) * -1);
 
   @media (--mediaTablet) {
     inset: 0;
@@ -136,22 +138,21 @@
     --background1: rgb(var(--rgbBackground) / 0.7);
     --background2: rgb(var(--rgbBackground) / 0.9);
     --background3: rgb(var(--rgbBackground));
-
-    content: '';
     position: absolute;
-    inset: 0;
     z-index: var(--zIndex1);
     background: linear-gradient(
       var(--background1),
       var(--background2),
       var(--background3)
     );
+    content: '';
+    inset: 0;
   }
 
   & img,
   & video {
-    height: 100%;
     width: 100%;
+    height: 100%;
     object-fit: cover;
   }
 }
@@ -163,16 +164,16 @@
 }
 
 .bannerImageBlur {
-  opacity: var(--blurOpacity, 0);
   transform: translateZ(0);
+  opacity: var(--blurOpacity, 0);
   will-change: opacity;
 }
 
 .details {
   display: flex;
+  gap: var(--spaceM);
   align-items: center;
   justify-content: space-between;
-  gap: var(--spaceM);
 }
 
 .arrow {
@@ -200,13 +201,13 @@
 }
 
 .timecode {
-  color: var(--colorTextLight);
-  font-size: 16px;
-  padding: var(--spaceL) 0;
   display: grid;
-  align-items: center;
   grid-template-columns: 60px 1fr;
   gap: 10px;
+  align-items: center;
+  padding: var(--spaceL) 0;
+  color: var(--colorTextLight);
+  font-size: 16px;
   opacity: 0;
 
   &:global {
@@ -214,17 +215,17 @@
   }
 
   &::before {
-    content: '';
     height: 2px;
     background: rgb(var(--rgbText) / 0.4);
+    content: '';
   }
 }
 
 .wrapper {
   display: flex;
   flex-direction: column;
-  padding-bottom: var(--space2XL);
   padding-top: calc(var(--gutterWidth) + var(--space2XL));
+  padding-bottom: var(--space2XL);
   overflow: hidden;
 
   @media (--mediaTablet) {
@@ -233,11 +234,13 @@
 }
 
 .content {
-  width: 100%;
-  align-self: center;
-  opacity: 0;
   display: grid;
-  grid-template-columns: 1fr var(--gutterWidth) var(--contentWidth) var(--gutterWidth) 1fr;
+  grid-template-columns:
+    1fr var(--gutterWidth) var(--contentWidth) var(--gutterWidth)
+    1fr;
+  align-self: center;
+  width: 100%;
+  opacity: 0;
 
   &:global {
     animation: fadeIn 1.2s var(--bezierFastoutSlowin) 1s forwards;

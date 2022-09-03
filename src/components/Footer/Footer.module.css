@@ -1,14 +1,13 @@
 .footer {
   --lineHeightBody: 1.1;
-
+  position: relative;
+  z-index: var(--zIndex2);
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: center;
   width: 100vw;
   padding: var(--space3XL) var(--spaceL);
-  z-index: var(--zIndex2);
-  position: relative;
   color: var(--colorTextLight);
 }
 
@@ -17,6 +16,6 @@
 }
 
 .date {
-  padding-right: var(--spaceXS);
   display: inline-flex;
+  padding-right: var(--spaceXS);
 }

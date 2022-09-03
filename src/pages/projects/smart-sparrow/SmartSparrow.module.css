@@ -16,29 +16,29 @@
   align-items: center;
 
   @media (--mediaTablet) {
-    padding: 0 80px;
     margin-top: 60px;
+    padding: 0 80px;
   }
 
   @media (--mediaMobile) {
-    padding: 0 20px;
     margin-top: 40px;
+    padding: 0 20px;
   }
 }
 
 .sidebarImage {
   &:first-child {
-    grid-column: col 1 / span 4;
-    grid-row: 1;
     position: relative;
     top: 5%;
+    grid-row: 1;
+    grid-column: col 1 / span 4;
     opacity: 0.4;
   }
 
   &:last-child {
-    grid-column: col 3 / span 4;
-    grid-row: 1;
     position: relative;
     top: -5%;
+    grid-row: 1;
+    grid-column: col 3 / span 4;
   }
 }
