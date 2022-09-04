@@ -26,6 +26,8 @@ const disciplines = [
   'Gamer',
   'Youtuber',
   'Programmer',
+  'Cypher',
+  'Sentient',
 ]
 
 export const Home = () => {
@@ -87,7 +89,7 @@ export const Home = () => {
         scrollIndicatorHidden={scrollIndicatorHidden}
       />
       <ProjectSummary
-        id='project-1'
+        id='projects'
         sectionRef={projectOne}
         visible={visibleSections.includes(projectOne.current)}
         index={1}
@@ -154,7 +156,7 @@ export const Home = () => {
       <Profile
         sectionRef={details}
         visible={visibleSections.includes(details.current)}
-        id='details'
+        id='about'
       />
       <Footer />
     </div>

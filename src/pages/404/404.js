@@ -37,7 +37,7 @@ export function Page404() {
                   level={3}
                 >
                   <DecoderText
-                    text='Error: Redacted'
+                    text='Error: Not found'
                     start={visible}
                     delay={300}
                   />
@@ -47,8 +47,7 @@ export function Page404() {
                   data-visible={visible}
                   as='p'
                 >
-                  This page could not be found. It either doesn’t exist or was
-                  deleted. Or perhaps you don’t exist.
+                  Page not found. Either it&apos;s deleted or doesn&apos;t exit.
                 </Text>
                 <Button
                   secondary

@@ -127,8 +127,9 @@ export const Navbar = () => {
 
   // Store the current hash to scroll to
   const handleNavItemClick = event => {
-    const hash = window.location.href.split('#')[1]
+    const hash = event.currentTarget.href.split('#')[1]
     setTarget(null)
+
     if (hash && route === '/') {
       setTarget(`#${hash}`)
       event.preventDefault()
@@ -143,6 +144,7 @@ export const Navbar = () => {
   return (
     <header className={styles.navbar} ref={headerRef}>
       <RouterLink href={route === '/' ? '/#intro' : '/'} scroll={false}>
+        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions,jsx-a11y/anchor-is-valid,jsx-a11y/click-events-have-key-events */}
         <a
           data-navbar-item
           className={styles.logo}
@@ -160,6 +162,7 @@ export const Navbar = () => {
         <div className={styles.navList}>
           {navLinks.map(({label, pathname}) => (
             <RouterLink href={pathname} scroll={false} key={label}>
+              {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions,jsx-a11y/anchor-is-valid,jsx-a11y/click-events-have-key-events */}
               <a
                 data-navbar-item
                 className={styles.navLink}
@@ -182,6 +185,7 @@ export const Navbar = () => {
           <nav className={styles.mobileNav} data-visible={visible}>
             {navLinks.map(({label, pathname}, index) => (
               <RouterLink href={pathname} scroll={false} key={label}>
+                {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions,jsx-a11y/anchor-is-valid,jsx-a11y/click-events-have-key-events */}
                 <a
                   className={styles.mobileNavLink}
                   data-visible={visible}

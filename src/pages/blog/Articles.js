@@ -68,7 +68,7 @@ const ArticlesPost = ({
           />
         </div>
       )}
-      <RouterLink href={`/articles/${slug}`} scroll={false}>
+      <RouterLink href={`/blog/${slug}`} scroll={false}>
         <a
           className={styles.postLink}
           onMouseEnter={handleMouseEnter}
@@ -87,7 +87,7 @@ const ArticlesPost = ({
             </Text>
             <div className={styles.postFooter}>
               <Button secondary iconHoverShift icon='chevronRight' as='div'>
-                Read article
+                Read post
               </Button>
               <Text className={styles.timecode} size='s'>
                 {timecode}
@@ -154,9 +154,9 @@ export const Articles = ({posts, featured}) => {
   const postsHeader = (
     <header className={styles.header}>
       <Heading className={styles.heading} level={5} as='h1'>
-        <DecoderText text='Latest articles' />
+        <DecoderText text='Latest posts' />
       </Heading>
-      <Barcode />
+      <Barcode style={{transform: 'scale(-1,-1)'}} />
     </header>
   )
 
@@ -179,8 +179,8 @@ export const Articles = ({posts, featured}) => {
   return (
     <article className={styles.articles}>
       <Meta
-        title='Articles'
-        description='A collection of technical design and development articles. May contain incoherent ramblings.'
+        title='Blog'
+        description='My writings about tech and anything in between'
       />
       <Section className={styles.content}>
         {!isSingleColumn && (

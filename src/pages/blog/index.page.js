@@ -7,7 +7,8 @@ import {formatTimecode} from 'utils/timecode'
 
 export {Articles as default} from './Articles'
 
-export function getStaticProps() {
+export async function getStaticProps() {
+  await new Promise(resolve => setTimeout(resolve, 10000))
   const allPosts = postFilePaths.map(filePath => {
     const source = fs.readFileSync(path.join(POSTS_PATH, filePath))
     const {data, content} = matter(source)

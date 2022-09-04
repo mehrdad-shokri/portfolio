@@ -1,6 +1,4 @@
-import 'layouts/App/reset.css'
-import 'layouts/App/global.css'
-
+import {Fragment, createContext, useEffect, useReducer} from 'react'
 import {Navbar} from 'components/Navbar'
 import {ThemeProvider} from 'components/ThemeProvider'
 import {tokens} from 'components/ThemeProvider/theme'
@@ -11,16 +9,15 @@ import styles from 'layouts/App/App.module.css'
 import {initialState, reducer} from 'layouts/App/reducer'
 import Head from 'next/head'
 import {useRouter} from 'next/router'
-import {Fragment, createContext, useEffect, useReducer} from 'react'
 import {msToNum} from 'utils/style'
 import {ScrollRestore} from '../layouts/App/ScrollRestore'
-
+import 'layouts/App/reset.css'
+import 'layouts/App/global.css'
 export const AppContext = createContext({})
 
 const repoPrompt = `
-__  __  __
-\u005C \u005C \u005C \u005C \u005C\u2215\n \u005C \u005C\u2215\u005C \u005C\n  \u005C\u2215  \u005C\u2215
-\n\nTaking a peek huh? Check out the source code: https://github.com/HamishMW/portfolio
+  \u002f\u005c \u002f\u005c\n \u002f  \u005c  \u005c\n\u002f\u002f  \u005c\u005c  \u005c\u002f\u005c
+\n\nLike what you see? Check out the source code: https://github.com/mehrdad-shokri/portfolio
 `
 
 const App = ({Component, pageProps}) => {
@@ -39,6 +36,7 @@ const App = ({Component, pageProps}) => {
 
   // Handle analytics pageview recording
   useEffect(() => {
+    console.log('env', process.env.NODE_ENV)
     if (process.env.NODE_ENV === 'development') return
 
     // Fathom.load(process.env.NEXT_PUBLIC_FATHOM_ID, {
@@ -48,12 +46,22 @@ const App = ({Component, pageProps}) => {
     const onRouteChangeComplete = () => {
       // Fathom.trackPageview({url: window.location.pathname})
     }
+    const onRouteChangeStart = () => {
+      // Fathom.trackPageview({url: window.location.pathname})
+    }
+    const onRouteChangeError = () => {
+      // Fathom.trackPageview({url: window.location.pathname})
+    }
 
     // Record a pageview when route changes
     events.on('routeChangeComplete', onRouteChangeComplete)
+    events.on('routeChangeStart', onRouteChangeStart)
+    events.on('routeChangeError', onRouteChangeError)
 
     return () => {
       events.off('routeChangeComplete', onRouteChangeComplete)
+      events.off('routeChangeStart', onRouteChangeStart)
+      events.off('routeChangeError', onRouteChangeError)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -78,17 +86,9 @@ const App = ({Component, pageProps}) => {
                 href={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${canonicalRoute}`}
               />
             </Head>
-            <VisuallyHidden
-              showOnFocus
-              as='a'
-              className={styles.skip}
-              href='#MainContent'
-            >
-              Skip to main content
-            </VisuallyHidden>
             <Navbar />
             <main className={styles.app} tabIndex={-1} id='MainContent'>
-              <AnimatePresence exitBeforeEnter>
+              <AnimatePresence mode='wait'>
                 <m.div
                   key={route}
                   className={styles.page}
