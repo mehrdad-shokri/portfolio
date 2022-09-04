@@ -24,7 +24,7 @@ async function addPost(post) {
 
   if (process.env.NODE_ENV === 'production' && frontmatter.draft) return
 
-  const path = post.replace('src/posts', '/articles').replace('.mdx', '')
+  const path = post.replace('src/posts', '/blog').replace('.mdx', '')
 
   return `  <url>
     <loc>${`${process.env.NEXT_PUBLIC_WEBSITE_URL}${path}`}</loc>

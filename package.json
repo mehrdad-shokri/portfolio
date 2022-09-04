@@ -1,10 +1,10 @@
 {
   "name": "portfolio",
   "version": "1.0.0",
-  "homepage": "https://hamishw.com",
-  "description": "Portfolio site for Hamish Williams",
+  "homepage": "https://shokri.dev",
+  "description": "Portfolio site for Mehrdad Shokri",
   "repository": "https://github.com/HamishMW/portfolio.git",
-  "author": "Hamish Williams <hello@hamishw.com>",
+  "author": "Mehrdad Shokri <code.poet95@gmail.com>",
   "devDependencies": {
     "@mapbox/rehype-prism": "^0.8.0",
     "@next/bundle-analyzer": "^12.2.5",
@@ -49,7 +49,6 @@
     "stylelint-order": "^5.0.0"
   },
   "dependencies": {
-    "fathom-client": "^3.5.0",
     "framer-motion": "^7.1.0",
     "mdx-bundler": "^9.0.1",
     "next": "^12.2.5",

@@ -9,6 +9,8 @@ import Copy from './svg/copy.svg'
 import Error from './svg/error.svg'
 import Figma from './svg/figma.svg'
 import Github from './svg/github.svg'
+import Linkedin from './svg/linkedin.svg'
+import Youtube from './svg/youtube.svg'
 import Link from './svg/link.svg'
 import Menu from './svg/menu.svg'
 import Pause from './svg/pause.svg'
@@ -27,6 +29,8 @@ export const icons = {
   figma: Figma,
   github: Github,
   link: Link,
+  youtube: Youtube,
+  linkedin: Linkedin,
   menu: Menu,
   pause: Pause,
   play: Play,

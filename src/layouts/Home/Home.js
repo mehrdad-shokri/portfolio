@@ -21,11 +21,11 @@ import styles from './Home.module.css'
 const disciplines = [
   'Creator',
   'Designer',
-  'H4|<3r',
-  'Innovator',
+  '|-|4|<3r',
+  'Cyborg',
   'Gamer',
   'Youtuber',
-  'Doer',
+  'Programmer',
 ]
 
 export const Home = () => {

@@ -129,7 +129,6 @@ export const Navbar = () => {
   const handleNavItemClick = event => {
     const hash = window.location.href.split('#')[1]
     setTarget(null)
-
     if (hash && route === '/') {
       setTarget(`#${hash}`)
       event.preventDefault()
@@ -144,14 +143,14 @@ export const Navbar = () => {
   return (
     <header className={styles.navbar} ref={headerRef}>
       <RouterLink href={route === '/' ? '/#intro' : '/'} scroll={false}>
-        <button
+        <a
           data-navbar-item
           className={styles.logo}
-          aria-label='Hamish Williams, Designer'
+          aria-label='Mehrdad Shokri, Developer'
           onClick={handleMobileNavClick}
         >
           <Monogram highlight />
-        </button>
+        </a>
       </RouterLink>
       <NavToggle
         onClick={() => dispatch({type: 'toggleMenu'})}
@@ -160,16 +159,12 @@ export const Navbar = () => {
       <nav className={styles.nav}>
         <div className={styles.navList}>
           {navLinks.map(({label, pathname}) => (
-            <RouterLink
-              href={pathname}
-              scroll={false}
-              key={label}
-              onClick={handleNavItemClick}
-            >
+            <RouterLink href={pathname} scroll={false} key={label}>
               <a
                 data-navbar-item
                 className={styles.navLink}
                 aria-current={getCurrent(pathname)}
+                onClick={handleNavItemClick}
               >
                 {label}
               </a>
@@ -186,16 +181,12 @@ export const Navbar = () => {
         {visible => (
           <nav className={styles.mobileNav} data-visible={visible}>
             {navLinks.map(({label, pathname}, index) => (
-              <RouterLink
-                href={pathname}
-                scroll={false}
-                key={label}
-                onClick={handleMobileNavClick}
-              >
+              <RouterLink href={pathname} scroll={false} key={label}>
                 <a
                   className={styles.mobileNavLink}
                   data-visible={visible}
                   aria-current={getCurrent(pathname)}
+                  onClick={handleMobileNavClick}
                   style={cssProps({
                     transitionDelay: numToMs(
                       Number(msToNum(tokens.base.durationS)) + index * 50

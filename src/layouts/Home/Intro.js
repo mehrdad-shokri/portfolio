@@ -10,7 +10,7 @@ import {AnimatePresence} from 'framer-motion'
 import {useInterval, usePrevious, useScrollToHash} from 'hooks'
 import dynamic from 'next/dynamic'
 import RouterLink from 'next/link'
-import {Fragment, useEffect, useState} from 'react'
+import {Fragment, useEffect, useMemo, useState} from 'react'
 import {cssProps} from 'utils/style'
 import styles from './Intro.module.css'
 
@@ -28,12 +28,16 @@ export function Intro({
   const theme = useTheme()
   const [disciplineIndex, setDisciplineIndex] = useState(0)
   const prevTheme = usePrevious(theme)
-  const introLabel = [
-    disciplines.slice(0, -1).join(', '),
-    disciplines.slice(-1)[0],
-  ].join(', and ')
-  const currentDiscipline = disciplines.find(
-    (item, index) => index === disciplineIndex
+  const introLabel = useMemo(
+    () =>
+      [disciplines.slice(0, -1).join(', '), disciplines.slice(-1)[0]].join(
+        ', and '
+      ),
+    [disciplines]
+  )
+  const currentDiscipline = useMemo(
+    () => disciplines.find((item, index) => index === disciplineIndex),
+    [disciplineIndex, disciplines]
   )
   const titleId = `${id}-title`
   const scrollToHash = useScrollToHash()

@@ -8,8 +8,8 @@ export const navLinks = [
     pathname: '/#details',
   },
   {
-    label: 'Articles',
-    pathname: '/articles',
+    label: 'Blog',
+    pathname: '/blog',
   },
   {
     label: 'Contact',
@@ -20,17 +20,22 @@ export const navLinks = [
 export const socialLinks = [
   {
     label: 'Twitter',
-    url: 'https://twitter.com/hamishMW',
+    url: 'https://twitter.com/mehrdad_shokri',
     icon: 'twitter',
   },
   {
-    label: 'Figma',
-    url: 'https://www.figma.com/@Hamish',
-    icon: 'figma',
+    label: 'Linkedin',
+    url: 'https://www.linkedin.com/in/mehrdad-shokri/',
+    icon: 'linkedin',
   },
   {
     label: 'Github',
-    url: 'https://github.com/HamishMW',
+    url: 'https://github.com/mehrdad-shokri',
     icon: 'github',
+  },
+  {
+    label: 'Youtube',
+    url: 'https://www.youtube.com/channel/UCTg_X3QVErq_B2MbJyZ0sUw',
+    icon: 'youtube',
   },
 ]
