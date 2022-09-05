@@ -1,7 +1,6 @@
-__  __  __
-\ \ \ \ \/
- \ \/\ \
-  \/  \/
+  /\ /\
+ /  \  \
+//  \\  \/\
 
 The humans.txt file explains the team, technology,
 and graphic assets behind this site humanstxt.org.
@@ -20,6 +19,16 @@ Blender
 
 twitter.com/hamishmw
 github.com/hamishmw
+
+_______________________________________________________________________________
+
+Developer | デベロッパー
+
+Hamish Williams
+Mehrdad Shokri
+
+
+
 
 _______________________________________________________________________________
 

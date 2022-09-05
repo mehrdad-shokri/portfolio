@@ -111,7 +111,7 @@ const dark = {
   themeId: 'dark',
   rgbBackground: '17 17 17',
   rgbBackgroundLight: '26 26 26',
-  rgbPrimary: '255 98 192',
+  rgbPrimary: '235 75 168',
   rgbAccent: '7 157 2563',
   rgbText: '255 255 255',
   rgbError: '255 55 102',

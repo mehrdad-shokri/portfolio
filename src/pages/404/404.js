@@ -47,7 +47,8 @@ export function Page404() {
                   data-visible={visible}
                   as='p'
                 >
-                  Page not found. Either it&apos;s deleted or doesn&apos;t exit.
+                  Page not found. Either it&apos;s deleted or it doesn&apos;t
+                  exist.
                 </Text>
                 <Button
                   secondary

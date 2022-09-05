@@ -36,7 +36,6 @@ const App = ({Component, pageProps}) => {
 
   // Handle analytics pageview recording
   useEffect(() => {
-    console.log('env', process.env.NODE_ENV)
     if (process.env.NODE_ENV === 'development') return
 
     // Fathom.load(process.env.NEXT_PUBLIC_FATHOM_ID, {
