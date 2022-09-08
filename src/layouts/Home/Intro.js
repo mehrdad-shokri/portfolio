@@ -47,7 +47,7 @@ export function Intro({
       const index = (disciplineIndex + 1) % disciplines.length
       setDisciplineIndex(index)
     },
-    5000,
+    4000,
     theme.themeId
   )
 

@@ -1,0 +1,46 @@
+.video {
+  width: 120%;
+
+  @media (--mediaLaptop) {
+    width: 150%;
+  }
+
+  @media (--mediaTablet) {
+    width: 100%;
+  }
+}
+
+.sidebarImages {
+  display: grid;
+  grid-template-columns: repeat(6, [col] 1fr);
+  align-items: center;
+
+  @media (--mediaTablet) {
+    margin-top: 60px;
+    padding: 0 80px;
+  }
+
+  @media (--mediaMobile) {
+    margin-top: 40px;
+    padding: 0 20px;
+  }
+}
+
+.sidebarImage {
+  &:first-child {
+    position: relative;
+    top: 0;
+    right: -10%;
+    grid-row: 1;
+    grid-column: col 1 / span 8;
+    opacity: 0.4;
+  }
+
+  &:last-child {
+    position: relative;
+    top: 0;
+    right: 25%;
+    grid-row: 1;
+    grid-column: col 1 / span 8;
+  }
+}

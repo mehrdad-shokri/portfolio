@@ -39,7 +39,7 @@ export const Uses = () => {
         />
         <ProjectHeader
           title='Uses'
-          description="A somewhat comprehensive list of tools, apps, software, hardware, and more that I use on a daily basis to get shit done. Over periods of time, people grow their own unique taste in tech and here's mine; so please, take it with a grain of salt.  And yeah, that is Johnny Mnemonic in the background."
+          description="A somewhat comprehensive list of tools, apps, software, hardware, and more that I use on a daily basis to get shit done. Over periods of time, people grow their own unique taste in tech and here's mine; so please take it with a grain of salt.  And yeah, that is Johnny Mnemonic in the background."
         />
         <ProjectSection padding='none' className={styles.section}>
           <ProjectSectionContent>
@@ -57,9 +57,23 @@ export const Uses = () => {
                     choice.
                   </ListItem>
                   <ListItem>
+                    I use both{' '}
+                    <Link href={'https://getfedora.org/'} target={'_blank'}>
+                      Fedora
+                    </Link>{' '}
+                    and{' '}
+                    <Link
+                      href={'https://www.apple.com/macos/monterey/'}
+                      target={'_blank'}
+                    >
+                      macOS
+                    </Link>{' '}
+                    on a daily basis because I love aesthetics of macOS and
+                    freedom of Linux.
+                  </ListItem>
+                  <ListItem>
                     Chrome is my main browser for both development and general
-                    use. But I make sure my front end code is running smoothly
-                    on both{' '}
+                    use. But I make sure my code is running smoothly on both{' '}
                     <Link href={'https://webkit.org/'} target={'_blank'}>
                       WebKit(Safari)
                     </Link>{' '}
@@ -71,10 +85,8 @@ export const Uses = () => {
                       Gecko(Firefox)
                     </Link>
                     . Believe me you need to check your site on iOS Safari.
-                    I&apos;ve seen surprising bugs related to CSS display
-                    behaving differently in Safari or scroll area scrolling by
-                    itself after adding an element as child so I had to reset
-                    scroll index by a React ref!
+                    I&apos;ve seen surprising bugs related to scroll areas and
+                    CSS display property behaving differently in Safari!
                   </ListItem>
                   <ListItem>
                     <Link href='https://reactjs.org/' target={'_blank'}>
@@ -97,7 +109,16 @@ export const Uses = () => {
                     >
                       <b>framework</b>
                     </Link>{' '}
-                    of choice. Since I learnt it back in{' '}
+                    of choice. I write my components in{' '}
+                    <Link
+                      href={'https://www.typescriptlang.org/'}
+                      target={'_blank'}
+                    >
+                      Typescript
+                    </Link>{' '}
+                    because of it&apos;s type(surprise) system, generics and
+                    assistance in code readability and maintenance. Since I
+                    learnt it back in{' '}
                     <Link
                       href={
                         'https://github.com/mehrdad-shokri/ashojash-web/blob/master/resources/assets/js/src/components/hoc/Panel.jsx'
@@ -106,13 +127,12 @@ export const Uses = () => {
                     >
                       2015
                     </Link>
-                    ; I&apos;ve never looked back for another front end
-                    framework because of it&apos;s reactive state model and
-                    component mental model and lately, it&apos;s hook mental
-                    model which all are really powerful. Before that I&apos;ve
-                    used KnockoutJS, BackboneJs and of course JQuery! I might
-                    give some of these new kids a try; the most prominent one
-                    under my radar;{' '}
+                    , I&apos;ve never looked back again because of it&apos;s
+                    reactive state model, components concept and lately;
+                    it&apos;s hook mental model which all are really empowering.
+                    Before React, I&apos;ve used KnockoutJS, BackboneJs and of
+                    course JQuery! I might try another framework in the future;
+                    the most prominent one under my radar;{' '}
                     <Link href={'https://svelte.dev/'} target={'_blank'}>
                       Svelte
                     </Link>
@@ -151,16 +171,16 @@ export const Uses = () => {
                   </ListItem>
                   <ListItem>
                     After using bare metal VPS servers for years, configuring
-                    Linux servers(CentOS), setting up firewalls, systemd, mysql
-                    on the server and running services on Docker and Docker
-                    Compose; I&apos;ve decided to put all my eggs on{' '}
+                    Linux servers(CentOS), setting up firewalls, systemd, redis,
+                    mysql, etc. on the server and running services inside Docker
+                    and Docker Compose; I&apos;ve decided to put all my eggs in{' '}
                     <Link href={'https://aws.amazon.com/'} target={'_blank'}>
                       AWS
                     </Link>{' '}
                     and never think of infrastructure maintenance again. (Yeah
                     shut up and take my money) I&apos;m now a servile of AWS and
                     services like Lambda, Amplify, AppSync, API Gateways,
-                    DynamoDB, Cognito, VPC, SQS, SNS, S3 and others!
+                    DynamoDB, RDS, Cognito, VPC, SQS, SNS, S3 and others!
                   </ListItem>
                   <ListItem>
                     I use PHP and Node.js for backend development. I still love{' '}
@@ -174,9 +194,12 @@ export const Uses = () => {
                       Express.js
                     </Link>
                     /<Link href={'https://docs.nestjs.com/'}>NestJS</Link>{' '}
-                    applications deployed as lambda functions + and integrated
-                    with other AWS services like lambda triggers, SQS, Amplify,
-                    DynamoDB as my backend.
+                    applications deployed as lambda functions . Also I love to
+                    learn about{' '}
+                    <Link href={'https://go.dev/'} target={'_blank'}>
+                      Go
+                    </Link>
+                    , which I think will be my next programming language.
                   </ListItem>
                   <ListItem>
                     I&apos;ve developed{' '}
@@ -201,12 +224,11 @@ export const Uses = () => {
                     but didn&apos;t like it because of many reasons (UI element
                     not looking native, let alone being 3rd party packages, not
                     having a suitable routing system as opposed to react-router
-                    on web and overall not feeling native to me overall) so gave{' '}
+                    on web and not feeling native to me overall) so gave{' '}
                     <Link href={'https://flutter.dev/'} target={'_blank'}>
                       Flutter
                     </Link>{' '}
-                    a try and fell in L❤️VE with it. I both love Dart
-                    programming language{' '}
+                    a try and fell in L❤️VE with it. I love Dart and Flutter{' '}
                     <Link
                       href={
                         'https://dart.dev/guides/language/language-tour#generics'
@@ -235,9 +257,41 @@ export const Uses = () => {
                     >
                       reasons
                     </Link>{' '}
-                    and Flutter for being platform adaptive and being able to
-                    run on almost all platforms, natively! Well, almost natively
-                    but it may seem 100% native due to Flutter&apos;s performant{' '}
+                    and also because it is{' '}
+                    <Link
+                      href={
+                        'https://docs.flutter.dev/development/ui/layout/adaptive-responsive'
+                      }
+                      target={'_blank'}
+                    >
+                      platform adaptive
+                    </Link>{' '}
+                    and able to run on{' '}
+                    <Link
+                      href={
+                        'https://docs.flutter.dev/development/tools/sdk/release-notes/supported-platforms'
+                      }
+                      target={'_blank'}
+                    >
+                      almost
+                    </Link>{' '}
+                    all the{' '}
+                    <Link
+                      href={'https://dart.dev/overview#platform'}
+                      target={'_blank'}
+                    >
+                      platforms
+                    </Link>
+                    . And of course it is performant and 60fps because of
+                    Flutter&apos;s{' '}
+                    <Link
+                      href={
+                        'https://github.com/flutter/engine/tree/main/impeller'
+                      }
+                      target={'_blank'}
+                    >
+                      performant
+                    </Link>{' '}
                     <Link
                       href={
                         'https://docs.flutter.dev/resources/architectural-overview'
@@ -274,19 +328,26 @@ export const Uses = () => {
                     >
                       React components and hooks
                     </Link>{' '}
-                    (e.g., useFrame) creates a powerful foundation for 3D scene
-                    rendering. (Think metaverse)
+                    (e.g. useFrame,{' '}
+                    <Link
+                      href={'https://github.com/pmndrs/use-cannon'}
+                      target={'_blank'}
+                    >
+                      useCanon
+                    </Link>
+                    ) creates a powerful foundation for 3D scene rendering.
+                    (Think metaverse)
                   </ListItem>
                   <ListItem>
-                    For building UI components in isolation I use{' '}
+                    I use{' '}
                     <Link href='https://storybook.js.org/' target={'_blank'}>
                       Storybook
-                    </Link>
-                    . For e2e testing I use{' '}
+                    </Link>{' '}
+                    for building components in isolation;{' '}
                     <Link href='https://www.cypress.io/' target={'_blank'}>
                       Cypress
-                    </Link>
-                    . For unit and integration tests I use{' '}
+                    </Link>{' '}
+                    for e2e testing;{' '}
                     <Link
                       href={'https://testing-library.com/'}
                       target={'_blank'}
@@ -296,13 +357,13 @@ export const Uses = () => {
                     and{' '}
                     <Link href={'https://jestjs.io/'} target={'_blank'}>
                       Jest
-                    </Link>
-                    .
+                    </Link>{' '}
+                    for unit and integration tests.
                   </ListItem>
                   <ListItem>
                     For CSS I’ve used a myriad pre-processors (Sass, Less,{' '}
                     <Link href='https://postcss.org/'>PostCSS</Link>), utilities
-                    (tailwind, bootstrap, classnames,...), component libraries (
+                    (tailwind, bootstrap,...), component libraries (
                     <Link href={'https://mui.com/'} target='_blank'>
                       material ui
                     </Link>
@@ -311,9 +372,7 @@ export const Uses = () => {
                       chakra-ui
                     </Link>
                     , <Link href={'https://semantic-ui.com/'}>semantic ui</Link>
-                    ), <span style={{whiteSpace: 'nowrap'}}>
-                      css-in-js
-                    </span>{' '}
+                    ) and <span style={{whiteSpace: 'nowrap'}}>css-in-js</span>{' '}
                     solutions (
                     <Link href={'https://cssinjs.org/'} target={'_blank'}>
                       JSS
@@ -329,15 +388,8 @@ export const Uses = () => {
                     >
                       styled components
                     </Link>
-                    ), etc. These days I like to use styled components wherever
+                    ) These days I like to use styled components wherever
                     possible and tailwind for a quick up and running.
-                  </ListItem>
-                  <ListItem>
-                    I get designs in{' '}
-                    <Link href={'https://figma.com'} target={'_blank'}>
-                      Figma
-                    </Link>{' '}
-                    and that&apos;s my preferred vector/prototyping editor.
                   </ListItem>
                 </List>
               </ProjectSectionText>
@@ -351,25 +403,23 @@ export const Uses = () => {
               <ProjectSectionText as='div'>
                 <List>
                   <ListItem>
-                    <Link href='https://www.figma.com'>Figma</Link> is my
-                    primary tool for UI design these days. Made the switch from
-                    Sketch in 2020 and haven’t looked back. I’ve also created{' '}
-                    <Link href='https://www.figma.com/@hamish'>
-                      a few plugins
+                    I get designs in{' '}
+                    <Link href={'https://figma.com'} target={'_blank'}>
+                      Figma
                     </Link>{' '}
-                    that you can install.
+                    and that&apos;s my preferred vector/prototyping tool.
                   </ListItem>
                   <ListItem>
-                    Any motion graphics I create are created in Adobe After
-                    Effects. So far I haven’t found a non-Adobe product that’s
-                    as good. If anyone has suggestions please{' '}
-                    <Link href='/contact'>message me</Link>.
-                  </ListItem>
-                  <ListItem>
-                    For any 3D models I use{' '}
-                    <Link href='https://www.blender.org/'>Blender</Link>. Since
-                    2.8 it’s become way simpler to use and in a lot of ways
-                    better than expensive paid tools like 3DS Max or Maya.
+                    {' '}
+                    For animating stuff on front end, I use{' '}
+                    <Link href={'https://framer.com/motion'} target={'_blank'}>
+                      Framer motion
+                    </Link>{' '}
+                    and{' '}
+                    <Link href={'https://lottiefiles.com/'} target={'_blank'}>
+                      LottieFiles
+                    </Link>
+                    .
                   </ListItem>
                 </List>
               </ProjectSectionText>
@@ -383,40 +433,61 @@ export const Uses = () => {
               <Table>
                 <TableBody>
                   <TableRow>
-                    <TableHeadCell>CPU</TableHeadCell>
-                    <TableCell>AMD Ryzen 5800x</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableHeadCell>GPU</TableHeadCell>
-                    <TableCell>MSI Gaming X Trio RTX 3080</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableHeadCell>Memory</TableHeadCell>
-                    <TableCell>GSkill 32GB DDR4 3600mhz CAS 18</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableHeadCell>Motherboard</TableHeadCell>
-                    <TableCell>MSI B550 Tomahawk</TableCell>
-                  </TableRow>
-                  <TableRow>
                     <TableHeadCell>Monitor</TableHeadCell>
-                    <TableCell>1440p IPS 144hz LG 27GL850</TableCell>
+                    <TableCell>
+                      2 *{' '}
+                      <Link
+                        href={
+                          'https://www.lg.com/us/monitors/lg-22MP58VQ-P-led-monitor'
+                        }
+                        target={'_blank'}
+                      >
+                        Full HD IPS LED Monitor 60hz LG 22MP58VQ
+                      </Link>
+                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableHeadCell>Keyboard</TableHeadCell>
-                    <TableCell>Logitech MX Keys</TableCell>
+                    <TableCell>
+                      <Link
+                        href={
+                          'https://www.amazon.com/Mechanical-Keyboard-Keyboard-Switches-N-Rollover/dp/B08DVZFW91'
+                        }
+                        target={'_blank'}
+                      >
+                        Philips keyboard
+                      </Link>
+                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableHeadCell>Mouse</TableHeadCell>
-                    <TableCell>Logitech G403</TableCell>
+                    <TableCell>
+                      <Link
+                        href={
+                          'https://www.apple.com/shop/product/MMMQ3AM/A/magic-mouse-black-multi-touch-surface'
+                        }
+                        target={'_blank'}
+                      >
+                        Apple Magic Mouse
+                      </Link>
+                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableHeadCell>Laptop</TableHeadCell>
-                    <TableCell>Macbook Pro 14″ (2022 M1 Max)</TableCell>
+                    <TableCell>Macbook Pro 13″ (2020 M1)</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableHeadCell>Headphones</TableHeadCell>
-                    <TableCell>Audio Technica ATH-M50x/Apple Airpods</TableCell>
+                    <TableCell>
+                      <Link
+                        href={
+                          'https://electronics.sony.com/audio/headphones/headband/p/wh1000xm4-b'
+                        }
+                        target={'_blank'}
+                      >
+                        Sony WH-1000XM4
+                      </Link>
+                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableHeadCell>Microphone</TableHeadCell>

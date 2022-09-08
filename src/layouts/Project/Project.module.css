@@ -319,6 +319,8 @@
 }
 
 .sectionText {
+  white-space: break-spaces;
+  hyphens: none !important;
   & + a,
   & + & {
     margin-top: var(--spaceL);

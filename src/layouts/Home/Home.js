@@ -7,9 +7,9 @@ import gamestackTexture from 'assets/gamestack-login.jpg'
 import sliceTextureLarge from 'assets/slice-app-large.jpg'
 import sliceTexturePlaceholder from 'assets/slice-app-placeholder.jpg'
 import sliceTexture from 'assets/slice-app.jpg'
-import sprTextureLarge from 'assets/spr-lesson-builder-dark-large.jpg'
-import sprTexturePlaceholder from 'assets/spr-lesson-builder-dark-placeholder.jpg'
-import sprTexture from 'assets/spr-lesson-builder-dark.jpg'
+import snappfoodTextureLarge from 'assets/snappfood-large.png'
+import snappfoodTexturePlaceholder from 'assets/snappfood-placeholder.png'
+import snappfoodTexture from 'assets/snappfood.png'
 import {Footer} from 'components/Footer'
 import {Meta} from 'components/Meta'
 import {Intro} from 'layouts/Home/Intro'
@@ -19,8 +19,8 @@ import {useEffect, useRef, useState} from 'react'
 import styles from './Home.module.css'
 
 const disciplines = [
-  'Creator',
   'Designer',
+  'Creator',
   '|-|4|<3r',
   'Cyborg',
   'Gamer',
@@ -78,9 +78,9 @@ export const Home = () => {
   return (
     <div className={styles.home}>
       <Meta
-        title='Designer + Developer'
-        description='Design portfolio of Mehrdad Shokri — a software developer working on web & mobile
-          apps with a focus on performance, user experience, and accessibility.'
+        title='Developer + Designer'
+        description='Design portfolio of Mehrdad Shokri — a software developer working on mobile and web
+          apps.'
       />
       <Intro
         id='intro'
@@ -93,17 +93,17 @@ export const Home = () => {
         sectionRef={projectOne}
         visible={visibleSections.includes(projectOne.current)}
         index={1}
-        title='Developing food ordering'
-        description='Designing a platform to help educators build better online courseware'
+        title="Iran's leading online food ordering service"
+        description='Developing mobile app and website of Snappfood'
         buttonText='View project'
-        buttonLink='/projects/smart-sparrow'
+        buttonLink='/projects/snappfood'
         model={{
           type: 'laptop',
-          alt: 'Smart Sparrow lesson builder',
+          alt: 'Snappfood, food ordering service',
           textures: [
             {
-              srcSet: [sprTexture, sprTextureLarge],
-              placeholder: sprTexturePlaceholder,
+              srcSet: [snappfoodTexture, snappfoodTextureLarge],
+              placeholder: snappfoodTexturePlaceholder,
             },
           ],
         }}

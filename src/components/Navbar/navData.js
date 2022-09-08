@@ -34,6 +34,11 @@ export const socialLinks = [
     icon: 'github',
   },
   {
+    label: 'Stackoverflow',
+    url: 'https://stackoverflow.com/users/5277245/mehrdad-shokri',
+    icon: 'stackoverflow',
+  },
+  {
     label: 'Youtube',
     url: 'https://www.youtube.com/channel/UCTg_X3QVErq_B2MbJyZ0sUw',
     icon: 'youtube',

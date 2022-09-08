@@ -17,6 +17,7 @@ import Pause from './svg/pause.svg'
 import Play from './svg/play.svg'
 import Send from './svg/send.svg'
 import Twitter from './svg/twitter.svg'
+import Stackoverflow from './svg/stackoverflow.svg'
 
 export const icons = {
   arrowLeft: ArrowLeft,
@@ -30,6 +31,7 @@ export const icons = {
   github: Github,
   link: Link,
   youtube: Youtube,
+  stackoverflow: Stackoverflow,
   linkedin: Linkedin,
   menu: Menu,
   pause: Pause,

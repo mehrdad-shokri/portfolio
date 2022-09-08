@@ -26,12 +26,12 @@ const ProfileText = ({visible, titleId}) => (
       <DecoderText text='Hi there' start={visible} delay={500} />
     </Heading>
     <Text className={styles.description} data-visible={visible} size='l' as='p'>
-      I&apos;m Mehrdad, currently I live in Tehran working as Frontend developer
-      at <Link href='https://snappfood.ir/'>Snappfood</Link>. I&apos;ve always
-      been curious about figuring out how things work; let that be physics of
-      this world, mathematics or the other framework&apos;s API. And I guess
-      that&apos;s what drives me. If you’re interested in the tools and software
-      I use check my <Link href='/uses'>uses page</Link>.
+      I&apos;m Mehrdad, currently I live in Tehran, Iran working as Frontend
+      developer at <Link href='https://snappfood.ir/'>Snappfood</Link>.
+      I&apos;ve always been curious about figuring out how things work; let that
+      be physics of this world, mathematics or the other framework&apos;s API.
+      And I guess that&apos;s what drives me. If you’re interested in the tools
+      and software I use check my <Link href='/uses'>uses page</Link>.
     </Text>
     <Text className={styles.description} data-visible={visible} size='l' as='p'>
       In my spare time I like to watch movies, play video games, and{' '}
@@ -94,9 +94,10 @@ export const Profile = ({id, visible, sectionRef}) => {
                   reveal
                   delay={100}
                   placeholder={profileImgPlaceholder}
+                  src={profileImg}
                   srcSet={[profileImg, profileImgLarge]}
                   sizes={`(max-width: ${media.mobile}px) 100vw, 480px`}
-                  alt='Me standing in front of the Torii on Miyajima, an island off the coast of Hiroshima in Japan'
+                  alt='Me beside Baranduz river located at Urmia, Iran. My motherland.'
                 />
                 <svg
                   aria-hidden='true'
