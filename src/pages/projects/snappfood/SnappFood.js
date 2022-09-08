@@ -23,11 +23,9 @@ import videoSnappfoodTestLarge from 'assets/snappfood-tests.mp4'
 import videoSnappfoodTestPlaceholder from 'assets/spr-motion-placeholder.jpg'
 import videoSnappfoodTest from 'assets/snappfood-tests.mp4'
 import imageSnappfoodHomePageLarge from 'assets/snappfood-home-page.png'
-import imageSprSchema1DarkPlaceholder from 'assets/spr-schema-1-dark-placeholder.png'
-import imageSnappfoodHomePage from 'assets/snappfood-home-page.png'
+import imageSnappfoodHomePagePlaceholder from 'assets/spr-schema-1-dark-placeholder.png'
 import imageSnappfoodWelcomePageLarge from 'assets/snappfood-welcome-page.png'
-import imageSprSchema2DarkPlaceholder from 'assets/spr-schema-2-dark-placeholder.png'
-import imageSnappfoodWelcomePage from 'assets/snappfood-welcome-page.png'
+import imageSnappfoodWelcomePlaceholder from 'assets/spr-schema-2-dark-placeholder.png'
 import imageSnappfoodPerformanceDarkLarge from 'assets/snappfood-performance-dark-large.png'
 import imageSnappfoodPerformanceDarkPlaceholder from 'assets/spr-storyboarder-dark-placeholder.png'
 import imageSnappfoodPerformanceDark from 'assets/snappfood-performance-dark.png'
@@ -318,26 +316,24 @@ export const SnappFood = () => {
                   Developing Pixel Perfect UI
                 </ProjectSectionHeading>
                 <ProjectSectionText>
-                  Developing new features and implementing new designs for
-                  existing features was part of my daily routine at Snappfood.
+                  Developing new features that would help customer retention and
+                  conversion rates and implementing existing features redesign
+                  was part of my daily routine at Snappfood.
                 </ProjectSectionText>
               </ProjectTextRow>
             </ProjectSectionContent>
             <div className={styles.sidebarImages}>
               <Image
                 className={styles.sidebarImage}
-                srcSet={[
-                  imageSnappfoodWelcomePage,
-                  imageSnappfoodWelcomePageLarge,
-                ]}
-                placeholder={imageSprSchema2DarkPlaceholder}
+                src={imageSnappfoodWelcomePageLarge}
+                placeholder={imageSnappfoodWelcomePlaceholder}
                 alt='Snappfood welcome page'
                 sizes={`(max-width: ${media.mobile}px) 50vw, 25vw`}
               />
               <Image
                 className={styles.sidebarImage}
-                srcSet={[imageSnappfoodHomePage, imageSnappfoodHomePageLarge]}
-                placeholder={imageSprSchema1DarkPlaceholder}
+                src={imageSnappfoodHomePageLarge}
+                placeholder={imageSnappfoodHomePagePlaceholder}
                 alt='Snappfood home page'
                 sizes={`(max-width: ${media.mobile}px) 50vw, 25vw`}
               />
