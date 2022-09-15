@@ -43,8 +43,6 @@ export const Post = ({
     scrollToHash(event.currentTarget.dataset.href)
   }
 
-  console.log(`banner ${banner} ${banner.split('.')[0]}-placeholder.jpg `)
-
   return (
     <article className={styles.post}>
       <Meta title={title} prefix='' description={abstract} ogImage={ogImage} />
