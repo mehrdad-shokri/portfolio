@@ -3,8 +3,7 @@
   "description": "Serverless functions for shokri.dev using AWS lambda",
   "scripts": {
     "deploy": "serverless deploy --stage production",
-    "deploy:api": "serverless deploy function --function api --stage production",
-    "deploy:headers": "serverless deploy function --function headers --stage production"
+    "deploy:api": "serverless deploy function --function api --stage production"
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.145.0",
