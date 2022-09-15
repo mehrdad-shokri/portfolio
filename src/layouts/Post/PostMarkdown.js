@@ -7,6 +7,7 @@ import {Text} from 'components/Text'
 import {Children} from 'react'
 import Img from 'next/image'
 import styles from './PostMarkdown.module.css'
+import {Image} from 'components/Image'
 
 const PostHeadingLink = ({id}) => {
   return (
@@ -118,6 +119,20 @@ const PostImage = ({src, alt, width, height, ...rest}) => {
     />
   )
 }
+const Video = ({src, alt, width, height, placeholder, ...rest}) => {
+  return (
+    <Image
+      className={styles.image}
+      src={{src}}
+      placeholder={{src: placeholder}}
+      alt={alt}
+      width={width}
+      height={height}
+      layout={'fill'}
+      {...rest}
+    />
+  )
+}
 
 const Embed = ({src, title}) => {
   return (
@@ -144,4 +159,5 @@ export const postMarkdown = {
   img: PostImage,
   strong: PostStrong,
   Embed,
+  Video: Video,
 }

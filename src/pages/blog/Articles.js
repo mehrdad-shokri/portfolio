@@ -51,7 +51,7 @@ const ArticlesPost = ({
       }
     >
       {featured && (
-        <Text className={styles.postLabel} size='s'>
+        <Text className={styles.postLabel} size='s' weight='bold'>
           Featured
         </Text>
       )}
@@ -98,7 +98,7 @@ const ArticlesPost = ({
       </RouterLink>
       {featured && (
         <Text aria-hidden className={styles.postTag} size='s'>
-          477
+          021
         </Text>
       )}
     </article>
@@ -178,10 +178,7 @@ export const Articles = ({posts, featured}) => {
 
   return (
     <article className={styles.articles}>
-      <Meta
-        title='Blog'
-        description='My writings about tech and anything in between'
-      />
+      <Meta title='Blog' description='My words on tech and programming' />
       <Section className={styles.content}>
         {!isSingleColumn && (
           <div className={styles.grid}>

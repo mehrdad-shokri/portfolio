@@ -59,12 +59,12 @@
 
   @media (--singleColumnWidth) {
     padding-top: calc(var(--spaceM) - var(--spaceXS));
-    padding-bottom: 0;
+    padding-bottom: var(--spaceS);
   }
 
   @media (--mediaMobileLS) {
     padding-top: 0;
-    padding-bottom: 0;
+    padding-bottom: var(--spaceS);
   }
 }
 

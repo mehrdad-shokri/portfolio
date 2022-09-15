@@ -1,0 +1,174 @@
+---
+title: Weather App with Flutter
+abstract: Lets create a weather app with RxDart, Streams and Flutter.
+date: '2022-09-08'
+banner: /static/flutter-weather-app.jpg
+featured: true
+---
+I created a [Weather](https://github.com/mehrdad-shokri/feather) app with Flutter, RxDart and Streams as my first video on [Youtube](https://www.youtube.com/watch?v=4olwp3P-Tc8&t=43s&ab_channel=ShokriDev) because I'm enthusiastic about Rx and Streams as apposed to Redux or any other imperative way of handling data.
+
+## Streams
+Streams are one of the [core](https://dart.dev/tutorials/language/streams) concepts of Dart and I think is a pretty powerful mindset. If you've worked with generator functions in Dart or Javascript, then Streams is no different from generator functions. Emitting values to ``Streams`` is equivalent of ``yield``ing in generator functions.
+Instead of RxDart introducing it's own API, it uses Dart Streams which is great because RX an Streams get integrated seamlessly. ``Observable`` is equivalent to ``Streams``, Subscriber(listener) is equivalent to ``Observer`` and ``StreamController`` is equivalent to ``Subject``!
+But we still have Subjects like ``BehaviourSubject`` or ``ReplaySubject`` cause I think they are more capable of mere ``StreamControllers``.
+Streams combined with [RxDart](https://pub.dev/packages/rxdart) creates a powerful toolkit for all your asynchronous and event based workflows.
+You can achieve pretty complicated results with ease in RX for workflows that are asynchronous/event based.
+Take a look at this code:
+```dart
+import 'package:rxdart/rxdart.dart';
+
+void main() {
+  const konamiKeyCodes = <int>[
+    KeyCode.UP,
+    KeyCode.UP,
+    KeyCode.DOWN,
+    KeyCode.DOWN,
+    KeyCode.LEFT,
+    KeyCode.RIGHT,
+    KeyCode.LEFT,
+    KeyCode.RIGHT,
+    KeyCode.B,
+    KeyCode.A,
+  ];
+
+  final result = querySelector('#result')!;
+
+  document.onKeyUp
+      .map((event) => event.keyCode)
+      .bufferCount(10, 1) // An extension method provided by rxdart
+      .where((lastTenKeyCodes) => const IterableEquality<int>().equals(lastTenKeyCodes, konamiKeyCodes))
+      .listen((_) => result.innerHtml = 'KONAMI!');
+}
+```
+It's a simple Observable created from ``keyUp`` event on ``document``. But before subscribing to ``keyUp`` events, we do a few transformations. First we get ``keyCode`` with ``map`` function.
+Then by the ``bufferCount`` method, we buffer emitted events by the length of 10. Since ``where`` method is accepting array of ``keyCode`` with length of 10, we simple need to
+check if array sequence is equivalent to KONAMI's sequence(quite easy right?) and listen to that Stream. Let that be handled with any other approach(Redux, global states, OOP) you would need to track
+all those things imperatively. I think the code above is pretty clean and self explanatory. I mean in 5 lines of code a sophisticated event based logic is implemented; and this is just a simple
+example of what's possible with RX. You can easily handle more complex asynchronous/event based scenarios with RX and Streams(which is majority of the case in client side applications in my opinion)
+# Blocs
+Blocs(business logic components) is a pattern introduced by Google to separate business logic from presentation layer. That may sound similar to MVC or MVVM but the main difference is
+separation of concerns in terms of use cases with respect to business components. For a weather app for example, I created ``GeoBloc``(geocoding, reverse geocoding), ``WeatherBloc``(retrieving forecasts), ``PositionBloc``(GPS related functionalities) which encapsulates a part of the business logic.
+Each Bloc has a set of ``Subject``s which events gets emitted into them by declared functions and each part of the UI ``listens`` to an specific ``Stream``s of the Bloc and reacts to it accordingly. Take this ``PositionBloc``:
+```dart
+import 'package:client/rx/blocs/rx_bloc.dart';
+import 'package:client/rx/services/position_service.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:rxdart/rxdart.dart';
+
+class PositionBloc extends RxBloc {
+  final _lastPosition = BehaviorSubject<Position>();
+  final _locationPermission = BehaviorSubject<LocationPermission>();
+  final _requestingCurrentLocation = BehaviorSubject<bool>();
+  final _requestingLocationPermission = BehaviorSubject<bool>();
+  final PositionService _positionService;
+
+  Stream<Position> get position => _lastPosition.stream;
+
+  Stream<bool> get requestingLocationPermission =>
+      _requestingLocationPermission.stream;
+
+  Stream<bool> get requestingCurrentLocation =>
+      _requestingCurrentLocation.stream;
+
+  Stream<LocationPermission> get locationPermission =>
+      _locationPermission.stream;
+
+  PositionBloc(this._positionService) {
+    checkPermission();
+  }
+
+  void getCurrentPosition(
+      {required Function onPermissionDenied,
+      required Function onPermissionDeniedForever,
+      required Function(Position) onPositionReceived,
+      required Function onError}) {
+    _requestingCurrentLocation.add(false);
+    _requestingLocationPermission.add(true);
+    addFutureSubscription(_positionService.requestPermission(),
+        (LocationPermission permission) {
+      _requestingLocationPermission.add(false);
+      if (permission == LocationPermission.deniedForever) {
+        onPermissionDeniedForever();
+        return;
+      } else if (permission == LocationPermission.denied ||
+          permission == LocationPermission.unableToDetermine) {
+        onPermissionDenied();
+        return;
+      } else if (permission == LocationPermission.always ||
+          permission == LocationPermission.whileInUse) {
+        _requestingCurrentLocation.add(true);
+        addFutureSubscription(_positionService.getCurrentPosition(),
+            (Position position) {
+          _requestingCurrentLocation.add(false);
+          onPositionReceived(position);
+        }, (e) {
+          _requestingCurrentLocation.add(false);
+          onError(e);
+        });
+      }
+    }, (e) {
+      _requestingLocationPermission.add(false);
+      onError(e);
+    });
+  }
+
+  void checkPermission() {
+    addFutureSubscription(_positionService.checkPermission(),
+        (LocationPermission permission) => _locationPermission.add(permission));
+  }
+
+  void openAppSettings() {
+    _positionService.openAppSettings();
+  }
+}
+```
+it exposes a set of ``Streams``(``currentPosition``, ``requestingLocationPermission``,``requestingCurrentLocation``, ``locationPermission`` ). ``GPS`` permission status is loaded on Bloc's initialization but other ``Streams`` would get updated by function calls.
+This Bloc gets used on several pages separately independently, so I guess we are following software architecture best practices like DRY, dependency inversion, open-closed principle, single responsibility pattern, etc.
+
+## Services
+But beyond business logics, there are long running asynchronously started application services like databases or SharedPreferences, which presumably need to be started once at application startup and disposed at application tear down. These services get used by Blocs to
+accomplish there tasks so they are initialized and booted up independent of Blocs life cycle. These services get registered at ``ServiceProvider`` which is a singleton initialized on application startup and ``awaited`` for all services to boot up before application is ready.
+This is the ``feather_app`` which is the root ``Widget`` passed to ``runApp`` in ``main.dart``:
+```dart
+
+  @override
+  void initState() {
+    super.initState();
+    appInitFuture = bootstrapApp();
+  }
+
+  Future<void> bootstrapApp() async {
+    serviceProvider = ServiceProvider();
+    try {
+      await serviceProvider.onCreate();
+      serviceProvider.setThemeChangeListener((event) {
+        setState(() {
+          theme = event;
+        });
+      });
+      serviceProvider.setLocaleChangeListener((event) {
+        setState(() {
+          locale = event;
+        });
+      });
+      settingsBloc = SettingsBloc(serviceProvider.sharedPrefsService);
+      setState(() {
+        theme = settingsBloc.currentTheme();
+        locale = settingsBloc.currentLocale();
+      });
+    } catch (e) {
+      //  TODO: Record crash in crashlytics
+    }
+  }
+
+```
+``bootstrapApp`` is assigned to ``appInitFuture`` and in the ``build`` method a ``FutureBuilder`` would return application main page or a loading page depending on ``appInitFuture``'s state.
+
+## Testing
+Flutter supports e2e testing natively also it comes with a test runner and testing library to write your unit tests. I've written [tests](https://github.com/mehrdad-shokri/feather/tree/master/test) for API adapter and API layer to make sure data gets constructed correctly. We can expand testing
+by adding tests to Widgets and Blocs.
+
+## API provider
+I'v used [Open Weather](https://openweathermap.org/) as my API for now. But API layer is implemented with abstractions in mind to make API sources interchangeable easily.
+
+## Conclusions

@@ -37,6 +37,6 @@ module.exports = {
     return config
   },
   images: {
-    loader: 'default',
+    unoptimized: true,
   },
 }

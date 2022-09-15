@@ -414,20 +414,14 @@ const Device = ({
       const {texture, position, url} = model
       let loadFullResTexture
       let playAnimation
-
-      const [placeholder, gltf] = await Promise.all([
-        await textureLoader.loadAsync(texture.placeholder.src),
-        await modelLoader.loadAsync(url),
-      ])
-
+      const placeholder = await textureLoader.loadAsync(texture.placeholder.src)
+      const gltf = await modelLoader.loadAsync(url)
       modelGroup.current.add(gltf.scene)
-
       gltf.scene.traverse(async node => {
         if (node.material) {
           node.material.color = new Color(0x161d25)
           node.material.color.convertSRGBToLinear()
         }
-
         if (node.name === MeshType.Screen) {
           // Create a copy of the screen mesh so we can fade it out
           // over the full resolution screen texture
@@ -453,13 +447,11 @@ const Device = ({
           }
         }
       })
-
       const targetPosition = new Vector3(position.x, position.y, position.z)
 
       if (reduceMotion) {
         gltf.scene.position.set(...targetPosition.toArray())
       }
-
       // Simple slide up animation
       if (model.animation === ModelAnimationType.SpringUp) {
         playAnimation = () => {

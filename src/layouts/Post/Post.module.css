@@ -161,6 +161,11 @@
 .bannerImageBlur {
   position: absolute;
   inset: 0;
+  height: 100%;
+}
+
+.bannerImageElement {
+  height: 100%;
 }
 
 .bannerImageBlur {

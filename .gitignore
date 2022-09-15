@@ -67,3 +67,4 @@ public/og
 .env
 .idea
 .vscode/*
+*/**/.DS_STORE

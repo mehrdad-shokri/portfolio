@@ -19,7 +19,7 @@
   position: absolute;
   top: 0.6em;
   padding: var(--spaceS);
-  color: rgb(var(--rgbTextLight));
+  color: rgb(var(--rgbText));
   transform: translate(-100%, -50%);
   opacity: 0;
   transition: opacity var(--durationS) ease;

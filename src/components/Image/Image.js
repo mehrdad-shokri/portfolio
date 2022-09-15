@@ -216,5 +216,8 @@ const ImageElements = ({
 }
 
 function getIsVideo(src) {
-  return typeof src.src === 'string' && src.src.endsWith('.mp4')
+  return (
+    typeof src.src === 'string' &&
+    (src.src.endsWith('.mp4') || src.src.endsWith('.mov'))
+  )
 }

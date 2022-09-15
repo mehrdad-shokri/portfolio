@@ -180,7 +180,7 @@ export const Uses = () => {
                     and never think of infrastructure maintenance again. (Yeah
                     shut up and take my money) I&apos;m now a servile of AWS and
                     services like Lambda, Amplify, AppSync, API Gateways,
-                    DynamoDB, RDS, Cognito, VPC, SQS, SNS, S3 and others!
+                    DynamoDB, RDS, Cognito, VPC, SQS, SNS, SES, S3 and others!
                   </ListItem>
                   <ListItem>
                     I use PHP and Node.js for backend development. I still love{' '}
@@ -340,14 +340,10 @@ export const Uses = () => {
                   </ListItem>
                   <ListItem>
                     I use{' '}
-                    <Link href='https://storybook.js.org/' target={'_blank'}>
-                      Storybook
-                    </Link>{' '}
-                    for building components in isolation;{' '}
                     <Link href='https://www.cypress.io/' target={'_blank'}>
                       Cypress
                     </Link>{' '}
-                    for e2e testing;{' '}
+                    for e2e testing,{' '}
                     <Link
                       href={'https://testing-library.com/'}
                       target={'_blank'}
@@ -362,8 +358,9 @@ export const Uses = () => {
                   </ListItem>
                   <ListItem>
                     For CSS I’ve used a myriad pre-processors (Sass, Less,{' '}
-                    <Link href='https://postcss.org/'>PostCSS</Link>), utilities
-                    (tailwind, bootstrap,...), component libraries (
+                    <Link href='https://postcss.org/'>PostCSS</Link>, CSS
+                    modules, etc.), utilities (tailwind, bootstrap,...),
+                    component libraries (
                     <Link href={'https://mui.com/'} target='_blank'>
                       material ui
                     </Link>
@@ -407,10 +404,16 @@ export const Uses = () => {
                     <Link href={'https://figma.com'} target={'_blank'}>
                       Figma
                     </Link>{' '}
-                    and that&apos;s my preferred vector/prototyping tool.
+                    and that&apos;s my preferred vector / prototyping software.
                   </ListItem>
                   <ListItem>
-                    {' '}
+                    I use{' '}
+                    <Link href='https://storybook.js.org/' target={'_blank'}>
+                      Storybook
+                    </Link>{' '}
+                    for building components in isolation.
+                  </ListItem>
+                  <ListItem>
                     For animating stuff on front end, I use{' '}
                     <Link href={'https://framer.com/motion'} target={'_blank'}>
                       Framer motion
