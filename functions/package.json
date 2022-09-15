@@ -19,7 +19,7 @@
     "eslint-plugin-promise": "^6.0.0"
   },
   "engines": {
-    "node": "14.19.1"
+    "node": "^14.0.0"
   },
   "private": true
 }
