@@ -16,7 +16,6 @@
     "@storybook/manager-webpack5": "^6.5.10",
     "@storybook/react": "^6.5.10",
     "@svgr/webpack": "^6.3.1",
-    "chrome-aws-lambda": "^10.1.0",
     "esbuild": "^0.15.2",
     "eslint": "8.22",
     "eslint-config-next": "^12.2.5",
@@ -34,7 +33,6 @@
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^7.7.2",
     "prettier": "^2.7.1",
-    "puppeteer-core": "^10.1.0",
     "reading-time": "^1.5.0",
     "rehype-img-size": "^1.0.1",
     "rehype-preset-minify": "^6.0.0",
@@ -53,6 +51,7 @@
     "framer-motion": "^7.3.5",
     "mdx-bundler": "^9.0.1",
     "next": "12.3.0",
+    "puppeteer": "^16.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "three": "^0.144.0",
@@ -88,6 +87,6 @@
   },
   "engines": {
     "npm": ">=8.6.0",
-    "node": "^14.0.0"
+    "node": "^16.0.0"
   }
 }
