@@ -1,3 +1,4 @@
+import chromium from 'chrome-aws-lambda'
 const puppeteer = require('puppeteer')
 const path = require('path')
 const fs = require('fs')
@@ -23,7 +24,11 @@ export async function generateOgImage(props) {
     // file does not exists, so we create it
   }
 
-  const browser = await puppeteer.launch({headless: true})
+  const executablePath = await chromium.executablePath
+  const browser = await puppeteer.launch({
+    headless: true,
+    executablePath,
+  })
   const page = await browser.newPage()
   await page.setViewport({width: 1200, height: 630})
   await page.goto(url, {waitUntil: 'networkidle0'})

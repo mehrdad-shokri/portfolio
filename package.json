@@ -49,6 +49,7 @@
     "stylelint-order": "^5.0.0"
   },
   "dependencies": {
+    "chrome-aws-lambda": "^10.1.0",
     "framer-motion": "^7.3.5",
     "mdx-bundler": "^9.0.1",
     "next": "12.3.0",
@@ -87,6 +88,6 @@
   },
   "engines": {
     "npm": ">=8.6.0",
-    "node": "^14"
+    "node": ">=16.0.0"
   }
 }
