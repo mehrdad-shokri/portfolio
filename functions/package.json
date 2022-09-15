@@ -3,6 +3,7 @@
   "description": "Serverless functions for shokri.dev using AWS lambda",
   "scripts": {
     "deploy": "serverless deploy --stage production",
+    "deploy:dev": "serverless deploy --stage dev",
     "deploy:api": "serverless deploy function --function api --stage production"
   },
   "dependencies": {
