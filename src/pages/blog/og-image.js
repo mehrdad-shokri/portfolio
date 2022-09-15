@@ -1,5 +1,4 @@
 import chromium from 'chrome-aws-lambda'
-const puppeteer = require('puppeteer')
 const path = require('path')
 const fs = require('fs')
 const {createHash} = require('crypto')
@@ -24,10 +23,11 @@ export async function generateOgImage(props) {
     // file does not exists, so we create it
   }
 
-  const executablePath = await chromium.executablePath
-  const browser = await puppeteer.launch({
+  const browser = await chromium.puppeteer.launch({
     headless: true,
-    executablePath,
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath,
+    ignoreHTTPSErrorstrue: true,
   })
 
   const page = await browser.newPage()
