@@ -11,7 +11,7 @@ const window = new JSDOM('').window
 const DOMPurify = createDOMPurify(window)
 
 const ses = new aws.SES({
-  region: 'us-east-1',
+  region: 'eu-central-1',
 })
 
 const ORIGINS = ['https://shokri.dev']
