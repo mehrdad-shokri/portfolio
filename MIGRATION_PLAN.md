@@ -1,13 +1,36 @@
-# Migration Plan: TypeScript + Next.js 15 Upgrade
+# Migration Plan: TypeScript + Next.js 15 + Bun Upgrade
 
 ## Overview
 
-Two parallel tracks:
-1. **TypeScript migration** — convert all 120 JS files to `.ts`/`.tsx`
-2. **Dependency upgrade** — Next.js 12 → 15, and all other packages to current versions
+Three tracks:
+1. **Runtime & package manager** — replace Node.js/npm with Bun
+2. **TypeScript migration** — convert all 120 JS files to `.ts`/`.tsx`
+3. **Dependency upgrade** — Next.js 12 → 15, and all other packages to current versions
 
 Styling toolchain (PostCSS, CSS Modules, stylelint) stays as-is; only versions change.
-Pages Router is kept — no App Router migration.
+Pages Router is kept — no App Router migration (see rationale below).
+
+---
+
+## Why Pages Router, Not App Router
+
+Next.js 13 introduced the App Router as an opt-in, and it has been the recommended default since Next.js 14. So it's a fair question why this plan sticks with Pages Router. Here is the reasoning, and where App Router would make sense later.
+
+**This codebase is structurally coupled to Pages Router patterns.** Every page uses `getStaticProps` and/or `getStaticPaths`. The `_app.page.js` holds global context (theme, menu state) via React Context and a `useReducer`. `_document.page.js` customizes the HTML shell. These are Pages Router primitives — none of them exist in the App Router. Migrating them isn't a rename; it's a rewrite:
+
+| Pages Router | App Router equivalent |
+|---|---|
+| `getStaticProps` | `async` page component + `fetch` with `cache: 'force-cache'` |
+| `getStaticPaths` | `generateStaticParams()` export |
+| `_app.page.js` | Root `layout.tsx` with `'use client'` providers |
+| `_document.page.js` | Root `layout.tsx` metadata + `<html>`/`<body>` |
+| `AppContext` via `useContext` | Context still works but providers must be in Client Components |
+
+**We are already doing two major changes simultaneously** (TypeScript + Next.js upgrade). App Router is a third axis of complexity with its own mental model: Server Components vs Client Components, streaming, the `use` hook for async data, the new `metadata` API, etc. Mixing all three would make regressions very hard to bisect.
+
+**Pages Router is not going away.** Vercel has committed to supporting it long-term. Next.js 15 ships with Pages Router fully intact. Choosing it now does not block an App Router migration later.
+
+**When App Router migration makes sense:** after this plan is complete and the codebase is stable TypeScript. At that point it would be a clean, isolated migration rather than an entangled one. The blog's `getStaticProps`/`getStaticPaths` pattern is the natural starting point — it maps almost 1:1 to `generateStaticParams` in the App Router.
 
 ---
 
@@ -23,6 +46,64 @@ Pages Router is kept — no App Router migration.
 | Storybook 6 → 8: complete config format change | Rewrite `.storybook/` config |
 | `pageExtensions` must include `.tsx` variants | Update next.config.js |
 | `module.exports` in next.config.js → use `import` or keep CJS | Decide on config format |
+| Bun replaces Node.js as runtime and npm/yarn as package manager | `yarn.lock` / `package-lock.json` replaced by `bun.lockb`; all scripts use `bun run` |
+| `engines` field in package.json changes from `node` to `bun` | Update before switching |
+
+---
+
+## Phase 0 — Bun Migration
+
+> Goal: replace npm/yarn with Bun as both the package manager and the JavaScript runtime.
+> Do this first so every subsequent install and script invocation in this plan uses Bun from the start.
+
+### What Bun replaces and what it doesn't
+
+Bun operates at two levels here:
+
+**Package manager** (`bun install`, `bun add`, `bun remove`) — a drop-in replacement for npm/yarn. Installs from the same `package.json`, resolves the same registry, but is significantly faster. Creates `bun.lockb` instead of `yarn.lock` / `package-lock.json`.
+
+**Runtime** (`bun run <script>`, `bun <file>`) — replaces `node` for running scripts. Bun implements the Node.js API surface (fs, path, crypto, child_process, etc.) so the existing utility scripts and `og-image.ts` will run under Bun without changes. It also has native TypeScript execution — no separate compilation step needed for running scripts directly.
+
+**What stays on Node.js:** Next.js internally spawns its own Node.js processes for compilation and the dev server. `bun run dev` / `bun run build` invoke the Next.js CLI, which runs inside Node.js. Bun is the launcher and package manager; Node.js remains the Next.js engine. This is the standard and supported way to use Bun with Next.js.
+
+### Tasks
+
+- [ ] **0.1** Install Bun
+  ```bash
+  curl -fsSL https://bun.sh/install | bash
+  ```
+  Verify: `bun --version` (target ≥ 1.1)
+- [ ] **0.2** Update `engines` in `package.json`
+  ```json
+  "engines": { "bun": ">=1.1.0" }
+  ```
+  Remove the `"node": "24.x"` entry.
+- [ ] **0.3** Generate `bun.lockb` and remove old lockfiles
+  ```bash
+  bun install
+  rm yarn.lock        # or package-lock.json if that exists
+  ```
+  Commit `bun.lockb` and the lockfile deletion together.
+- [ ] **0.4** Update all scripts in `package.json` — replace `npm run` with `bun run` in any chained script commands (e.g., the `lint` script currently chains with `;`)
+- [ ] **0.5** Update `.npmrc` — check if any flags are npm-specific and need a Bun equivalent (Bun reads `.npmrc` for registry settings but ignores some npm-only flags)
+- [ ] **0.6** Verify the full build still works
+  ```bash
+  bun run build
+  ```
+- [ ] **0.7** Update CI / Vercel configuration
+  - On Vercel: set the **Install Command** to `bun install` and **Build Command** to `bun run build` in project settings, or add a `vercel.json`:
+    ```json
+    {
+      "installCommand": "bun install",
+      "buildCommand": "bun run build"
+    }
+    ```
+  - Update any other CI pipeline configs (GitHub Actions, etc.) to use `oven-sh/setup-bun` action
+- [ ] **0.8** Confirm `puppeteer` still launches Chrome correctly under Bun
+  ```bash
+  bun -e "import puppeteer from 'puppeteer'; const b = await puppeteer.launch({headless:true, args:['--no-sandbox']}); console.log(await b.version()); await b.close();"
+  ```
+  Bun's `child_process.spawn` is compatible with Node's, so this should pass unchanged.
 
 ---
 
@@ -31,8 +112,8 @@ Pages Router is kept — no App Router migration.
 > Goal: get the project ready to accept TypeScript without breaking the existing build.
 
 - [ ] **1.1** Install TypeScript and type packages
-  ```
-  npm install --save-dev typescript @types/react @types/react-dom @types/node
+  ```bash
+  bun add --dev typescript @types/react @types/react-dom @types/node
   ```
 - [ ] **1.2** Create `tsconfig.json`
   - Set `baseUrl: "src"` to preserve existing path aliases
@@ -42,8 +123,8 @@ Pages Router is kept — no App Router migration.
   - Set `moduleResolution: "bundler"` (Next.js 15 default)
   - Remove `jsconfig.json` after tsconfig is confirmed working
 - [ ] **1.3** Add TypeScript ESLint support
-  ```
-  npm install --save-dev @typescript-eslint/parser @typescript-eslint/eslint-plugin
+  ```bash
+  bun add --dev @typescript-eslint/parser @typescript-eslint/eslint-plugin
   ```
   Update `.eslintrc` to use `@typescript-eslint/parser` and extend `plugin:@typescript-eslint/recommended`
 - [ ] **1.4** Update `prettier` to current version (2.x → 3.x) and verify `.prettierrc` still works
@@ -52,7 +133,10 @@ Pages Router is kept — no App Router migration.
   "typecheck": "tsc --noEmit"
   ```
 - [ ] **1.6** Update `stylelint` and all stylelint plugins to current versions
-- [ ] **1.7** Verify the existing JS build still passes after tooling changes (`npm run build`)
+- [ ] **1.7** Verify the existing JS build still passes after tooling changes
+  ```bash
+  bun run build
+  ```
 
 ---
 
@@ -61,8 +145,8 @@ Pages Router is kept — no App Router migration.
 > Goal: upgrade Next.js and fix all breaking changes before touching TypeScript.
 
 - [ ] **2.1** Upgrade Next.js and related packages
-  ```
-  npm install next@latest react@latest react-dom@latest @next/bundle-analyzer@latest eslint-config-next@latest
+  ```bash
+  bun add next@latest react@latest react-dom@latest @next/bundle-analyzer@latest eslint-config-next@latest
   ```
 - [ ] **2.2** Replace `next export` in `package.json` build script
   - Remove `&& next export -o build/`
@@ -80,7 +164,10 @@ Pages Router is kept — no App Router migration.
   - Find all `<Link><a>...</a></Link>` patterns
   - Remove the inner `<a>` wrapper (Next.js 13+ renders it automatically)
   - Preserve any `className` or `onClick` that was on `<a>` by moving to `<Link>`
-- [ ] **2.6** Run `next build` and fix any remaining Next.js upgrade errors
+- [ ] **2.6** Run build and fix any remaining Next.js upgrade errors
+  ```bash
+  bun run build
+  ```
 - [ ] **2.7** Smoke-test the static export and confirm `build/` directory is correct
 
 ---
@@ -196,7 +283,7 @@ These are needed for non-typed imports:
 - [ ] Add `argTypes` with proper TS types
 
 ### 3.11 Final typecheck pass
-- [ ] Run `npm run typecheck` with zero errors
+- [ ] Run `bun run typecheck` with zero errors
 - [ ] Remove `jsconfig.json`
 - [ ] Remove `.js` extensions from `pageExtensions` once all files are migrated
 
@@ -218,7 +305,7 @@ These are needed for non-typed imports:
 - [ ] **4.4** Upgrade `esbuild` to current (0.15 → latest)
 - [ ] **4.5** Upgrade Storybook (6.5 → 8.x)
   - This is a significant rewrite of `.storybook/main.js` and `.storybook/preview.js`
-  - Use `npx storybook@latest upgrade` to get the automated migration
+  - Use `bunx storybook@latest upgrade` to get the automated migration (Bun equivalent of `npx`)
   - Replace `storybook-addon-next` with `@storybook/nextjs` (official framework package)
   - Update `@storybook/builder-webpack5` → Storybook 8 uses Vite by default (or keep webpack5)
 - [ ] **4.6** Upgrade all rehype plugins (`rehype-img-size`, `rehype-preset-minify`, `rehype-slug`, `@mapbox/rehype-prism`) to current versions
@@ -232,10 +319,10 @@ These are needed for non-typed imports:
 
 ## Phase 5 — Validation & Cleanup
 
-- [ ] **5.1** `npm run typecheck` — zero TypeScript errors
-- [ ] **5.2** `npm run build` — clean production build with static export
-- [ ] **5.3** `npm run lint` — zero ESLint and stylelint errors
-- [ ] **5.4** `npm run build:storybook` — Storybook builds successfully
+- [ ] **5.1** `bun run typecheck` — zero TypeScript errors
+- [ ] **5.2** `bun run build` — clean production build with static export
+- [ ] **5.3** `bun run lint` — zero ESLint and stylelint errors
+- [ ] **5.4** `bun run build:storybook` — Storybook builds successfully
 - [ ] **5.5** Serve the `build/` directory locally and manually verify all pages
   - Home, Blog index, blog posts (MDX rendering, OG images)
   - Contact page
@@ -267,4 +354,4 @@ These are needed for non-typed imports:
 ## Suggested Commit Cadence
 
 Each phase or sub-section in Phase 3 should be a separate commit so regressions are easy to bisect.
-Never commit with a failing `npm run build` or failing `npm run typecheck`.
+Never commit with a failing `bun run build` or failing `bun run typecheck`.
