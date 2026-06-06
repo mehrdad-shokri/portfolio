@@ -58,8 +58,8 @@
     "three-stdlib": "^2.15.0"
   },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build && next export -o build/",
+    "dev": "bun run --bun next dev",
+    "build": "bun run --bun next build && bun run --bun next export -o build/",
     "build:storybook": "build-storybook -o build-storybook && node scripts/draco-storybook",
     "deploy": "aws s3 sync --delete build/ s3://hamish-portfolio-site",
     "deploy:storybook": "aws s3 sync --delete build-storybook s3://hamish-portfolio-storybook",
@@ -68,7 +68,7 @@
     "test": "echo 'write some tests'",
     "storybook": "start-storybook -p 9009 -h localhost",
     "prettier": "prettier '**/*.{js,jsx,ts,tsx,css,md}' --check --write",
-    "lint": "yarn lint:scripts; yarn lint:styles",
+    "lint": "bun lint:scripts; bun lint:styles",
     "lint:scripts": "eslint '**/*.{js,jsx,ts,tsx}' --config .eslintrc --fix",
     "lint:styles": "stylelint '**/*.{css,scss,ts,tsx}' --config .stylelintrc --fix"
   },
