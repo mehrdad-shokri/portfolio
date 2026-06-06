@@ -87,7 +87,7 @@
     ]
   },
   "engines": {
-    "bun": ">=1.1.0"
+    "node": ">=24.x"
   },
   "overrides": {
     "unist-util-visit-parents": "^5.1.1"
