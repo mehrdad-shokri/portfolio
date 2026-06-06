@@ -10,7 +10,7 @@ import rehypeMinify from 'rehype-preset-minify'
 import rehypeSlug from 'rehype-slug'
 import {POSTS_PATH, postFilePaths} from 'utils/mdx'
 import {formatTimecode} from 'utils/timecode'
-import rehypePrism from '@mapbox/rehype-prism'
+import rehypePrism from 'rehype-prism-plus'
 import {generateOgImage} from './og-image'
 
 export default function PostPage({frontmatter, code, timecode, ogImage}) {

@@ -6,7 +6,7 @@
   "repository": "https://github.com/HamishMW/portfolio.git",
   "author": "Mehrdad Shokri <code.poet95@gmail.com>",
   "devDependencies": {
-    "@mapbox/rehype-prism": "^0.8.0",
+    "rehype-prism-plus": "^1.6.3",
     "@next/bundle-analyzer": "^12.2.5",
     "@storybook/addon-a11y": "^6.5.10",
     "@storybook/addon-actions": "^6.5.10",
@@ -55,11 +55,12 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "three": "^0.144.0",
-    "three-stdlib": "^2.15.0"
+    "three-stdlib": "^2.15.0",
+    "unist-util-visit-parents": "^5.1.1"
   },
   "scripts": {
-    "dev": "bun run --bun next dev",
-    "build": "bun run --bun next build && bun run --bun next export -o build/",
+    "dev": "next dev",
+    "build": "next build && next export -o build/",
     "build:storybook": "build-storybook -o build-storybook && bun scripts/draco-storybook",
     "deploy": "aws s3 sync --delete build/ s3://hamish-portfolio-site",
     "deploy:storybook": "aws s3 sync --delete build-storybook s3://hamish-portfolio-storybook",
@@ -87,5 +88,8 @@
   },
   "engines": {
     "bun": ">=1.1.0"
+  },
+  "overrides": {
+    "unist-util-visit-parents": "^5.1.1"
   }
 }
