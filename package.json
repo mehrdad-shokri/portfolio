@@ -51,7 +51,7 @@
     "framer-motion": "^7.3.5",
     "mdx-bundler": "^9.0.1",
     "next": "12.3.0",
-    "puppeteer": "^16.1.0",
+    "puppeteer": "^25.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "three": "^0.144.0",
@@ -85,5 +85,7 @@
       "last 1 safari version"
     ]
   },
-  "engines":{ "node": "24.x" }
+  "engines": {
+    "node": "24.x"
+  }
 }
