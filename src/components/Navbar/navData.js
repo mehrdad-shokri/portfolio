@@ -19,11 +19,6 @@ export const navLinks = [
 
 export const socialLinks = [
   {
-    label: 'Twitter',
-    url: 'https://twitter.com/mehrdad_shokri',
-    icon: 'twitter',
-  },
-  {
     label: 'Linkedin',
     url: 'https://www.linkedin.com/in/mehrdad-shokri/',
     icon: 'linkedin',
