@@ -1,4 +1,3 @@
-import puppeteer from 'puppeteer'
 import path from 'path'
 import fs from 'fs'
 import {createHash} from 'crypto'
@@ -19,23 +18,51 @@ export async function generateOgImage(props) {
   try {
     fs.statSync(imagePath)
     return publicPath
-  } catch (error) {
-    // file does not exists, so we create it
+  } catch {
+    // file does not exist, so we create it
   }
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox'],
-  })
+  const isVercel = !!process.env.VERCEL_ENV
+  let puppeteer
+  let launchOptions = {headless: true}
 
-  const page = await browser.newPage()
-  await page.setViewport({width: 1200, height: 630})
-  await page.goto(url, {waitUntil: 'networkidle0'})
-  const buffer = await page.screenshot()
-  await browser.close()
+  puppeteer = await import('puppeteer-core')
 
-  fs.mkdirSync(ogImageDir, {recursive: true})
-  fs.writeFileSync(imagePath, buffer)
+  if (isVercel) {
+    const chromium = (await import('@sparticuz/chromium')).default
+    launchOptions = {
+      ...launchOptions,
+      args: chromium.args,
+      executablePath: await chromium.executablePath(),
+    }
+  } else {
+    const localChromePaths = {
+      darwin: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+      linux: '/usr/bin/google-chrome',
+      win32: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+    }
+    launchOptions = {
+      ...launchOptions,
+      args: ['--no-sandbox'],
+      executablePath:
+        process.env.CHROME_EXECUTABLE_PATH ??
+        localChromePaths[process.platform] ??
+        localChromePaths.linux,
+    }
+  }
+
+  let browser
+  try {
+    browser = await puppeteer.launch(launchOptions)
+    const page = await browser.newPage()
+    await page.setViewport({width: 1200, height: 630})
+    await page.goto(url, {waitUntil: 'networkidle0'})
+    const buffer = await page.screenshot()
+    fs.mkdirSync(ogImageDir, {recursive: true})
+    fs.writeFileSync(imagePath, buffer)
+  } finally {
+    await browser?.close()
+  }
 
   return publicPath
 }
