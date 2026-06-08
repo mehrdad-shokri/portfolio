@@ -69,12 +69,13 @@ const ArticlesPost = ({
           />
         </div>
       )}
-      <RouterLink href={`/blog/${slug}`} scroll={false}>
-        <a
-          className={styles.postLink}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
+      <RouterLink
+        href={`/blog/${slug}/`}
+        scroll={false}
+        className={styles.postLink}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
           <div className={styles.postDetails}>
             <div aria-hidden className={styles.postDate}>
               <Divider notchWidth='64px' notchHeight='8px' />
@@ -95,7 +96,6 @@ const ArticlesPost = ({
               </Text>
             </div>
           </div>
-        </a>
       </RouterLink>
       {featured && (
         <Text aria-hidden className={styles.postTag} size='s'>

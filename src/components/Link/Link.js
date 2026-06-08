@@ -17,20 +17,36 @@ export const Link = forwardRef(({href, ...rest}, ref) => {
   }
 
   return (
-    <RouterLink passHref href={href} scroll={false}>
-      <LinkContent ref={ref} {...rest} />
-    </RouterLink>
+    <LinkContent
+      as={RouterLink}
+      href={href}
+      scroll={false}
+      ref={ref}
+      {...rest}
+    />
   )
 })
 
 export const LinkContent = forwardRef(
-  ({rel, target, children, secondary, className, href, ...rest}, ref) => {
+  (
+    {
+      as: Component = 'a',
+      rel,
+      target,
+      children,
+      secondary,
+      className,
+      href,
+      ...rest
+    },
+    ref
+  ) => {
     const isExternal = href?.includes('://')
     const relValue = rel || (isExternal ? 'noreferrer noopener' : undefined)
     const targetValue = target || (isExternal ? '_blank' : undefined)
 
     return (
-      <a
+      <Component
         className={classes(styles.link, className)}
         data-secondary={secondary}
         rel={relValue}
@@ -40,7 +56,7 @@ export const LinkContent = forwardRef(
         {...rest}
       >
         {children}
-      </a>
+      </Component>
     )
   }
 )
