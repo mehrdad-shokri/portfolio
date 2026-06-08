@@ -15,7 +15,6 @@
   ],
   "plugins": [
     "react",
-    "unused-imports",
     "import",
     "prettier"
   ],
@@ -45,7 +44,7 @@
   },
   "rules": {
     "semi": 0,
-    "no-unused-vars": "warn",
+    "no-unused-vars": ["warn", {"argsIgnorePattern": "^_", "varsIgnorePattern": "^_", "ignoreRestSiblings": true}],
     "import/no-anonymous-default-export": 0,
     "import/prefer-default-export": 0,
     "react/display-name": "off",
@@ -66,14 +65,6 @@
           "invalidHref",
           "preferButton"
         ]
-      }
-    ],
-    "unused-imports/no-unused-vars": [
-      "error",
-      {
-        "vars": "all",
-        "argsIgnorePattern": "_",
-        "varsIgnorePattern": "_"
       }
     ],
     "jsx-a11y/no-autofocus": [
