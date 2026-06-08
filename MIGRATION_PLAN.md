@@ -68,42 +68,14 @@ Bun operates at two levels here:
 
 ### Tasks
 
-- [ ] **0.1** Install Bun
-  ```bash
-  curl -fsSL https://bun.sh/install | bash
-  ```
-  Verify: `bun --version` (target ≥ 1.1)
-- [ ] **0.2** Update `engines` in `package.json`
-  ```json
-  "engines": { "bun": ">=1.1.0" }
-  ```
-  Remove the `"node": "24.x"` entry.
-- [ ] **0.3** Generate `bun.lockb` and remove old lockfiles
-  ```bash
-  bun install
-  rm yarn.lock        # or package-lock.json if that exists
-  ```
-  Commit `bun.lockb` and the lockfile deletion together.
-- [ ] **0.4** Update all scripts in `package.json` — replace `npm run` with `bun run` in any chained script commands (e.g., the `lint` script currently chains with `;`)
-- [ ] **0.5** Update `.npmrc` — check if any flags are npm-specific and need a Bun equivalent (Bun reads `.npmrc` for registry settings but ignores some npm-only flags)
-- [ ] **0.6** Verify the full build still works
-  ```bash
-  bun run build
-  ```
-- [ ] **0.7** Update CI / Vercel configuration
-  - On Vercel: set the **Install Command** to `bun install` and **Build Command** to `bun run build` in project settings, or add a `vercel.json`:
-    ```json
-    {
-      "installCommand": "bun install",
-      "buildCommand": "bun run build"
-    }
-    ```
-  - Update any other CI pipeline configs (GitHub Actions, etc.) to use `oven-sh/setup-bun` action
-- [ ] **0.8** Confirm `puppeteer` still launches Chrome correctly under Bun
-  ```bash
-  bun -e "import puppeteer from 'puppeteer'; const b = await puppeteer.launch({headless:true, args:['--no-sandbox']}); console.log(await b.version()); await b.close();"
-  ```
-  Bun's `child_process.spawn` is compatible with Node's, so this should pass unchanged.
+- [x] **0.1** Install Bun (1.3.14)
+- [x] **0.2** Update `engines` in `package.json` to `"bun": ">=1.1.0"`
+- [x] **0.3** Generated `bun.lock`, removed `package-lock.json`
+- [x] **0.4** All scripts use `bun run` — `lint`, `build:storybook` updated; `deploy:functions` left as `npm run deploy` intentionally (separate sub-project)
+- [x] **0.5** Removed `legacy-peer-deps=true` from `.npmrc` (npm-only flag, Bun ignores it)
+- [x] **0.6** Build verified passing with `bun run build`
+- [x] **0.7** `vercel.json` updated with `bunVersion`, `installCommand`, `buildCommand`, `outputDirectory`
+- [x] **0.8** `puppeteer-core` launches Chrome correctly under Bun runtime
 
 ---
 
