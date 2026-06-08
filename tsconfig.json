@@ -1,0 +1,55 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "ignoreDeprecations": "6.0",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "baseUrl": "src",
+    "paths": {
+      "components/*": [
+        "components/*"
+      ],
+      "layouts/*": [
+        "layouts/*"
+      ],
+      "hooks": [
+        "hooks/index.js"
+      ],
+      "hooks/*": [
+        "hooks/*"
+      ],
+      "utils/*": [
+        "utils/*"
+      ],
+      "assets/*": [
+        "assets/*"
+      ],
+      "pages/*": [
+        "pages/*"
+      ]
+    },
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "src",
+    ".storybook/StoryContainer.js",
+    "next.config.js"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

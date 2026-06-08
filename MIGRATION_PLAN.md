@@ -111,29 +111,30 @@ Bun operates at two levels here:
 
 > Goal: get the project ready to accept TypeScript without breaking the existing build.
 
-- [ ] **1.1** Install TypeScript and type packages
+- [x] **1.1** Install TypeScript and type packages
   ```bash
   bun add --dev typescript @types/react @types/react-dom @types/node
   ```
-- [ ] **1.2** Create `tsconfig.json`
+- [x] **1.2** Create `tsconfig.json`
   - Set `baseUrl: "src"` to preserve existing path aliases
   - Enable `strict: true`
   - Include `jsx: "preserve"` (Next.js handles JSX transform)
   - Add `paths` to match jsconfig aliases (components/*, layouts/*, etc.)
-  - Set `moduleResolution: "bundler"` (Next.js 15 default)
+  - Set `moduleResolution: "node"` (Next.js 12 uses webpack; upgrade to `bundler` in Phase 2)
+  - Add `ignoreDeprecations: "6.0"` to silence TS 6 baseUrl deprecation warning
   - Remove `jsconfig.json` after tsconfig is confirmed working
-- [ ] **1.3** Add TypeScript ESLint support
+- [x] **1.3** Add TypeScript ESLint support
   ```bash
   bun add --dev @typescript-eslint/parser @typescript-eslint/eslint-plugin
   ```
-  Update `.eslintrc` to use `@typescript-eslint/parser` and extend `plugin:@typescript-eslint/recommended`
-- [ ] **1.4** Update `prettier` to current version (2.x → 3.x) and verify `.prettierrc` still works
-- [ ] **1.5** Add `typecheck` script to `package.json`
+  Scoped to `.ts`/`.tsx` files via `overrides` — avoids breaking existing JS files before migration
+- [x] **1.4** Update `prettier` to current version (2.x → 3.x) and verify `.prettierrc` still works
+- [x] **1.5** Add `typecheck` script to `package.json`
   ```json
   "typecheck": "tsc --noEmit"
   ```
-- [ ] **1.6** Update `stylelint` and all stylelint plugins to current versions
-- [ ] **1.7** Verify the existing JS build still passes after tooling changes
+- [x] **1.6** Update `stylelint` and all stylelint plugins to current versions
+- [x] **1.7** Verify the existing JS build still passes after tooling changes
   ```bash
   bun run build
   ```
