@@ -1,15 +1,15 @@
+'use client'
+
 import ArrowDown from 'assets/arrow-down.svg'
 import {Divider} from 'components/Divider'
 import {Footer} from 'components/Footer'
 import {Heading} from 'components/Heading'
 import {Image} from 'components/Image'
-import {Meta} from 'components/Meta'
 import {Section} from 'components/Section'
 import {Text} from 'components/Text'
 import {tokens} from 'components/ThemeProvider/theme'
 import {Transition} from 'components/Transition'
 import {useParallax, useScrollToHash} from 'hooks'
-import RouterLink from 'next/link'
 import {useRef, useState, useEffect} from 'react'
 import {clamp} from 'utils/clamp'
 import {formatDate} from 'utils/date'
@@ -45,7 +45,6 @@ export const Post = ({
 
   return (
     <article className={styles.post}>
-      <Meta title={title} prefix='' description={abstract} ogImage={ogImage} />
       <Section>
         {banner && (
           <div className={styles.banner} ref={imageRef}>
@@ -111,16 +110,14 @@ export const Post = ({
               ))}
             </Heading>
             <div className={styles.details}>
-              <RouterLink href='#postContent'>
-                <button
-                  className={styles.arrow}
-                  aria-label='Scroll to post content'
-                  data-href='#postContent'
-                  onClick={handleScrollIndicatorClick}
-                >
-                  <ArrowDown aria-hidden />
-                </button>
-              </RouterLink>
+              <button
+                className={styles.arrow}
+                aria-label='Scroll to post content'
+                data-href='#postContent'
+                onClick={handleScrollIndicatorClick}
+              >
+                <ArrowDown aria-hidden />
+              </button>
               <div className={styles.timecode}>{timecode}</div>
             </div>
           </div>

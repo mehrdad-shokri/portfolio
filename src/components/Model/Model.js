@@ -1,3 +1,5 @@
+'use client'
+
 import {animate, useReducedMotion, useSpring} from 'framer-motion'
 import {useInViewport} from 'hooks'
 import {useFps} from 'hooks/useFps'

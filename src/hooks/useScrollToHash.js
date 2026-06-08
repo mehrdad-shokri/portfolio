@@ -1,18 +1,18 @@
 import {useReducedMotion} from 'framer-motion'
-import {useRouter} from 'next/router'
+import {useRouter, usePathname} from 'next/navigation'
 import {useCallback, useRef} from 'react'
 
 export function useScrollToHash() {
   const scrollTimeout = useRef()
-  const {asPath, push} = useRouter()
+  const router = useRouter()
+  const pathname = usePathname()
   const reduceMotion = useReducedMotion()
 
   const scrollToHash = useCallback(
     (hash, onDone) => {
       const id = hash.split('#')[1]
       const targetElement = document.getElementById(id)
-      const route = asPath.split('#')[0]
-      const newPath = `${route}#${id}`
+      const newPath = `${pathname}#${id}`
 
       targetElement.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth'})
 
@@ -22,9 +22,9 @@ export function useScrollToHash() {
         scrollTimeout.current = setTimeout(() => {
           window.removeEventListener('scroll', handleScroll)
 
-          if (window.location.pathname === route) {
+          if (window.location.pathname === pathname) {
             onDone?.()
-            push(newPath, null, {scroll: false})
+            router.push(newPath, {scroll: false})
           }
         }, 50)
       }
@@ -36,7 +36,7 @@ export function useScrollToHash() {
         clearTimeout(scrollTimeout.current)
       }
     },
-    [push, reduceMotion, asPath]
+    [router, reduceMotion, pathname]
   )
 
   return scrollToHash

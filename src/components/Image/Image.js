@@ -1,3 +1,5 @@
+'use client'
+
 import {Button} from 'components/Button'
 import {Icon} from 'components/Icon'
 import {useTheme} from 'components/ThemeProvider'

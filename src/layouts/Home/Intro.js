@@ -1,3 +1,5 @@
+'use client'
+
 import ArrowDown from 'assets/arrow-down.svg'
 import {DecoderText} from 'components/DecoderText'
 import {Heading} from 'components/Heading'

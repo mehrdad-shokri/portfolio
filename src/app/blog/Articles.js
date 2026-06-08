@@ -1,3 +1,5 @@
+'use client'
+
 import Barcode from 'assets/barcode.svg'
 import {Button} from 'components/Button'
 import {DecoderText} from 'components/DecoderText'
@@ -5,7 +7,6 @@ import {Divider} from 'components/Divider'
 import {Footer} from 'components/Footer'
 import {Heading} from 'components/Heading'
 import {Image} from 'components/Image'
-import {Meta} from 'components/Meta'
 import {Section} from 'components/Section'
 import {Text} from 'components/Text'
 import {useReducedMotion} from 'framer-motion'
@@ -178,7 +179,6 @@ export const Articles = ({posts, featured}) => {
 
   return (
     <article className={styles.articles}>
-      <Meta title='Blog' description='My words on tech and programming' />
       <Section className={styles.content}>
         {!isSingleColumn && (
           <div className={styles.grid}>

@@ -1,3 +1,5 @@
+'use client'
+
 import {VisuallyHidden} from 'components/VisuallyHidden'
 import {useReducedMotion, useSpring} from 'framer-motion'
 import {memo, useEffect, useRef} from 'react'

@@ -113,35 +113,26 @@ Bun operates at two levels here:
 
 ---
 
-## Phase 2 — Next.js 15 Upgrade
+## Phase 2 — Next.js 16 Upgrade + App Router Migration
 
-> Goal: upgrade Next.js and fix all breaking changes before touching TypeScript.
+> Upgraded to Next.js 16.2.7 (latest), React 19, framer-motion 12. Migrated to App Router.
 
-- [ ] **2.1** Upgrade Next.js and related packages
-  ```bash
-  bun add next@latest react@latest react-dom@latest @next/bundle-analyzer@latest eslint-config-next@latest
-  ```
-- [ ] **2.2** Replace `next export` in `package.json` build script
-  - Remove `&& next export -o build/`
-  - Add `output: 'export'` and `distDir: 'build'` to `next.config.js`
-  - Update `deploy` script accordingly
-- [ ] **2.3** Update `next.config.js`
-  - Add `output: 'export'`
-  - Add `distDir: 'build'`
-  - Update `pageExtensions` to `['page.tsx', 'page.ts', 'page.js', 'api.tsx', 'api.ts', 'api.js']` (support both during migration)
-- [ ] **2.4** Fix `next/image` usage
-  - Audit all `<Image>` usages in the codebase (`src/components/Image/Image.js`, pages, layouts)
-  - Remove `layout` prop; replace with `fill` or explicit `width`/`height`
-  - Update `objectFit` and `objectPosition` to CSS instead of props
-- [ ] **2.5** Fix `next/link` usage
-  - Find all `<Link><a>...</a></Link>` patterns
-  - Remove the inner `<a>` wrapper (Next.js 13+ renders it automatically)
-  - Preserve any `className` or `onClick` that was on `<a>` by moving to `<Link>`
-- [ ] **2.6** Run build and fix any remaining Next.js upgrade errors
-  ```bash
-  bun run build
-  ```
-- [ ] **2.7** Smoke-test the static export and confirm `build/` directory is correct
+- [x] **2.1** Upgrade Next.js 12 → 16, React 18 → 19, framer-motion 7 → 12
+- [x] **2.2** Remove `next export` from build script — replaced by `output: 'export'` in next.config.js
+- [x] **2.3** Update `next.config.js` — added `output: 'export'`, removed `pageExtensions`, added `--webpack` flag (Turbopack migration is a separate future task)
+- [x] **2.4** App Router migration — created `src/app/` with layout.js, providers.js, and all page routes
+  - Root layout replaces `_app.page.js` + `_document.page.js`
+  - Providers client component handles AppContext, ThemeProvider, framer-motion, Navbar
+  - All pages moved to `src/app/` with proper server/client component split
+  - Pages Router (`src/pages/`) fully removed
+- [x] **2.5** Fixed `next/router` → `next/navigation` (usePathname, useRouter from next/navigation)
+- [x] **2.6** Fixed `next/link` — removed nested `<a>` wrappers in Navbar and other components
+- [x] **2.7** Replaced `Meta` component (`next/head`) with Next.js Metadata API (`export const metadata`, `generateMetadata`)
+- [x] **2.8** Replaced `mdx-bundler` + `getMDXComponent` with `next-mdx-remote/rsc` for native App Router MDX support
+- [x] **2.9** Extracted `tokenStyles`/`fontStyles` to `ThemeProvider/styles.js` (server-safe, no `'use client'`)
+- [x] **2.10** Added `'use client'` to all interactive components (framer-motion, hooks, Three.js)
+- [x] **2.11** Dropped `rehype-preset-minify` — caused EBADF in Next.js build workers; Next.js minifies HTML natively
+- [x] **2.12** Build passes — all 7 routes generate correctly (/, /blog, /blog/[slug], /contact, /projects/snappfood, /uses, /_not-found)
 
 ---
 

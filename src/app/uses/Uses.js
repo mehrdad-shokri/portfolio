@@ -1,9 +1,10 @@
+'use client'
+
 import usesBackgroundPlaceholder from 'assets/uses-background-placeholder.jpg'
 import usesBackground from 'assets/uses-background.mp4'
 import {Footer} from 'components/Footer'
 import {Link} from 'components/Link'
 import {List, ListItem} from 'components/List'
-import {Meta} from 'components/Meta'
 import {
   Table,
   TableBody,
@@ -27,10 +28,7 @@ import styles from './Uses.module.css'
 export const Uses = () => {
   return (
     <Fragment>
-      <Meta
-        title='Uses'
-        description='A list of hardware and software I use to get things done'
-      />
+      
       <ProjectContainer className={styles.uses}>
         <ProjectBackground
           src={{src: usesBackground}}

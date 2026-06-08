@@ -1,3 +1,5 @@
+'use client'
+
 import {Button} from 'components/Button'
 import {useAppContext} from 'hooks'
 import {useId} from 'react'

@@ -1,3 +1,5 @@
+'use client'
+
 import backgroundSprLarge from 'assets/snappfood-background-large.jpg'
 import backgroundSprPlaceholder from 'assets/snappfood-background-placeholder.jpg'
 import backgroundSpr from 'assets/snappfood-background.jpg'
@@ -36,7 +38,6 @@ import imageSnappfoodPerformanceLight from 'assets/snappfood-performance-light.p
 import {Footer} from 'components/Footer'
 import {Image} from 'components/Image'
 import {Link} from 'components/Link'
-import {Meta} from 'components/Meta'
 import {
   SegmentedControl,
   SegmentedControlOption,
@@ -91,7 +92,6 @@ export const SnappFood = () => {
   return (
     <Fragment>
       <ProjectContainer className='spr'>
-        <Meta title={title} prefix='Projects' description={description} />
         <ProjectBackground
           opacity={isDark ? 0.5 : 0.8}
           src={backgroundSpr}

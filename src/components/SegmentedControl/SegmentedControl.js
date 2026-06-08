@@ -1,3 +1,5 @@
+'use client'
+
 import {VisuallyHidden} from 'components/VisuallyHidden'
 import {
   createContext,

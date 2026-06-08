@@ -1,9 +1,10 @@
+'use client'
+
 import notFoundPoster from 'assets/notfound.jpg'
 import notFoundVideo from 'assets/notfound.mp4'
 import {Button} from 'components/Button'
 import {DecoderText} from 'components/DecoderText'
 import {Heading} from 'components/Heading'
-import {Meta} from 'components/Meta'
 import {Text} from 'components/Text'
 import {Transition} from 'components/Transition'
 import {Fragment} from 'react'
@@ -12,10 +13,7 @@ import styles from './404.module.css'
 export function Page404() {
   return (
     <section className={styles.page}>
-      <Meta
-        title='404 Not Found'
-        description="404 page not found. This page doesn't exist"
-      />
+      
       <Transition in>
         {visible => (
           <Fragment>

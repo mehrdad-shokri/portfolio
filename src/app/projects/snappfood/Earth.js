@@ -1,3 +1,5 @@
+'use client'
+
 import earthModel from 'assets/earth.glb'
 import mwnx from 'assets/milkyway-nx.hdr'
 import mwny from 'assets/milkyway-ny.hdr'

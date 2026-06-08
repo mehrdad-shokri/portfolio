@@ -1,3 +1,5 @@
+'use client'
+
 import {Text} from 'components/Text'
 import {VisuallyHidden} from 'components/VisuallyHidden'
 import {useReducedMotion} from 'framer-motion'

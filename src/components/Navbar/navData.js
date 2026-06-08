@@ -9,11 +9,11 @@ export const navLinks = [
   },
   {
     label: 'Blog',
-    pathname: '/blog',
+    pathname: '/blog/',
   },
   {
     label: 'Contact',
-    pathname: '/contact',
+    pathname: '/contact/',
   },
 ]
 

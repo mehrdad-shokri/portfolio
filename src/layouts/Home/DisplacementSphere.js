@@ -1,3 +1,5 @@
+'use client'
+
 import {useTheme} from 'components/ThemeProvider'
 import {Transition} from 'components/Transition'
 import {useReducedMotion, useSpring} from 'framer-motion'

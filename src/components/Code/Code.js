@@ -1,3 +1,5 @@
+'use client'
+
 import {Button} from 'components/Button'
 import {Icon} from 'components/Icon'
 import {Text} from 'components/Text'

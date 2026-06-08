@@ -1,3 +1,5 @@
+'use client'
+
 import featherTexture2Large from 'assets/feather-home-large.png'
 import featherTexture2Placeholder from 'assets/feather-home-large-placeholder.png'
 import featherTexture2 from 'assets/feather-home.png'
@@ -8,7 +10,6 @@ import snappfoodTextureLarge from 'assets/snappfood-large.png'
 import snappfoodTexturePlaceholder from 'assets/snappfood-placeholder.png'
 import snappfoodTexture from 'assets/snappfood.png'
 import {Footer} from 'components/Footer'
-import {Meta} from 'components/Meta'
 import {Intro} from 'layouts/Home/Intro'
 import {Profile} from 'layouts/Home/Profile'
 import {ProjectSummary} from 'layouts/Home/ProjectSummary'
@@ -73,11 +74,7 @@ export const Home = () => {
 
   return (
     <div className={styles.home}>
-      <Meta
-        title='Developer + Designer'
-        description='Design portfolio of Mehrdad Shokri — a software developer working on mobile and web
-          apps.'
-      />
+      
       <Intro
         id='intro'
         sectionRef={intro}

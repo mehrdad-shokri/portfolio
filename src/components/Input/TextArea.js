@@ -1,3 +1,5 @@
+'use client'
+
 import {useEffect, useRef, useState} from 'react'
 import {classes, cssProps} from 'utils/style'
 import styles from './TextArea.module.css'

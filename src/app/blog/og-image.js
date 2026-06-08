@@ -2,11 +2,17 @@ import path from 'path'
 import fs from 'fs'
 import {createHash} from 'crypto'
 
+const localChromePaths = {
+  darwin: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+  linux: '/usr/bin/google-chrome',
+  win32: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+}
+
 export async function generateOgImage(props) {
   const params = new URLSearchParams(props)
   const url = `file:${path.join(
     process.cwd(),
-    `src/pages/blog/og-image.html?${params}`
+    `src/app/blog/og-image.html?${params}`
   )}`
 
   const hash = createHash('md5').update(url).digest('hex')
@@ -23,10 +29,8 @@ export async function generateOgImage(props) {
   }
 
   const isVercel = !!process.env.VERCEL_ENV
-  let puppeteer
+  const puppeteer = await import('puppeteer-core')
   let launchOptions = {headless: true}
-
-  puppeteer = await import('puppeteer-core')
 
   if (isVercel) {
     const chromium = (await import('@sparticuz/chromium')).default
@@ -36,11 +40,6 @@ export async function generateOgImage(props) {
       executablePath: await chromium.executablePath(),
     }
   } else {
-    const localChromePaths = {
-      darwin: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-      linux: '/usr/bin/google-chrome',
-      win32: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-    }
     launchOptions = {
       ...launchOptions,
       args: ['--no-sandbox'],

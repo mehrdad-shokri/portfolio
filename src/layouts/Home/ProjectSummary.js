@@ -1,3 +1,5 @@
+'use client'
+
 import projectKatakana from 'assets/katakana-project.svg?url'
 import {Button} from 'components/Button'
 import {Divider} from 'components/Divider'

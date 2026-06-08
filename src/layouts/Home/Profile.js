@@ -1,3 +1,5 @@
+'use client'
+
 import profileKatakana from 'assets/katakana-profile.svg?url'
 import profileImgLarge from 'assets/profile-large.jpeg'
 import profileImgPlaceholder from 'assets/profile-placeholder.jpeg'

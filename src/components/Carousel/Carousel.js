@@ -1,3 +1,5 @@
+'use client'
+
 import ArrowLeft from 'assets/arrow-left.svg'
 import ArrowRight from 'assets/arrow-right.svg'
 import {animate, useReducedMotion} from 'framer-motion'

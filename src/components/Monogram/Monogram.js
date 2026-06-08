@@ -1,3 +1,5 @@
+'use client'
+
 import {forwardRef, useId} from 'react'
 import {classes} from 'utils/style'
 import styles from './Monogram.module.css'

@@ -1,3 +1,5 @@
+'use client'
+
 import {Icon} from 'components/Icon'
 import {tokens} from 'components/ThemeProvider/theme'
 import {Transition} from 'components/Transition'
