@@ -354,8 +354,9 @@ export const Carousel = ({width, height, images, placeholder, ...rest}: Carousel
         direction: swipeDirection.current,
       })
     } else {
+      const prevImage = uniforms.currentImage.value
       uniforms.currentImage.value = uniforms.nextImage.value
-      uniforms.nextImage.value = uniforms.currentImage.value
+      uniforms.nextImage.value = prevImage
       uniforms.dispFactor.value = 1 - (uniforms.dispFactor.value as number)
 
       navigate({

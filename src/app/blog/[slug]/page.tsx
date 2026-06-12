@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 import readingTime from 'reading-time'
+import {cache} from 'react'
 import {MDXRemote} from 'next-mdx-remote/rsc'
 import rehypeImgSize from 'rehype-img-size'
 import rehypeSlug from 'rehype-slug'
@@ -13,6 +14,11 @@ import {generateOgImage} from 'app/blog/og-image'
 import {Post} from 'layouts/Post/Post'
 import {postMarkdown} from 'layouts/Post/PostMarkdown'
 
+const loadPost = cache((slug: string) => {
+  const source = fs.readFileSync(path.join(POSTS_PATH, `${slug}.mdx`), 'utf-8')
+  return matter(source)
+})
+
 export async function generateStaticParams() {
   return postFilePaths
     .map(filePath => filePath.replace(/\.mdx?$/, ''))
@@ -21,15 +27,13 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({params}: {params: Promise<{slug: string}>}) {
   const {slug} = await params
-  const source = fs.readFileSync(path.join(POSTS_PATH, `${slug}.mdx`), 'utf-8')
-  const {data} = matter(source)
+  const {data} = loadPost(slug)
   return {title: data.title as string, description: data.abstract as string}
 }
 
 export default async function BlogPostPage({params}: {params: Promise<{slug: string}>}) {
   const {slug} = await params
-  const source = fs.readFileSync(path.join(POSTS_PATH, `${slug}.mdx`), 'utf-8')
-  const {data: frontmatter, content} = matter(source)
+  const {data: frontmatter, content} = loadPost(slug)
 
   if (process.env.NODE_ENV === 'production' && frontmatter.draft) notFound()
 

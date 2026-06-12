@@ -17,7 +17,11 @@ interface OgImageProps {
 }
 
 export async function generateOgImage(props: OgImageProps): Promise<string> {
-  const params = new URLSearchParams(props as Record<string, string>)
+  const params = new URLSearchParams(
+    Object.fromEntries(
+      Object.entries(props).filter(([, v]) => v != null)
+    ) as Record<string, string>
+  )
   const url = `file:${path.join(process.cwd(), `src/app/blog/og-image.html?${params}`)}`
 
   const hash = createHash('md5').update(url).digest('hex')

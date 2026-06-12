@@ -1,5 +1,5 @@
 export const clamp = (number: number, boundOne: number, boundTwo?: number): number => {
-  if (!boundTwo) {
+  if (boundTwo === undefined) {
     return Math.max(number, boundOne) === boundOne ? number : boundOne
   } else if (Math.min(number, boundOne) === number) {
     return boundOne

@@ -8,6 +8,7 @@ export function useInViewport(
 ): boolean {
   const [intersect, setIntersect] = useState(false)
   const [isUnobserved, setIsUnobserved] = useState(false)
+  const optionsRef = useRef(options)
 
   useEffect(() => {
     if (!elementRef?.current) return
@@ -18,11 +19,11 @@ export function useInViewport(
         observer.unobserve(entry.target)
         setIsUnobserved(true)
       }
-    }, options)
+    }, optionsRef.current)
 
     if (!isUnobserved && shouldObserve) observer.observe(elementRef.current)
     return () => observer.disconnect()
-  }, [elementRef, unobserveOnIntersect, options, isUnobserved, shouldObserve])
+  }, [elementRef, unobserveOnIntersect, isUnobserved, shouldObserve])
 
   return intersect
 }

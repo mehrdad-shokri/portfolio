@@ -5,7 +5,7 @@ import type {AppState, AppAction} from 'layouts/App/reducer'
 import {Fragment, createContext, useEffect, useReducer} from 'react'
 import {Navbar} from 'components/Navbar'
 import {ThemeProvider} from 'components/ThemeProvider'
-import {useFoucFix, useLocalStorage} from 'hooks'
+import {useLocalStorage} from 'hooks'
 import styles from 'layouts/App/App.module.css'
 import {initialState, reducer} from 'layouts/App/reducer'
 
@@ -29,7 +29,10 @@ export function Providers({children}: {children: ReactNode}) {
   const [state, dispatch] = useReducer(reducer, initialState)
 
   useEffect(() => { console.info(`${repoPrompt}\n\n`) }, [])
-  useEffect(() => { dispatch({type: 'setTheme', value: (storedTheme || 'dark') as 'dark' | 'light'}) }, [storedTheme])
+  useEffect(() => {
+    const safeTheme = storedTheme === 'light' ? 'light' : 'dark'
+    dispatch({type: 'setTheme', value: safeTheme})
+  }, [storedTheme])
 
   return (
     <AppContext.Provider value={{...state, dispatch}}>
