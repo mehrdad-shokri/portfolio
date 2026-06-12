@@ -27,7 +27,7 @@
         "layouts/*"
       ],
       "hooks": [
-        "hooks/index.js"
+        "hooks/index.ts"
       ],
       "hooks/*": [
         "hooks/*"
