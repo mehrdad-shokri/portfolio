@@ -27,6 +27,7 @@ import {
   PlaneGeometry,
   Scene,
   ShaderMaterial,
+  sRGBEncoding,
   Texture,
   Vector3,
   WebGLRenderTarget,
@@ -133,9 +134,7 @@ export const Model = ({
 
     renderer.current.setPixelRatio(2)
     renderer.current.setSize(clientWidth, clientHeight)
-    // @ts-expect-error – outputEncoding is a legacy Three r144 property
-    renderer.current.outputEncoding = 3001 /* sRGBEncoding */
-    // @ts-expect-error – physicallyCorrectLights is a legacy Three r144 property
+    renderer.current.outputEncoding = sRGBEncoding
     renderer.current.physicallyCorrectLights = true
 
     camera.current = new PerspectiveCamera(
@@ -447,8 +446,7 @@ const Device = ({
 
   useEffect(() => {
     const applyScreenTexture = async (texture: Texture, node: Mesh) => {
-      // @ts-expect-error – encoding is a legacy Three r144 property
-      texture.encoding = 3001 /* sRGBEncoding */
+      texture.encoding = sRGBEncoding
       texture.flipY = false
       texture.anisotropy = renderer.current!.capabilities.getMaxAnisotropy()
       texture.generateMipmaps = false

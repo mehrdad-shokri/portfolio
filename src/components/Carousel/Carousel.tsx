@@ -13,6 +13,7 @@ import {
   PlaneGeometry,
   Scene,
   ShaderMaterial,
+  sRGBEncoding,
   Texture,
   WebGLRenderer,
 } from 'three'
@@ -145,8 +146,7 @@ export const Carousel = ({width, height, images, placeholder, ...rest}: Carousel
           : image.src.src
         const imageTexture = await textureLoader.loadAsync(imageSrc)
         await renderer.current!.initTexture(imageTexture)
-        // @ts-expect-error – encoding is a legacy Three r144 property
-        imageTexture.encoding = 3001 /* sRGBEncoding */
+        imageTexture.encoding = sRGBEncoding
         imageTexture.minFilter = LinearFilter
         imageTexture.magFilter = LinearFilter
         imageTexture.anisotropy = anisotropy

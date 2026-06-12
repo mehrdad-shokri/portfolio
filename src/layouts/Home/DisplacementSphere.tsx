@@ -16,6 +16,7 @@ import {
   PerspectiveCamera,
   Scene,
   SphereGeometry,
+  sRGBEncoding,
   UniformsUtils,
   Vector2,
   WebGLRenderer,
@@ -77,8 +78,7 @@ export const DisplacementSphere = (props: DisplacementSphereProps) => {
     })
     renderer.current.setSize(innerWidth, innerHeight)
     renderer.current.setPixelRatio(1)
-    // @ts-expect-error – outputEncoding is a legacy Three r144 property
-    renderer.current.outputEncoding = 3001 /* sRGBEncoding */
+    renderer.current.outputEncoding = sRGBEncoding
 
     camera.current = new PerspectiveCamera(
       54,

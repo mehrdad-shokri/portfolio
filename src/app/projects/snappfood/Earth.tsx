@@ -26,15 +26,18 @@ import {
   useRef,
   useState,
 } from 'react'
-import {HDRCubeTextureLoader} from 'three-stdlib'
-import {OrbitControls} from 'three/addons/controls/OrbitControls.js'
+import {HDRCubeTextureLoader, OrbitControls} from 'three-stdlib'
 import {
   ACESFilmicToneMapping,
   AmbientLight,
+  AnimationClip,
   AnimationMixer,
   Clock,
+  CubeTexture,
   DirectionalLight,
   LoopOnce,
+  Mesh,
+  MeshStandardMaterial,
   PMREMGenerator,
   PerspectiveCamera,
   Raycaster,
@@ -45,8 +48,7 @@ import {
   WebGLRenderer,
   Object3D,
   Texture,
-  AnimationAction,
-  Camera,
+  sRGBEncoding,
 } from 'three'
 import {LinearFilter} from 'three'
 import {EquirectangularReflectionMapping} from 'three'
@@ -66,9 +68,10 @@ import styles from './Earth.module.css'
 
 interface LabelData {
   position: number[]
-  content: string
+  content?: string
   text?: string
   delay?: number
+  hidden?: boolean
   sprite?: Sprite
   element?: HTMLElement
   [key: string]: unknown
@@ -139,11 +142,11 @@ const EarthContext = createContext<EarthContextValue>({
 export const Earth = ({
   position = [0, 0, 0],
   scale = 1,
-  hideMeshes = [] as string[],
-  labels = [] as any[],
+  hideMeshes = [],
+  labels = [],
   className,
   children,
-}: {scale?: number; hideMeshes?: string[]; labels?: any[]; className?: string; children?: React.ReactNode; scrim?: boolean; scrimReverse?: boolean; camera?: number[]; animations?: string | string[]; meshes?: unknown; [key: string]: unknown}) => {
+}: {position?: number[]; scale?: number; hideMeshes?: string[]; labels?: LabelData[]; className?: string; children?: React.ReactNode; scrim?: boolean; scrimReverse?: boolean; camera?: number[]; animations?: string | string[]; meshes?: unknown; [key: string]: unknown}) => {
   const [loaded, setLoaded] = useState(false)
   const [grabbing, setGrabbing] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -159,7 +162,7 @@ export const Earth = ({
   const mouse = useRef<Vector2 | undefined>(undefined)
   const raycaster = useRef<Raycaster | undefined>(undefined)
   const sceneModel = useRef<Object3D | undefined>(undefined)
-  const animations = useRef<AnimationAction[] | undefined>(undefined)
+  const animations = useRef<AnimationClip[] | undefined>(undefined)
   const mixer = useRef<AnimationMixer | undefined>(undefined)
   const inViewport = useInViewport(canvas)
   const animationFrame = useRef<number | undefined>(undefined)
@@ -190,20 +193,20 @@ export const Earth = ({
     const delta = clock.current?.getDelta() ?? 0
     mixer.current?.update(delta)
     controls.current?.update()
-    renderer.current?.render(scene.current!, camera.current as Camera)
+    renderer.current?.render(scene.current!, camera.current!)
 
     // Render labels
     labelElements.current.forEach(label => {
       const {element, position, sprite} = label
-      const vector = new Vector3(...(position as unknown as [number, number, number]))
+      const vector = new Vector3().fromArray(position)
       const meshDistance = camera.current!.position.distanceTo(
         sceneModel.current!.position
       )
-      const spriteDistance = camera.current!.position.distanceTo((sprite as {position: Vector3}).position)
+      const spriteDistance = camera.current!.position.distanceTo(sprite.position)
       const spriteBehindObject = spriteDistance > meshDistance
       void spriteBehindObject
 
-      vector.project(camera.current as Camera)
+      vector.project(camera.current!)
       vector.x = Math.round((0.5 + vector.x / 2) * window.innerWidth)
       vector.y = Math.round((0.5 - vector.y / 2) * window.innerHeight)
       element.style.setProperty('--posX', numToPx(vector.x))
@@ -237,10 +240,8 @@ export const Earth = ({
       failIfMajorPerformanceCaveat: true,
     })
     renderer.current!.setPixelRatio(1)
-    // @ts-ignore - outputEncoding removed in Three r152+
-    ;(renderer.current as any).outputEncoding = 3001
-    // @ts-ignore - physicallyCorrectLights removed in Three r152+
-    ;(renderer.current as any).physicallyCorrectLights = true
+    renderer.current!.outputEncoding = sRGBEncoding
+    renderer.current!.physicallyCorrectLights = true
     renderer.current!.toneMapping = ACESFilmicToneMapping
 
     camera.current = new PerspectiveCamera(
@@ -330,7 +331,7 @@ export const Earth = ({
     )
 
     const handleChunkChange = (axis: 'x' | 'y' | 'z', value: number) => {
-      if (chunk) { (chunk as any).position[axis] = value }
+      if (chunk) { chunk.position[axis] = value }
     }
 
     const unsubscribeChunkX = chunkXSpring.on('change',value =>
@@ -344,7 +345,9 @@ export const Earth = ({
     )
 
     const unsubscribeOpacity = opacitySpring.on('change',value => {
-      if (atmosphere) { (atmosphere as any).material.opacity = value }
+      if (atmosphere) {
+        ((atmosphere as Mesh).material as MeshStandardMaterial).opacity = value
+      }
     })
 
     return () => {
@@ -384,25 +387,26 @@ export const Earth = ({
       const gltf = await modelLoader.loadAsync(earthModel)
 
       sceneModel.current = gltf.scene
-      animations.current = gltf.animations as unknown as AnimationAction[]
+      animations.current = gltf.animations
       mixer.current = new AnimationMixer(sceneModel.current)
       mixer.current.timeScale = 0.1
 
       sceneModel.current?.traverse(async child => {
-        const {material, name} = child as any
+        const material = (child as Mesh).material as MeshStandardMaterial | undefined
+        if (!material) return
 
-        if (name === 'Atmosphere') {
+        if (child.name === 'Atmosphere') {
           material.alphaMap = material.map
         }
 
-        if (material) {
-          await renderer.current!.initTexture(material)
+        if (material.map) {
+          await renderer.current!.initTexture(material.map)
         }
       })
 
-      sceneModel.current!.position.x = (position as number[])[0]
-      sceneModel.current!.position.y = (position as number[])[1]
-      sceneModel.current!.position.z = (position as number[])[2]
+      sceneModel.current!.position.x = position[0]
+      sceneModel.current!.position.y = position[1]
+      sceneModel.current!.position.z = position[2]
 
       sceneModel.current.scale.x = scale
       sceneModel.current.scale.y = scale
@@ -410,26 +414,23 @@ export const Earth = ({
     }
 
     const loadEnv = async () => {
-      const hdrTexture = await (hdrLoader as any).loadAsync([
-        mwnx,
-        mwny,
-        mwnz,
-        mwpx,
-        mwpy,
-        mwpz,
-      ])
+      // HDRCubeTextureLoader.load takes the 6 cube faces; three-stdlib mistypes
+      // its loadAsync override as single-url, so use the callback form here.
+      const hdrTexture = await new Promise<CubeTexture>((resolve, reject) => {
+        hdrLoader.load([mwnx, mwny, mwnz, mwpx, mwpy, mwpz], resolve, undefined, reject)
+      })
 
       hdrTexture.magFilter = LinearFilter
-      envMap.current = (pmremGenerator.fromCubemap(hdrTexture) as any).texture
+      const envTexture = pmremGenerator.fromCubemap(hdrTexture).texture
+      envMap.current = envTexture
       pmremGenerator.dispose()
-      await renderer.current!.initTexture(envMap.current as unknown as Texture)
+      await renderer.current!.initTexture(envTexture)
     }
 
     const loadBackground = async () => {
-      const backgroundTexture = await textureLoader.loadAsync(milkywayBg as string)
+      const backgroundTexture = await textureLoader.loadAsync(milkywayBg)
       backgroundTexture.mapping = EquirectangularReflectionMapping
-      // @ts-ignore - encoding removed in Three r152+
-      ;(backgroundTexture as any).encoding = 3001
+      backgroundTexture.encoding = sRGBEncoding
       if (scene.current) scene.current.background = backgroundTexture
       await renderer.current!.initTexture(backgroundTexture)
     }
@@ -437,8 +438,8 @@ export const Earth = ({
     const handleLoad = async () => {
       await Promise.all([loadBackground(), loadEnv(), loadModel()])
 
-      sceneModel.current!.traverse((child: any) => {
-        const {material} = child
+      sceneModel.current!.traverse(child => {
+        const material = (child as Mesh).material as MeshStandardMaterial | undefined
         if (material) {
           material.envMap = envMap.current ?? null
           material.needsUpdate = true
@@ -486,10 +487,10 @@ export const Earth = ({
         element.classList.add(styles.label)
         element.dataset.hidden = 'true'
         element.style.setProperty('--delay', `${label.delay || 0}ms`)
-        element.textContent = label.text
+        element.textContent = label.text ?? ''
         labelContainer.current!.appendChild(element)
         const sprite = new Sprite()
-        sprite.position.set(...(label.position as unknown as [number, number, number]))
+        sprite.position.fromArray(label.position)
         sprite.scale.set(60, 60, 1)
         return {element, ...label, sprite}
       })
@@ -516,7 +517,7 @@ export const Earth = ({
         (event.clientX / innerWidth) * 2 - 1,
         -(event.clientY / innerHeight) * 2 + 1
       )
-      raycaster.current?.setFromCamera(mouse.current!, camera.current as Camera)
+      raycaster.current?.setFromCamera(mouse.current!, camera.current!)
       const intersects = raycaster.current?.intersectObjects(
         scene.current?.children ?? [],
         true
@@ -573,7 +574,7 @@ export const Earth = ({
               chunkYSpring.set(chunkTarget.y)
               chunkZSpring.set(chunkTarget.z)
             }
-          } else if (name === 'EarthFull' && (chunk as any)?.visible) {
+          } else if (name === 'EarthFull' && chunk?.visible) {
             child.visible = false
           } else {
             child.visible = true
@@ -584,14 +585,14 @@ export const Earth = ({
           } else if (name === 'Chunk') {
             const chunkTarget = new Vector3(0, 0, 0)
 
-            if (isEqualPosition(chunkTarget, (chunk as any)?.position ?? {})) {
+            if (isEqualPosition(chunkTarget, chunk?.position ?? {})) {
               child.visible = false
             }
 
             chunkXSpring.set(chunkTarget.x)
             chunkYSpring.set(chunkTarget.y)
             chunkZSpring.set(chunkTarget.z)
-          } else if (name === 'EarthPartial' && (chunk as any)?.visible) {
+          } else if (name === 'EarthPartial' && chunk?.visible) {
             child.visible = true
           } else {
             child.visible = false
@@ -605,7 +606,7 @@ export const Earth = ({
 
       if (reduceMotion) return
 
-      animations.current?.forEach((clip: any, index: number) => {
+      animations.current?.forEach((clip: AnimationClip, index: number) => {
         if (
           !sectionAnimations.find((section: string) => section.includes(index.toString()))
         ) {
@@ -618,12 +619,12 @@ export const Earth = ({
         sectionAnimations.forEach((animItem: string) => {
           const values = animItem.split(':')
           const clip = animations.current![Number(values[0])]
-          const animation = mixer.current?.clipAction(clip as any)
+          const animation = mixer.current?.clipAction(clip)
 
           if (!animation) return
           if (!values[1] || values[1] !== 'loop') {
             animation.clampWhenFinished = true
-            animation.loop = LoopOnce as any
+            animation.loop = LoopOnce
           }
           animation.play()
         })
