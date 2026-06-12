@@ -26,7 +26,8 @@ import {
   useRef,
   useState,
 } from 'react'
-import {HDRCubeTextureLoader, OrbitControls} from 'three-stdlib'
+import {HDRCubeTextureLoader} from 'three-stdlib'
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js'
 import {
   ACESFilmicToneMapping,
   AmbientLight,
@@ -299,12 +300,12 @@ export const Earth = ({
       setGrabbing(false)
     }
 
-    (controls.current as any)?.addEventListener('start', handleControlStart)
-    (controls.current as any)?.addEventListener('end', handleControlEnd)
+    controls.current?.addEventListener('start', handleControlStart)
+    controls.current?.addEventListener('end', handleControlEnd)
 
     return () => {
-      (controls.current as any)?.removeEventListener('start', handleControlStart)
-      (controls.current as any)?.removeEventListener('end', handleControlEnd)
+      controls.current?.removeEventListener('start', handleControlStart)
+      controls.current?.removeEventListener('end', handleControlEnd)
     }
   }, [cameraXSpring, cameraYSpring, cameraZSpring])
 
