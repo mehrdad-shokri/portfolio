@@ -191,10 +191,9 @@ export const Model = ({
     renderTargetBlur.current.texture.generateMipmaps = false
 
     // Make a plane and make it face up
-    const planeGeometry = new PlaneGeometry(
-      planeWidth,
-      planeHeight
-    ).rotateX(Math.PI / 2)
+    const planeGeometry = new PlaneGeometry(planeWidth, planeHeight).rotateX(
+      Math.PI / 2
+    )
 
     const planeMaterial = new MeshBasicMaterial({
       map: renderTarget.current.texture,
@@ -279,8 +278,9 @@ export const Model = ({
 
     // Blur horizontally and draw in the renderTargetBlur
     ;(blurPlane.current as Mesh).material = horizontalBlurMaterial.current!
-    ;(horizontalBlurMaterial.current!.uniforms.tDiffuse as {value: Texture}).value =
-      renderTarget.current!.texture
+    ;(
+      horizontalBlurMaterial.current!.uniforms.tDiffuse as {value: Texture}
+    ).value = renderTarget.current!.texture
     horizontalBlurMaterial.current!.uniforms.h.value = amount * (1 / 256)
 
     renderer.current!.setRenderTarget(renderTargetBlur.current)
@@ -288,8 +288,9 @@ export const Model = ({
 
     // Blur vertically and draw in the main renderTarget
     ;(blurPlane.current as Mesh).material = verticalBlurMaterial.current!
-    ;(verticalBlurMaterial.current!.uniforms.tDiffuse as {value: Texture}).value =
-      renderTargetBlur.current!.texture
+    ;(
+      verticalBlurMaterial.current!.uniforms.tDiffuse as {value: Texture}
+    ).value = renderTargetBlur.current!.texture
     verticalBlurMaterial.current!.uniforms.v.value = amount * (1 / 256)
 
     renderer.current!.setRenderTarget(renderTarget.current)
@@ -442,7 +443,8 @@ const Device = ({
 }: DeviceProps) => {
   const [loadDevice, setLoadDevice] = useState<LoadDevice | undefined>()
   const reduceMotion = useReducedMotion()
-  const placeholderScreen = createRef<Mesh | null>() as React.MutableRefObject<Mesh | null>
+  const placeholderScreen =
+    createRef<Mesh | null>() as React.MutableRefObject<Mesh | null>
 
   useEffect(() => {
     const applyScreenTexture = async (texture: Texture, node: Mesh) => {
@@ -479,7 +481,9 @@ const Device = ({
           // Create a copy of the screen mesh so we can fade it out
           // over the full resolution screen texture
           placeholderScreen.current = screenMesh.clone() as Mesh
-          placeholderScreen.current.material = (screenMesh.material as MeshBasicMaterial).clone()
+          placeholderScreen.current.material = (
+            screenMesh.material as MeshBasicMaterial
+          ).clone()
           screenMesh.parent!.add(placeholderScreen.current)
           ;(placeholderScreen.current.material as MeshBasicMaterial).opacity = 1
           placeholderScreen.current.position.z += 0.001
@@ -488,7 +492,8 @@ const Device = ({
 
           loadFullResTexture = async () => {
             const image = await resolveSrcFromSrcSet({
-              srcSet: (texture.srcSet ?? []) as import('utils/image').SrcSetItem[],
+              srcSet: (texture.srcSet ??
+                []) as import('utils/image').SrcSetItem[],
               sizes: texture.sizes,
             })
             const fullSize = await textureLoader.loadAsync(image)
@@ -496,7 +501,10 @@ const Device = ({
 
             animate(1, 0, {
               onUpdate: value => {
-                ;(placeholderScreen.current!.material as MeshBasicMaterial).opacity = value
+                // eslint-disable-next-line no-extra-semi
+                ;(
+                  placeholderScreen.current!.material as MeshBasicMaterial
+                ).opacity = value
                 renderFrame()
               },
             })
@@ -506,7 +514,9 @@ const Device = ({
       const targetPosition = new Vector3(position.x, position.y, position.z)
 
       if (reduceMotion) {
-        gltf.scene.position.set(...(targetPosition.toArray() as [number, number, number]))
+        gltf.scene.position.set(
+          ...(targetPosition.toArray() as [number, number, number])
+        )
       }
       // Simple slide up animation
       if (model.animation === ModelAnimationType.SpringUp) {
@@ -517,7 +527,9 @@ const Device = ({
             targetPosition.z
           )
 
-          gltf.scene.position.set(...(startPosition.toArray() as [number, number, number]))
+          gltf.scene.position.set(
+            ...(startPosition.toArray() as [number, number, number])
+          )
 
           return animate(startPosition.y, targetPosition.y, {
             type: 'spring',
@@ -544,9 +556,13 @@ const Device = ({
           const startRotation = new Vector3(MathUtils.degToRad(90), 0, 0)
           const endRotation = new Vector3(0, 0, 0)
 
-          gltf.scene.position.set(...(targetPosition.toArray() as [number, number, number]))
+          gltf.scene.position.set(
+            ...(targetPosition.toArray() as [number, number, number])
+          )
           if (frameNode) {
-            frameNode.rotation.set(...(startRotation.toArray() as [number, number, number]))
+            frameNode.rotation.set(
+              ...(startRotation.toArray() as [number, number, number])
+            )
           }
 
           return animate(startRotation.x, endRotation.x, {
@@ -593,7 +609,17 @@ const Device = ({
     }
 
     startTransition(() => {
-      onLoad()
+      onLoad().catch(error => {
+        if (process.env.NODE_ENV === 'development') {
+          // three.js ImageLoader rejects with the <img> error Event, which
+          // has no message — the failing URL lives on its target.
+          const failedUrl =
+            error instanceof Event && error.target instanceof HTMLImageElement
+              ? error.target.src
+              : undefined
+          console.error('Model load failed:', failedUrl ?? error)
+        }
+      })
     })
 
     return () => {
