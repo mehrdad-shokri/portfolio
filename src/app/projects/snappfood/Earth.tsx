@@ -76,6 +76,21 @@ interface LabelData {
   [key: string]: unknown
 }
 
+interface LabelElement extends LabelData {
+  element: HTMLElement
+  sprite: Sprite
+}
+
+interface EarthSectionData {
+  camera: number[]
+  animations: string[]
+  meshes: string[]
+  labels: string[]
+  sectionRef: React.RefObject<HTMLDivElement | null>
+}
+
+type CameraTarget = {x: number; y: number; z: number}
+
 const nullTarget = {x: 0, y: 0, z: 2}
 
 const interpolatePosition = (
@@ -138,8 +153,8 @@ const opacitySpringConfig = {
 }
 
 interface EarthContextValue {
-  registerSection: (section: any) => void
-  unregisterSection: (section: any) => void
+  registerSection: (section: EarthSectionData) => void
+  unregisterSection: (section: EarthSectionData) => void
 }
 const EarthContext = createContext<EarthContextValue>({
   registerSection: () => {},
@@ -171,7 +186,7 @@ export const Earth = ({
   const [grabbing, setGrabbing] = useState(false)
   const [visible, setVisible] = useState(false)
   const [loaderVisible, setLoaderVisible] = useState(false)
-  const sectionRefs = useRef<any[]>([])
+  const sectionRefs = useRef<EarthSectionData[]>([])
   const container = useRef<HTMLDivElement>(null)
   const labelContainer = useRef<HTMLDivElement>(null)
   const canvas = useRef<HTMLCanvasElement>(null)
@@ -187,7 +202,7 @@ export const Earth = ({
   const inViewport = useInViewport(canvas)
   const animationFrame = useRef<number | undefined>(undefined)
   const initCameraPosition = useRef(getPositionValues(sectionRefs.current[0]))
-  const labelElements = useRef<any[]>([])
+  const labelElements = useRef<LabelElement[]>([])
   const controls = useRef<OrbitControls | undefined>(undefined)
   const envMap = useRef<Texture | undefined>(undefined)
   const contentAdded = useRef<boolean>(false)
@@ -376,7 +391,8 @@ export const Earth = ({
 
     const unsubscribeOpacity = opacitySpring.on('change', value => {
       if (atmosphere) {
-        ((atmosphere as Mesh).material as MeshStandardMaterial).opacity = value
+        const material = (atmosphere as Mesh).material as MeshStandardMaterial
+        material.opacity = value
       }
     })
 
@@ -533,7 +549,7 @@ export const Earth = ({
         const sprite = new Sprite()
         sprite.position.fromArray(label.position)
         sprite.scale.set(60, 60, 1)
-        return {element, ...label, sprite}
+        return {...label, element, sprite}
       })
     }
   }, [labels, loaded])
@@ -587,7 +603,7 @@ export const Earth = ({
     const {innerHeight} = window
 
     const currentScrollY = window.scrollY - offsetTop
-    let prevTarget: any
+    let prevTarget: CameraTarget | undefined
 
     const updateMeshes = (index: number) => {
       const visibleMeshes = sectionRefs.current[index].meshes
@@ -684,7 +700,7 @@ export const Earth = ({
 
       const sectionLabels = sectionRefs.current[index].labels
 
-      sectionLabels.forEach((label: any) => {
+      sectionLabels.forEach((label: string) => {
         const matches = labelElements.current.filter(
           item => item.text === label
         )
@@ -774,11 +790,11 @@ export const Earth = ({
     }
   }, [handleScroll, inViewport, loaded, opacitySpring])
 
-  const registerSection = useCallback((section: any): void => {
+  const registerSection = useCallback((section: EarthSectionData): void => {
     sectionRefs.current = [...sectionRefs.current, section]
   }, [])
 
-  const unregisterSection = useCallback((section: any): void => {
+  const unregisterSection = useCallback((section: EarthSectionData): void => {
     sectionRefs.current = sectionRefs.current.filter(item => item !== section)
   }, [])
 

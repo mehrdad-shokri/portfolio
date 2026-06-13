@@ -95,7 +95,10 @@ export const SnappFood = () => {
         <ProjectBackground
           opacity={isDark ? 0.5 : 0.8}
           src={backgroundSpr}
-          srcSet={[{src: backgroundSpr as string, width: 1080}, {src: backgroundSprLarge as string, width: 2160}] as any}
+          srcSet={[
+            {src: backgroundSpr as string, width: 1080},
+            {src: backgroundSprLarge as string, width: 2160},
+          ]}
           placeholder={{src: backgroundSprPlaceholder as string}}
         />
         <ProjectHeader
@@ -109,7 +112,10 @@ export const SnappFood = () => {
             <ProjectImage
               raised
               key={themeId}
-              srcSet={[{src: imageSnappfood as string, width: 800}, {src: imageSnappfoodLarge as string, width: 1600}] as any}
+              srcSet={[
+                {src: imageSnappfood as string, width: 800},
+                {src: imageSnappfoodLarge as string, width: 1600},
+              ]}
               placeholder={{src: imageSnappfoodPlaceholder as string}}
               sizes={`(max-width: ${media.mobile}px) 100vw, (max-width: ${media.tablet}px) 800px, 1000px`}
               alt='Snappfood website home page'
@@ -132,18 +138,28 @@ export const SnappFood = () => {
           <ProjectSectionContent>
             <Image
               key={themeId}
-              srcSet={(isDark
-                  ? [imageSnappfoodDarkDesign, imageSnappfoodDesignDarkLarge]
-                  : [imageSnappfoodLightDesign, imageSnappfoodDesignLightLarge]) as any}
-              placeholder={{src: (isDark
+              srcSet={
+                isDark
+                  ? [
+                      {src: imageSnappfoodDarkDesign, width: 1024},
+                      {src: imageSnappfoodDesignDarkLarge, width: 2048},
+                    ]
+                  : [
+                      {src: imageSnappfoodLightDesign, width: 1024},
+                      {src: imageSnappfoodDesignLightLarge, width: 2048},
+                    ]
+              }
+              placeholder={{
+                src: (isDark
                   ? imageSnappfoodDesignDarkPlaceholder
-                  : imageSnappfoodDesignLightPlaceholder) as string}}
+                  : imageSnappfoodDesignLightPlaceholder) as string,
+              }}
               alt={`Snappfood design system`}
               sizes='100vw'
             />
             <ProjectTextRow>
               <SegmentedControl
-                label="Theme"
+                label='Theme'
                 currentIndex={themes.indexOf(themeId as string as ThemeId)}
                 onChange={handleThemeChange}
               >
@@ -169,18 +185,22 @@ export const SnappFood = () => {
             <Image
               raised
               key={themeId}
-              srcSet={(isDark
+              srcSet={
+                isDark
                   ? [
-                      imageSnappfoodDesignSystemDark,
-                      imageSnappfoodDesignSystemDarkLarge,
+                      {src: imageSnappfoodDesignSystemDark, width: 1280},
+                      {src: imageSnappfoodDesignSystemDarkLarge, width: 2560},
                     ]
                   : [
-                      imageSnappfoodDesignSystemLight,
-                      imageSnappfoodDesignSystemLightLarge,
-                    ]) as any}
-              placeholder={{src: (isDark
+                      {src: imageSnappfoodDesignSystemLight, width: 1280},
+                      {src: imageSnappfoodDesignSystemLightLarge, width: 2560},
+                    ]
+              }
+              placeholder={{
+                src: (isDark
                   ? imageSnappfoodDesignSystemDarkPlaceholder
-                  : imageSnappfoodDesignSystemLightPlaceholder) as string}}
+                  : imageSnappfoodDesignSystemLightPlaceholder) as string,
+              }}
               alt='Snappfood design system'
               sizes='100vw'
             />
@@ -205,8 +225,16 @@ export const SnappFood = () => {
             backgroundOverlayOpacity={0.5}
             backgroundElement={
               <Image
-                srcSet={[{src: imageSprBackgroundVolcanism as string, width: 800}, {src: imageSprBackgroundVolcanismLarge as string, width: 1600}] as any}
-                placeholder={{src: imageSprBackgroundVolcanismPlaceholder as string}}
+                srcSet={[
+                  {src: imageSprBackgroundVolcanism as string, width: 800},
+                  {
+                    src: imageSprBackgroundVolcanismLarge as string,
+                    width: 1600,
+                  },
+                ]}
+                placeholder={{
+                  src: imageSprBackgroundVolcanismPlaceholder as string,
+                }}
                 alt='A dramatic ocean scene with lava forming a new land mass.'
                 sizes='100vw'
               />
@@ -244,7 +272,7 @@ export const SnappFood = () => {
                 srcSet={[
                   {src: videoSnappfoodTest, width: 1280},
                   {src: videoSnappfoodTestLarge, width: 2560},
-                ] as any}
+                ]}
                 placeholder={{src: videoSnappfoodTestPlaceholder as string}}
                 alt='A learning designer building and deploying an interactive lesson on volcanism using the app.'
                 sizes={`(max-width: ${media.mobile}px) 100vw, 50vw`}
@@ -277,18 +305,22 @@ export const SnappFood = () => {
             <Image
               raised
               key={themeId}
-              srcSet={(isDark
+              srcSet={
+                isDark
                   ? [
-                      imageSnappfoodPerformanceDark,
-                      imageSnappfoodPerformanceDarkLarge,
+                      {src: imageSnappfoodPerformanceDark, width: 1024},
+                      {src: imageSnappfoodPerformanceDarkLarge, width: 2032},
                     ]
                   : [
-                      imageSnappfoodPerformanceLight,
-                      imageSnappfoodPerformanceLightLarge,
-                    ]) as any}
-              placeholder={{src: (isDark
+                      {src: imageSnappfoodPerformanceLight, width: 1024},
+                      {src: imageSnappfoodPerformanceLightLarge, width: 2032},
+                    ]
+              }
+              placeholder={{
+                src: (isDark
                   ? imageSnappfoodPerformanceDarkPlaceholder
-                  : imageSnappfoodPerformanceLightPlaceholder) as string}}
+                  : imageSnappfoodPerformanceLightPlaceholder) as string,
+              }}
               alt='Snappfood performance analytics in Chrome Lighthouse'
               sizes={`(max-width: ${media.mobile}px) 100vw, 80vw`}
             />

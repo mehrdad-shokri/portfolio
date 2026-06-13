@@ -38,7 +38,11 @@ interface CharItem {
   value: string
 }
 
-function shuffle(content: string[], output: CharItem[], position: number): CharItem[] {
+function shuffle(
+  content: string[],
+  output: CharItem[],
+  position: number
+): CharItem[] {
   return content.map((value, index) => {
     if (index < position) {
       return {type: CharType.Value, value}
@@ -62,7 +66,13 @@ interface DecoderTextProps {
 }
 
 export const DecoderText = memo(
-  ({text, start = true, delay: startDelay = 0, className, ...rest}: DecoderTextProps) => {
+  ({
+    text,
+    start = true,
+    delay: startDelay = 0,
+    className,
+    ...rest
+  }: DecoderTextProps) => {
     const output = useRef<CharItem[]>([{type: CharType.Glyph, value: ''}])
     const container = useRef<HTMLSpanElement>(null)
     const reduceMotion = useReducedMotion()
@@ -82,7 +92,7 @@ export const DecoderText = memo(
         containerInstance.innerHTML = characterMap.join('')
       }
 
-      const unsubscribeSpring = decoderSpring.on('change',value => {
+      const unsubscribeSpring = decoderSpring.on('change', value => {
         output.current = shuffle(content, output.current, value)
         renderOutput()
       })
