@@ -17,21 +17,31 @@ import styles from './ProjectSummary.module.css'
 
 const Model = dynamic(() => import('components/Model').then(mod => mod.Model))
 
+// Note: importing a .png/.jpg yields a Next.js StaticImageData object
+// ({src, width, height, ...}) at runtime, not a string (the *.png type
+// declaration is misleading). So an "image import" can be either a bare
+// URL string or that object — handle both.
+type TextureSource = string | {src: string; width?: number}
+
 interface ProjectTexture {
-  srcSet: string[] | Array<{src: string; width?: number}>
-  placeholder: string
+  srcSet: TextureSource[]
+  placeholder: TextureSource
 }
 
 function normalizeTexture(
   t: ProjectTexture,
   sizes: string
-): {srcSet: Array<{src: string}>; placeholder: {src: string}; sizes: string} {
-  const srcSet = t.srcSet.map(item =>
+): {
+  srcSet: Array<{src: string; width?: number}>
+  placeholder: {src: string; width?: number}
+  sizes: string
+} {
+  const toItem = (item: TextureSource) =>
     typeof item === 'string' ? {src: item} : item
-  )
+
   return {
-    srcSet,
-    placeholder: {src: t.placeholder},
+    srcSet: t.srcSet.map(toItem),
+    placeholder: toItem(t.placeholder),
     sizes,
   }
 }
