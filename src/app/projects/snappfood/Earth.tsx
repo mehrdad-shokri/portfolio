@@ -65,7 +65,6 @@ import {
 import {throttle} from 'utils/throttle'
 import styles from './Earth.module.css'
 
-
 interface LabelData {
   position: number[]
   content?: string
@@ -79,8 +78,11 @@ interface LabelData {
 
 const nullTarget = {x: 0, y: 0, z: 2}
 
-const interpolatePosition = (value: number, nextValue: number, percent: number): number =>
-  value + percent * (nextValue - value)
+const interpolatePosition = (
+  value: number,
+  nextValue: number,
+  percent: number
+): number => value + percent * (nextValue - value)
 
 /*
 const positionToString = value =>
@@ -89,7 +91,9 @@ const positionToString = value =>
     .join(', ');
 */
 
-const getPositionValues = (section?: {camera?: number[]}): {x: number; y: number; z: number} => {
+const getPositionValues = (section?: {
+  camera?: number[]
+}): {x: number; y: number; z: number} => {
   if (!section || !section.camera) return nullTarget
 
   return {
@@ -99,7 +103,10 @@ const getPositionValues = (section?: {camera?: number[]}): {x: number; y: number
   }
 }
 
-const isEqualPosition = (position1?: {x?: number; y?: number; z?: number}, position2?: {x?: number; y?: number; z?: number}): boolean => {
+const isEqualPosition = (
+  position1?: {x?: number; y?: number; z?: number},
+  position2?: {x?: number; y?: number; z?: number}
+): boolean => {
   const round = (num = 0) => Math.round((num + Number.EPSILON) * 100) / 100
 
   return (
@@ -146,7 +153,20 @@ export const Earth = ({
   labels = [],
   className,
   children,
-}: {position?: number[]; scale?: number; hideMeshes?: string[]; labels?: LabelData[]; className?: string; children?: React.ReactNode; scrim?: boolean; scrimReverse?: boolean; camera?: number[]; animations?: string | string[]; meshes?: unknown; [key: string]: unknown}) => {
+}: {
+  position?: number[]
+  scale?: number
+  hideMeshes?: string[]
+  labels?: LabelData[]
+  className?: string
+  children?: React.ReactNode
+  scrim?: boolean
+  scrimReverse?: boolean
+  camera?: number[]
+  animations?: string | string[]
+  meshes?: unknown
+  [key: string]: unknown
+}) => {
   const [loaded, setLoaded] = useState(false)
   const [grabbing, setGrabbing] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -185,7 +205,8 @@ export const Earth = ({
 
   const renderFrame = useCallback(() => {
     if (!inViewport) {
-      if (animationFrame.current !== undefined) cancelAnimationFrame(animationFrame.current)
+      if (animationFrame.current !== undefined)
+        cancelAnimationFrame(animationFrame.current)
       return
     }
 
@@ -202,7 +223,9 @@ export const Earth = ({
       const meshDistance = camera.current!.position.distanceTo(
         sceneModel.current!.position
       )
-      const spriteDistance = camera.current!.position.distanceTo(sprite.position)
+      const spriteDistance = camera.current!.position.distanceTo(
+        sprite.position
+      )
       const spriteBehindObject = spriteDistance > meshDistance
       void spriteBehindObject
 
@@ -269,7 +292,10 @@ export const Earth = ({
     const lights = [ambientLight, dirLight]
     lights.forEach(light => scene.current!.add(light))
 
-    controls.current = new OrbitControls(camera.current, canvas.current ?? undefined)
+    controls.current = new OrbitControls(
+      camera.current,
+      canvas.current ?? undefined
+    )
     controls.current!.enableZoom = false
     controls.current!.enablePan = false
     controls.current!.enableDamping = false
@@ -277,11 +303,13 @@ export const Earth = ({
 
     return () => {
       mounted.current = false
-      if (animationFrame.current !== undefined) cancelAnimationFrame(animationFrame.current)
+      if (animationFrame.current !== undefined)
+        cancelAnimationFrame(animationFrame.current)
 
       removeLights(lights)
       if (scene.current) cleanScene(scene.current)
-      if (renderer.current) if (renderer.current) cleanRenderer(renderer.current)
+      if (renderer.current)
+        if (renderer.current) cleanRenderer(renderer.current)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -320,31 +348,33 @@ export const Earth = ({
       camera.current!.position[axis] = value
     }
 
-    const unsubscribeCameraX = cameraXSpring.on('change',value =>
+    const unsubscribeCameraX = cameraXSpring.on('change', value =>
       handleCameraChange('x', value)
     )
-    const unsubscribeCameraY = cameraYSpring.on('change',value =>
+    const unsubscribeCameraY = cameraYSpring.on('change', value =>
       handleCameraChange('y', value)
     )
-    const unsubscribeCameraZ = cameraZSpring.on('change',value =>
+    const unsubscribeCameraZ = cameraZSpring.on('change', value =>
       handleCameraChange('z', value)
     )
 
     const handleChunkChange = (axis: 'x' | 'y' | 'z', value: number) => {
-      if (chunk) { chunk.position[axis] = value }
+      if (chunk) {
+        chunk.position[axis] = value
+      }
     }
 
-    const unsubscribeChunkX = chunkXSpring.on('change',value =>
+    const unsubscribeChunkX = chunkXSpring.on('change', value =>
       handleChunkChange('x', value)
     )
-    const unsubscribeChunkY = chunkYSpring.on('change',value =>
+    const unsubscribeChunkY = chunkYSpring.on('change', value =>
       handleChunkChange('y', value)
     )
-    const unsubscribeChunkZ = chunkZSpring.on('change',value =>
+    const unsubscribeChunkZ = chunkZSpring.on('change', value =>
       handleChunkChange('z', value)
     )
 
-    const unsubscribeOpacity = opacitySpring.on('change',value => {
+    const unsubscribeOpacity = opacitySpring.on('change', value => {
       if (atmosphere) {
         ((atmosphere as Mesh).material as MeshStandardMaterial).opacity = value
       }
@@ -392,7 +422,9 @@ export const Earth = ({
       mixer.current.timeScale = 0.1
 
       sceneModel.current?.traverse(async child => {
-        const material = (child as Mesh).material as MeshStandardMaterial | undefined
+        const material = (child as Mesh).material as
+          | MeshStandardMaterial
+          | undefined
         if (!material) return
 
         if (child.name === 'Atmosphere') {
@@ -417,7 +449,12 @@ export const Earth = ({
       // HDRCubeTextureLoader.load takes the 6 cube faces; three-stdlib mistypes
       // its loadAsync override as single-url, so use the callback form here.
       const hdrTexture = await new Promise<CubeTexture>((resolve, reject) => {
-        hdrLoader.load([mwnx, mwny, mwnz, mwpx, mwpy, mwpz], resolve, undefined, reject)
+        hdrLoader.load(
+          [mwnx, mwny, mwnz, mwpx, mwpy, mwpz],
+          resolve,
+          undefined,
+          reject
+        )
       })
 
       hdrTexture.magFilter = LinearFilter
@@ -439,7 +476,9 @@ export const Earth = ({
       await Promise.all([loadBackground(), loadEnv(), loadModel()])
 
       sceneModel.current!.traverse(child => {
-        const material = (child as Mesh).material as MeshStandardMaterial | undefined
+        const material = (child as Mesh).material as
+          | MeshStandardMaterial
+          | undefined
         if (material) {
           material.envMap = envMap.current ?? null
           material.needsUpdate = true
@@ -463,7 +502,8 @@ export const Earth = ({
   useEffect(() => {
     // Add models and textures once visible
     if (loaded && !contentAdded.current) {
-      if (scene.current && sceneModel.current) scene.current.add(sceneModel.current)
+      if (scene.current && sceneModel.current)
+        scene.current.add(sceneModel.current)
       contentAdded.current = true
     }
 
@@ -474,7 +514,8 @@ export const Earth = ({
     }
 
     return () => {
-      if (animationFrame.current !== undefined) cancelAnimationFrame(animationFrame.current)
+      if (animationFrame.current !== undefined)
+        cancelAnimationFrame(animationFrame.current)
     }
   }, [renderFrame, inViewport, loaded])
 
@@ -608,7 +649,9 @@ export const Earth = ({
 
       animations.current?.forEach((clip: AnimationClip, index: number) => {
         if (
-          !sectionAnimations.find((section: string) => section.includes(index.toString()))
+          !sectionAnimations.find((section: string) =>
+            section.includes(index.toString())
+          )
         ) {
           const animation = mixer.current?.clipAction(clip)
           animation?.reset().stop()
@@ -774,7 +817,16 @@ export const Earth = ({
 }
 
 export const EarthSection = memo(
-({children, scrim, scrimReverse, className, camera = [0, 0, 0], animations = [], meshes = [], labels = []}: {
+  ({
+    children,
+    scrim,
+    scrimReverse,
+    className,
+    camera = [0, 0, 0],
+    animations = [],
+    meshes = [],
+    labels = [],
+  }: {
     children?: React.ReactNode
     scrim?: boolean
     scrimReverse?: boolean
