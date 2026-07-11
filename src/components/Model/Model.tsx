@@ -74,6 +74,12 @@ export interface ModelConfig {
   position: {x: number; y: number; z: number}
   animation: ModelAnimationTypeValue
   texture: ModelTexture
+  // Uniform scale applied to the loaded model (defaults to 1).
+  scale?: number
+  // Base orientation in radians, e.g. {y: Math.PI} to face the model forward.
+  rotation?: {x: number; y: number; z: number}
+  // Keep the glTF's own materials instead of the dark device-frame override.
+  keepMaterials?: boolean
 }
 
 interface ModelProps {
@@ -81,6 +87,8 @@ interface ModelProps {
   show?: boolean
   showDelay?: number
   cameraPosition?: {x: number; y: number; z: number}
+  // Multiplier for how much the model rotates with the mouse (defaults to 1).
+  rotationFactor?: number
   style?: React.CSSProperties
   className?: string
   alt?: string
@@ -92,6 +100,7 @@ export const Model = ({
   show = true,
   showDelay = 0,
   cameraPosition = {x: 0, y: 0, z: 8},
+  rotationFactor = 1,
   style,
   className,
   alt,
@@ -350,8 +359,8 @@ export const Model = ({
         y: (event.clientY - innerHeight / 2) / innerHeight,
       }
 
-      rotationY.set(position.x / 2)
-      rotationX.set(position.y / 2)
+      rotationY.set((position.x / 2) * rotationFactor)
+      rotationX.set((position.y / 2) * rotationFactor)
     }
 
     if (isInViewport && !reduceMotion) {
@@ -361,7 +370,7 @@ export const Model = ({
     return () => {
       window.removeEventListener('mousemove', onMouseMove)
     }
-  }, [isInViewport, reduceMotion, rotationX, rotationY])
+  }, [isInViewport, reduceMotion, rotationX, rotationY, rotationFactor])
 
   // Handle window resize
   useEffect(() => {
@@ -470,9 +479,24 @@ const Device = ({
       const placeholder = await textureLoader.loadAsync(texture.placeholder.src)
       const gltf = await modelLoader.loadAsync(url)
       modelGroup.current!.add(gltf.scene)
+
+      // Per-model base orientation (e.g. face the truck forward) and scale.
+      if (model.rotation) {
+        gltf.scene.rotation.set(
+          model.rotation.x,
+          model.rotation.y,
+          model.rotation.z
+        )
+      }
+      if (model.scale != null) {
+        gltf.scene.scale.setScalar(model.scale)
+      }
+
       gltf.scene.traverse(async (node: Object3D) => {
         const meshNode = node as Mesh & {material?: MeshBasicMaterial}
-        if (meshNode.material) {
+        // Devices get a dark frame override; models flagged keepMaterials
+        // (e.g. the truck) keep their own glTF colors/materials.
+        if (!model.keepMaterials && meshNode.material) {
           meshNode.material.color = new Color(0x161d25)
           meshNode.material.color.convertSRGBToLinear()
         }

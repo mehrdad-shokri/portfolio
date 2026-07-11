@@ -1,6 +1,9 @@
 import type {Scene, Material, WebGLRenderer, Light, Object3D, Mesh} from 'three'
 import {Cache, TextureLoader} from 'three'
 import {DRACOLoader, GLTFLoader} from 'three-stdlib'
+// three-stdlib exports MeshoptDecoder at runtime but omits it from its type defs.
+// @ts-expect-error - missing from three-stdlib type declarations
+import {MeshoptDecoder} from 'three-stdlib'
 
 Cache.enabled = true
 
@@ -8,6 +11,9 @@ const dracoLoader = new DRACOLoader()
 const gltfLoader = new GLTFLoader()
 dracoLoader.setDecoderPath('/draco/')
 gltfLoader.setDRACOLoader(dracoLoader)
+// The Volvo model is meshopt-compressed (EXT_meshopt_compression, via gltfpack).
+// `MeshoptDecoder` is a factory here — call it to get the decoder instance.
+gltfLoader.setMeshoptDecoder(MeshoptDecoder())
 
 export const modelLoader = gltfLoader
 export const textureLoader = new TextureLoader()

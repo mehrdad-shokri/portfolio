@@ -8,6 +8,7 @@ import featherTexturePlaceholder from 'assets/feather-days-placeholder.png'
 import featherTexture from 'assets/feather-days.png'
 import snappfoodTextureLarge from 'assets/snappfood-large.png'
 import snappfoodTexturePlaceholder from 'assets/snappfood-placeholder.png'
+import volvoTruckPlaceholder from 'assets/volvo-placeholder.png'
 import snappfoodTexture from 'assets/snappfood.png'
 import {Footer} from 'components/Footer'
 import {Intro} from 'layouts/Home/Intro'
@@ -32,12 +33,13 @@ export const Home = () => {
   const [visibleSections, setVisibleSections] = useState<Element[]>([])
   const [scrollIndicatorHidden, setScrollIndicatorHidden] = useState(false)
   const intro = useRef<HTMLElement>(null)
+  const projectVolvo = useRef<HTMLElement>(null)
   const projectOne = useRef<HTMLElement>(null)
   const projectTwo = useRef<HTMLElement>(null)
   const details = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    const sections = [intro, projectOne, projectTwo, details]
+    const sections = [intro, projectVolvo, projectOne, projectTwo, details]
 
     const sectionObserver = new IntersectionObserver(
       (entries, observer) => {
@@ -81,10 +83,31 @@ export const Home = () => {
         scrollIndicatorHidden={scrollIndicatorHidden}
       />
       <ProjectSummary
-        id='projects'
+        id='volvo'
+        sectionRef={projectVolvo}
+        visible={visibleSections.includes(projectVolvo.current!)}
+        index={1}
+        title='Volvo Group Connected Soloutions'
+        description='Trucks connectivity and Fleet management'
+        buttonText='View project'
+        buttonLink='/projects/volvo'
+        model={{
+          type: 'volvoTruck',
+          alt: 'Volvo Group Connected Solutions',
+          textures: [
+            {
+              srcSet: [],
+              placeholder: volvoTruckPlaceholder,
+            },
+          ],
+        }}
+      />
+
+      <ProjectSummary
+        id='snappfood'
         sectionRef={projectOne}
         visible={visibleSections.includes(projectOne.current!)}
-        index={1}
+        index={2}
         title="Iran's leading online food ordering service"
         description="Snappfood's mobile app and website development"
         buttonText='View project'
@@ -105,7 +128,7 @@ export const Home = () => {
         alternate
         sectionRef={projectTwo}
         visible={visibleSections.includes(projectTwo.current!)}
-        index={2}
+        index={3}
         title='Flutter Weather App'
         description='Weather App developed with Flutter, RxDart and Bloc pattern'
         buttonText='View project'

@@ -47,7 +47,7 @@ function normalizeTexture(
 }
 
 interface ProjectModel {
-  type: 'laptop' | 'phone'
+  type: 'laptop' | 'phone' | 'volvoTruck'
   alt: string
   textures: ProjectTexture[]
 }
@@ -177,7 +177,27 @@ export const ProjectSummary = ({
                 {
                   ...deviceModels.phone,
                   position: {x: 0.6, y: -0.5, z: 0.3},
-                  texture: normalizeTexture(model.textures[1], phoneSizes),
+                  texture: normalizeTexture(model.textures[1], laptopSizes),
+                },
+              ]}
+            />
+          </div>
+        </>
+      )}
+      {model.type === 'volvoTruck' && (
+        <>
+          {renderKatakana('volvoTruck', visible)}
+          <div className={styles.model} data-device='volvoTruck'>
+            <Model
+              alt={model.alt}
+              cameraPosition={{x: 0, y: 0, z: 8}}
+              showDelay={700}
+              show={visible}
+              rotationFactor={2}
+              models={[
+                {
+                  ...deviceModels.volvoTruck,
+                  texture: normalizeTexture(model.textures[0], phoneSizes),
                 },
               ]}
             />

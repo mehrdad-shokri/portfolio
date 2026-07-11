@@ -74,7 +74,7 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "build:storybook": "build-storybook -o build-storybook && bun scripts/draco-storybook",
-    "start": "npx serve build",
+    "start": "next start",
     "typecheck": "tsc --noEmit",
     "test": "echo 'write some tests'",
     "storybook": "start-storybook -p 9009 -h localhost",
