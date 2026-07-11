@@ -29,7 +29,9 @@ export const TextArea = ({
   ...rest
 }: TextAreaProps) => {
   const [rows, setRows] = useState(minRows)
-  const [textareaDimensions, setTextareaDimensions] = useState<TextareaDimensions | undefined>()
+  const [textareaDimensions, setTextareaDimensions] = useState<
+    TextareaDimensions | undefined
+  >()
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
@@ -37,7 +39,8 @@ export const TextArea = ({
     const style = getComputedStyle(textareaRef.current)
     setTextareaDimensions({
       lineHeight: parseInt(style.lineHeight, 10),
-      paddingHeight: parseInt(style.paddingTop, 10) + parseInt(style.paddingBottom, 10),
+      paddingHeight:
+        parseInt(style.paddingTop, 10) + parseInt(style.paddingBottom, 10),
     })
   }, [])
 
@@ -47,7 +50,10 @@ export const TextArea = ({
     const {lineHeight, paddingHeight} = textareaDimensions
     const previousRows = event.target.rows
     event.target.rows = minRows
-    const currentRows = ~~((event.target.scrollHeight - paddingHeight) / lineHeight)
+    const currentRows = ~~(
+      (event.target.scrollHeight - paddingHeight) /
+      lineHeight
+    )
     if (currentRows === previousRows) event.target.rows = currentRows
     if (maxRows && currentRows >= maxRows) {
       event.target.rows = maxRows

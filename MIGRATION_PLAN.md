@@ -3,6 +3,7 @@
 ## Overview
 
 Three tracks:
+
 1. **Runtime & package manager** — replace Node.js/npm with Bun
 2. **TypeScript migration** — convert all 120 JS files to `.ts`/`.tsx`
 3. **Dependency upgrade** — Next.js 12 → 15, and all other packages to current versions
@@ -18,12 +19,12 @@ Next.js 13 introduced the App Router as an opt-in, and it has been the recommend
 
 **This codebase is structurally coupled to Pages Router patterns.** Every page uses `getStaticProps` and/or `getStaticPaths`. The `_app.page.js` holds global context (theme, menu state) via React Context and a `useReducer`. `_document.page.js` customizes the HTML shell. These are Pages Router primitives — none of them exist in the App Router. Migrating them isn't a rename; it's a rewrite:
 
-| Pages Router | App Router equivalent |
-|---|---|
-| `getStaticProps` | `async` page component + `fetch` with `cache: 'force-cache'` |
-| `getStaticPaths` | `generateStaticParams()` export |
-| `_app.page.js` | Root `layout.tsx` with `'use client'` providers |
-| `_document.page.js` | Root `layout.tsx` metadata + `<html>`/`<body>` |
+| Pages Router                  | App Router equivalent                                          |
+| ----------------------------- | -------------------------------------------------------------- |
+| `getStaticProps`              | `async` page component + `fetch` with `cache: 'force-cache'`   |
+| `getStaticPaths`              | `generateStaticParams()` export                                |
+| `_app.page.js`                | Root `layout.tsx` with `'use client'` providers                |
+| `_document.page.js`           | Root `layout.tsx` metadata + `<html>`/`<body>`                 |
 | `AppContext` via `useContext` | Context still works but providers must be in Client Components |
 
 **We are already doing two major changes simultaneously** (TypeScript + Next.js upgrade). App Router is a third axis of complexity with its own mental model: Server Components vs Client Components, streaming, the `use` hook for async data, the new `metadata` API, etc. Mixing all three would make regressions very hard to bisect.
@@ -36,18 +37,18 @@ Next.js 13 introduced the App Router as an opt-in, and it has been the recommend
 
 ## Breaking Changes to Know Before Starting
 
-| Change | Impact |
-|--------|--------|
-| `next export` CLI removed in Next.js 13 | Replace with `output: 'export'` in next.config.js |
-| `next/image` API changed in Next.js 13 | `layout` prop removed; use `fill`, `width`, `height` instead |
-| `next/link` no longer needs `<a>` child in Next.js 13 | Remove bare `<a>` children from `<Link>` |
-| `next start` doesn't work with static export | Use a static file server for local preview |
-| framer-motion 7 → 12: `AnimatePresence` and `LazyMotion` API changes | Review animation code |
-| Storybook 6 → 8: complete config format change | Rewrite `.storybook/` config |
-| `pageExtensions` must include `.tsx` variants | Update next.config.js |
-| `module.exports` in next.config.js → use `import` or keep CJS | Decide on config format |
-| Bun replaces Node.js as runtime and npm/yarn as package manager | `yarn.lock` / `package-lock.json` replaced by `bun.lockb`; all scripts use `bun run` |
-| `engines` field in package.json changes from `node` to `bun` | Update before switching |
+| Change                                                               | Impact                                                                               |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `next export` CLI removed in Next.js 13                              | Replace with `output: 'export'` in next.config.js                                    |
+| `next/image` API changed in Next.js 13                               | `layout` prop removed; use `fill`, `width`, `height` instead                         |
+| `next/link` no longer needs `<a>` child in Next.js 13                | Remove bare `<a>` children from `<Link>`                                             |
+| `next start` doesn't work with static export                         | Use a static file server for local preview                                           |
+| framer-motion 7 → 12: `AnimatePresence` and `LazyMotion` API changes | Review animation code                                                                |
+| Storybook 6 → 8: complete config format change                       | Rewrite `.storybook/` config                                                         |
+| `pageExtensions` must include `.tsx` variants                        | Update next.config.js                                                                |
+| `module.exports` in next.config.js → use `import` or keep CJS        | Decide on config format                                                              |
+| Bun replaces Node.js as runtime and npm/yarn as package manager      | `yarn.lock` / `package-lock.json` replaced by `bun.lockb`; all scripts use `bun run` |
+| `engines` field in package.json changes from `node` to `bun`         | Update before switching                                                              |
 
 ---
 
@@ -91,7 +92,7 @@ Bun operates at two levels here:
   - Set `baseUrl: "src"` to preserve existing path aliases
   - Enable `strict: true`
   - Include `jsx: "preserve"` (Next.js handles JSX transform)
-  - Add `paths` to match jsconfig aliases (components/*, layouts/*, etc.)
+  - Add `paths` to match jsconfig aliases (components/_, layouts/_, etc.)
   - Set `moduleResolution: "node"` (Next.js 12 uses webpack; upgrade to `bundler` in Phase 2)
   - Add `ignoreDeprecations: "6.0"` to silence TS 6 baseUrl deprecation warning
   - Remove `jsconfig.json` after tsconfig is confirmed working
@@ -132,7 +133,7 @@ Bun operates at two levels here:
 - [x] **2.9** Extracted `tokenStyles`/`fontStyles` to `ThemeProvider/styles.js` (server-safe, no `'use client'`)
 - [x] **2.10** Added `'use client'` to all interactive components (framer-motion, hooks, Three.js)
 - [x] **2.11** Dropped `rehype-preset-minify` — caused EBADF in Next.js build workers; Next.js minifies HTML natively
-- [x] **2.12** Build passes — all 7 routes generate correctly (/, /blog, /blog/[slug], /contact, /projects/snappfood, /uses, /_not-found)
+- [x] **2.12** Build passes — all 7 routes generate correctly (/, /blog, /blog/[slug], /contact, /projects/snappfood, /uses, /\_not-found)
 
 ---
 
@@ -142,6 +143,7 @@ Bun operates at two levels here:
 > Strategy: rename `.js` → `.ts`/`.tsx`, fix type errors, commit in logical batches.
 
 ### 3.1 Shared Types File
+
 - [ ] Create `src/types/index.ts` with shared interfaces:
   - `Theme` (`'dark' | 'light'`)
   - `AppState` and `AppAction` (from `layouts/App/reducer.js`)
@@ -149,6 +151,7 @@ Bun operates at two levels here:
   - Any other cross-cutting types
 
 ### 3.2 Utilities (`src/utils/`)
+
 - [ ] `clamp.js` → `clamp.ts`
 - [ ] `date.js` → `date.ts`
 - [ ] `delay.js` → `delay.ts`
@@ -160,6 +163,7 @@ Bun operates at two levels here:
 - [ ] `mdx.js` → `mdx.ts`
 
 ### 3.3 Custom Hooks (`src/hooks/`)
+
 - [ ] `useAppContext.js` → `useAppContext.ts`
 - [ ] `useFormInput.js` → `useFormInput.ts`
 - [ ] `useFoucFix.js` → `useFoucFix.ts`
@@ -174,12 +178,15 @@ Bun operates at two levels here:
 - [ ] `index.js` → `index.ts`
 
 ### 3.4 ThemeProvider (dependency of almost everything)
+
 - [ ] `ThemeProvider/theme.js` → `theme.ts`
 - [ ] `ThemeProvider/useTheme.js` → `useTheme.ts`
 - [ ] `ThemeProvider/ThemeProvider.js` → `ThemeProvider.tsx`
 
 ### 3.5 Simple/Leaf Components (`src/components/`)
+
 These have no or few sub-dependencies — convert first:
+
 - [ ] `Divider` → `.tsx`
 - [ ] `VisuallyHidden` → `.tsx`
 - [ ] `Text` → `.tsx`
@@ -195,6 +202,7 @@ These have no or few sub-dependencies — convert first:
 - [ ] `DecoderText` → `.tsx`
 
 ### 3.6 Complex Components
+
 - [ ] `Button` → `.tsx` (has `forwardRef`, external link detection)
 - [ ] `Link` → `.tsx`
 - [ ] `Input` + `TextArea` → `.tsx`
@@ -207,6 +215,7 @@ These have no or few sub-dependencies — convert first:
 - [ ] `Footer` → `.tsx`
 
 ### 3.7 Layouts (`src/layouts/`)
+
 - [ ] `App/reducer.js` → `reducer.ts`
 - [ ] `App/ScrollRestore.js` → `ScrollRestore.tsx`
 - [ ] `Home/DisplacementSphere.js` → `DisplacementSphere.tsx`
@@ -219,6 +228,7 @@ These have no or few sub-dependencies — convert first:
 - [ ] `Project/Project.js` → `Project.tsx`
 
 ### 3.8 Pages (`src/pages/`)
+
 - [ ] `_app.page.js` → `_app.page.tsx`
 - [ ] `_document.page.js` → `_document.page.tsx`
 - [ ] `index.page.js` → `index.page.tsx`
@@ -236,17 +246,21 @@ These have no or few sub-dependencies — convert first:
 - [ ] `uses/index.page.js` → `uses/index.page.tsx`
 
 ### 3.9 Module Declarations (`src/types/`)
+
 These are needed for non-typed imports:
+
 - [ ] `glsl.d.ts` — declare `*.glsl` as `string`
 - [ ] `mdx.d.ts` — declare `*.mdx` module if needed
 - [ ] `css.d.ts` — CSS Modules typing (or use `typescript-plugin-css-modules`)
 - [ ] Check if `@types/three` covers everything or if custom Three.js overrides are needed
 
 ### 3.10 Storybook
+
 - [ ] Update all `*.stories.js` files to `*.stories.tsx`
 - [ ] Add `argTypes` with proper TS types
 
 ### 3.11 Final typecheck pass
+
 - [ ] Run `bun run typecheck` with zero errors
 - [ ] Remove `jsconfig.json`
 - [ ] Remove `.js` extensions from `pageExtensions` once all files are migrated
@@ -302,16 +316,16 @@ These are needed for non-typed imports:
 
 ## File Count Summary
 
-| Area | Files to Migrate |
-|------|-----------------|
-| utils/ | 9 |
-| hooks/ | 12 |
-| components/ | ~55 (JS + index files) |
-| layouts/ | ~20 |
-| pages/ | ~16 |
-| stories/ | ~26 |
-| types to create | ~4 |
-| **Total** | **~142 files** |
+| Area            | Files to Migrate       |
+| --------------- | ---------------------- |
+| utils/          | 9                      |
+| hooks/          | 12                     |
+| components/     | ~55 (JS + index files) |
+| layouts/        | ~20                    |
+| pages/          | ~16                    |
+| stories/        | ~26                    |
+| types to create | ~4                     |
+| **Total**       | **~142 files**         |
 
 ---
 

@@ -37,11 +37,24 @@ interface ImageProps {
   [key: string]: unknown
 }
 
-export const Image = ({className, style, reveal, delay = 0, raised, src: baseSrc, srcSet, placeholder, layout, ...rest}: ImageProps) => {
+export const Image = ({
+  className,
+  style,
+  reveal,
+  delay = 0,
+  raised,
+  src: baseSrc,
+  srcSet,
+  placeholder,
+  layout,
+  ...rest
+}: ImageProps) => {
   const [loaded, setLoaded] = useState(false)
   const {themeId} = useTheme() as {themeId: string}
   const containerRef = useRef<HTMLDivElement>(null)
-  const src = baseSrc ?? (srcSet ? {src: srcSet[0].src, width: srcSet[0].width} : undefined)
+  const src =
+    baseSrc ??
+    (srcSet ? {src: srcSet[0].src, width: srcSet[0].width} : undefined)
   const inViewport = useInViewport(containerRef, !getIsVideo(src))
   const onLoad = useCallback(() => setLoaded(true), [])
 
@@ -55,12 +68,39 @@ export const Image = ({className, style, reveal, delay = 0, raised, src: baseSrc
       style={cssProps({delay: numToMs(delay)}, style)}
       ref={containerRef}
     >
-      <ImageElements delay={delay} onLoad={onLoad} loaded={loaded} inViewport={inViewport} reveal={reveal} src={src} srcSet={srcSet} placeholder={placeholder} layout={layout} {...rest} />
+      <ImageElements
+        delay={delay}
+        onLoad={onLoad}
+        loaded={loaded}
+        inViewport={inViewport}
+        reveal={reveal}
+        src={src}
+        srcSet={srcSet}
+        placeholder={placeholder}
+        layout={layout}
+        {...rest}
+      />
     </div>
   )
 }
 
-const ImageElements = ({onLoad, loaded, inViewport, srcSet, placeholder, delay = 0, src, alt, play = true, restartOnPause, reveal, sizes, noPauseButton, layout, ...rest}: ImageProps & {onLoad: () => void; loaded: boolean; inViewport: boolean}) => {
+const ImageElements = ({
+  onLoad,
+  loaded,
+  inViewport,
+  srcSet,
+  placeholder,
+  delay = 0,
+  src,
+  alt,
+  play = true,
+  restartOnPause,
+  reveal,
+  sizes,
+  noPauseButton,
+  layout,
+  ...rest
+}: ImageProps & {onLoad: () => void; loaded: boolean; inViewport: boolean}) => {
   const reduceMotion = useReducedMotion()
   const [showPlaceholder, setShowPlaceholder] = useState(true)
   const [playing, setPlaying] = useState(!reduceMotion)
@@ -83,24 +123,62 @@ const ImageElements = ({onLoad, loaded, inViewport, srcSet, placeholder, delay =
   useEffect(() => {
     const video = videoRef.current
     if (!video || !videoSrc) return
-    if (!play) { setPlaying(false); video.pause(); if (restartOnPause) video.currentTime = 0 }
+    if (!play) {
+      setPlaying(false)
+      video.pause()
+      if (restartOnPause) video.currentTime = 0
+    }
     if (videoInteracted) return
-    if (!inViewport) { setPlaying(false); video.pause() }
-    else if (inViewport && !reduceMotion && play) { setPlaying(true); video.play() }
-  }, [inViewport, play, reduceMotion, restartOnPause, videoInteracted, videoSrc])
+    if (!inViewport) {
+      setPlaying(false)
+      video.pause()
+    } else if (inViewport && !reduceMotion && play) {
+      setPlaying(true)
+      video.play()
+    }
+  }, [
+    inViewport,
+    play,
+    reduceMotion,
+    restartOnPause,
+    videoInteracted,
+    videoSrc,
+  ])
 
   const togglePlaying = (event: MouseEvent) => {
     event.preventDefault()
     setVideoInteracted(true)
-    if (videoRef.current?.paused) { setPlaying(true); videoRef.current.play() }
-    else { setPlaying(false); videoRef.current?.pause() }
+    if (videoRef.current?.paused) {
+      setPlaying(true)
+      videoRef.current.play()
+    } else {
+      setPlaying(false)
+      videoRef.current?.pause()
+    }
   }
 
   return (
-    <div className={styles.elementWrapper} data-reveal={reveal} data-visible={inViewport || loaded} style={cssProps({delay: numToMs(delay + 1000)})}>
+    <div
+      className={styles.elementWrapper}
+      data-reveal={reveal}
+      data-visible={inViewport || loaded}
+      style={cssProps({delay: numToMs(delay + 1000)})}
+    >
       {isVideo && hasMounted && (
         <Fragment>
-          <video muted loop playsInline className={styles.element} data-loaded={loaded} autoPlay={!reduceMotion} onLoadStart={onLoad} src={videoSrc} aria-label={alt} ref={videoRef} {...(rest as object)} />
+          <video
+            muted
+            loop
+            playsInline
+            className={styles.element}
+            data-loaded={loaded}
+            autoPlay={!reduceMotion}
+            onLoadStart={onLoad}
+            src={videoSrc}
+            aria-label={alt}
+            ref={videoRef}
+            {...(rest as object)}
+          />
           {!noPauseButton && (
             <Button className={styles.button} onClick={togglePlaying}>
               <Icon icon={playing ? 'pause' : 'play'} />
@@ -143,5 +221,8 @@ const ImageElements = ({onLoad, loaded, inViewport, srcSet, placeholder, delay =
 }
 
 function getIsVideo(src?: ImageSrc): boolean {
-  return typeof src?.src === 'string' && (src.src.endsWith('.mp4') || src.src.endsWith('.mov'))
+  return (
+    typeof src?.src === 'string' &&
+    (src.src.endsWith('.mp4') || src.src.endsWith('.mov'))
+  )
 }

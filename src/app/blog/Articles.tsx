@@ -17,7 +17,7 @@ import {formatDate} from 'utils/date'
 import {classes, cssProps} from 'utils/style'
 import styles from './Articles.module.css'
 
-import type {Post} from "app/blog/page"
+import type {Post} from 'app/blog/page'
 
 interface ArticlesPostProps extends Omit<Post, 'slug'> {
   slug: string
@@ -83,26 +83,26 @@ const ArticlesPost = ({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-          <div className={styles.postDetails}>
-            <div aria-hidden className={styles.postDate}>
-              <Divider notchWidth='64px' notchHeight='8px' />
-              {dateTime}
-            </div>
-            <Heading as='h2' level={featured ? 2 : 4}>
-              {title}
-            </Heading>
-            <Text size={featured ? 'l' : 's'} as='p'>
-              {abstract}
-            </Text>
-            <div className={styles.postFooter}>
-              <Button secondary iconHoverShift icon='chevronRight' as='div'>
-                Read post
-              </Button>
-              <Text className={styles.timecode} size='s'>
-                {timecode}
-              </Text>
-            </div>
+        <div className={styles.postDetails}>
+          <div aria-hidden className={styles.postDate}>
+            <Divider notchWidth='64px' notchHeight='8px' />
+            {dateTime}
           </div>
+          <Heading as='h2' level={featured ? 2 : 4}>
+            {title}
+          </Heading>
+          <Text size={featured ? 'l' : 's'} as='p'>
+            {abstract}
+          </Text>
+          <div className={styles.postFooter}>
+            <Button secondary iconHoverShift icon='chevronRight' as='div'>
+              Read post
+            </Button>
+            <Text className={styles.timecode} size='s'>
+              {timecode}
+            </Text>
+          </div>
+        </div>
       </RouterLink>
       {featured && (
         <Text aria-hidden className={styles.postTag} size='s'>
@@ -154,7 +154,13 @@ const SkeletonPost = ({index}: {index?: number}) => {
   )
 }
 
-export const Articles = ({posts, featured}: {posts: Post[]; featured?: Post}) => {
+export const Articles = ({
+  posts,
+  featured,
+}: {
+  posts: Post[]
+  featured?: Post
+}) => {
   const {width} = useWindowSize()
   const singleColumnWidth = 1190
   const isSingleColumn = width <= singleColumnWidth
@@ -175,8 +181,8 @@ export const Articles = ({posts, featured}: {posts: Post[]; featured?: Post}) =>
         <ArticlesPost key={slug} slug={slug} index={index} {...post} />
       ))}
       {Array.from({length: 2}).map((_, index) => (
-          <SkeletonPost key={index} />
-        ))}
+        <SkeletonPost key={index} />
+      ))}
     </div>
   )
 

@@ -1,7 +1,7 @@
 import path from 'path'
 import fs from 'fs'
 import {createHash} from 'crypto'
-import type {LaunchOptions as PuppeteerLaunchOptions} from "puppeteer-core"
+import type {LaunchOptions as PuppeteerLaunchOptions} from 'puppeteer-core'
 
 const localChromePaths: Record<string, string> = {
   darwin: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',

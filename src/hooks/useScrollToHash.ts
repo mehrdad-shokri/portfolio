@@ -3,7 +3,9 @@ import {useRouter, usePathname} from 'next/navigation'
 import {useCallback, useRef} from 'react'
 
 export function useScrollToHash() {
-  const scrollTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const scrollTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  )
   const router = useRouter()
   const pathname = usePathname()
   const reduceMotion = useReducedMotion()
@@ -14,7 +16,9 @@ export function useScrollToHash() {
       const targetElement = document.getElementById(id)
       const newPath = `${pathname}#${id}`
 
-      targetElement?.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth'})
+      targetElement?.scrollIntoView({
+        behavior: reduceMotion ? 'auto' : 'smooth',
+      })
 
       const handleScroll = () => {
         clearTimeout(scrollTimeout.current)

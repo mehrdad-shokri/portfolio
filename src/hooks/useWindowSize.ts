@@ -23,16 +23,25 @@ export function useWindowSize(): WindowSize {
 
   const getHeight = useCallback(() => {
     const isIOS = navigator?.userAgent.match(/iphone|ipod|ipad/i)
-    if (isIOS) { createRuler(); return dimensions.current.h }
+    if (isIOS) {
+      createRuler()
+      return dimensions.current.h
+    }
     return window.innerHeight
   }, [createRuler])
 
-  const getSize = useCallback((): WindowSize => ({
-    width: window.innerWidth,
-    height: getHeight(),
-  }), [getHeight])
+  const getSize = useCallback(
+    (): WindowSize => ({
+      width: window.innerWidth,
+      height: getHeight(),
+    }),
+    [getHeight]
+  )
 
-  const [windowSize, setWindowSize] = useState<WindowSize>({width: 1280, height: 800})
+  const [windowSize, setWindowSize] = useState<WindowSize>({
+    width: 1280,
+    height: 800,
+  })
 
   useEffect(() => {
     const handleResize = () => setWindowSize(getSize())

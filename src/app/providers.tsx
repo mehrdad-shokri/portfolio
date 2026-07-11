@@ -13,7 +13,10 @@ export interface AppContextValue extends AppState {
   dispatch: React.Dispatch<AppAction>
 }
 
-export const AppContext = createContext<AppContextValue>({...initialState, dispatch: () => {}})
+export const AppContext = createContext<AppContextValue>({
+  ...initialState,
+  dispatch: () => {},
+})
 
 const repoPrompt = `
   /\\ /\\n /  \\  \\n//  \\\\  \\/\\
@@ -21,14 +24,19 @@ const repoPrompt = `
 `
 
 export function Providers({children}: {children: ReactNode}) {
-  const [storedTheme] = useLocalStorage<string>('theme',
+  const [storedTheme] = useLocalStorage<string>(
+    'theme',
     typeof window !== 'undefined' && window.matchMedia
-      ? window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+      ? window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light'
       : 'dark'
   )
   const [state, dispatch] = useReducer(reducer, initialState)
 
-  useEffect(() => { console.info(`${repoPrompt}\n\n`) }, [])
+  useEffect(() => {
+    console.info(`${repoPrompt}\n\n`)
+  }, [])
   useEffect(() => {
     const safeTheme = storedTheme === 'light' ? 'light' : 'dark'
     dispatch({type: 'setTheme', value: safeTheme})

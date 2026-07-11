@@ -19,7 +19,10 @@ export function reducer(state: AppState, action: AppAction): AppState {
     case 'setTheme':
       return {...state, theme: action.value}
     case 'toggleTheme':
-      return {...state, theme: (state.theme ?? 'dark') === 'dark' ? 'light' : 'dark'}
+      return {
+        ...state,
+        theme: (state.theme ?? 'dark') === 'dark' ? 'light' : 'dark',
+      }
     case 'toggleMenu':
       return {...state, menuOpen: !state.menuOpen}
     default:

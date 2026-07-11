@@ -21,17 +21,39 @@ interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   children?: ReactNode
 }
 
-export const Link = forwardRef<HTMLAnchorElement, LinkProps>(({href, ...rest}, ref) => {
-  if (isAnchor(href)) return <LinkContent href={href} ref={ref} {...rest} />
-  return <LinkContent as={RouterLink} href={href} scroll={false} ref={ref} {...rest} />
-})
+export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
+  ({href, ...rest}, ref) => {
+    if (isAnchor(href)) return <LinkContent href={href} ref={ref} {...rest} />
+    return (
+      <LinkContent
+        as={RouterLink}
+        href={href}
+        scroll={false}
+        ref={ref}
+        {...rest}
+      />
+    )
+  }
+)
 
 interface LinkContentProps extends LinkProps {
   scroll?: boolean
 }
 
 export const LinkContent = forwardRef<HTMLAnchorElement, LinkContentProps>(
-  ({as: Component = 'a', rel, target, children, secondary, className, href, ...rest}, ref) => {
+  (
+    {
+      as: Component = 'a',
+      rel,
+      target,
+      children,
+      secondary,
+      className,
+      href,
+      ...rest
+    },
+    ref
+  ) => {
     const isExternal = href?.includes('://')
     return (
       <Component

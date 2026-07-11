@@ -108,7 +108,10 @@ export const Profile = ({id, visible, sectionRef}: ProfileProps) => {
                   delay={100}
                   placeholder={{src: profileImgPlaceholder}}
                   src={{src: profileImg}}
-                  srcSet={[{src: profileImg, width: 480}, {src: profileImgLarge, width: 960}]}
+                  srcSet={[
+                    {src: profileImg, width: 480},
+                    {src: profileImgLarge, width: 960},
+                  ]}
                   sizes={`(max-width: ${media.mobile}px) 100vw, 480px`}
                   alt='Me beside Baranduz river located at Urmia, Iran. My motherland.'
                 />

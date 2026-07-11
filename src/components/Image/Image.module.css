@@ -6,7 +6,8 @@
   isolation: isolate;
 
   &[data-raised='true'] {
-    box-shadow: 0 50px 100px -20px rgb(var(--rgbBlack) / 0.25),
+    box-shadow:
+      0 50px 100px -20px rgb(var(--rgbBlack) / 0.25),
       0 30px 60px -30px rgb(var(--rgbBlack) / 0.3);
   }
 

@@ -1,6 +1,11 @@
 'use client'
 
-import type {ChangeEvent, CSSProperties, FocusEvent, InputHTMLAttributes} from 'react'
+import type {
+  ChangeEvent,
+  CSSProperties,
+  FocusEvent,
+  InputHTMLAttributes,
+} from 'react'
 import {Icon} from 'components/Icon'
 import {tokens} from 'components/ThemeProvider/theme'
 import {Transition} from 'components/Transition'
@@ -17,10 +22,27 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   style?: CSSProperties
   error?: string | null
   onBlur?: (event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void
-  onChange?: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  onChange?: (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void
 }
 
-export const Input = ({id, label, value, multiline, className, style, error, onBlur, autoComplete, required, maxLength, type, onChange, ...rest}: InputProps) => {
+export const Input = ({
+  id,
+  label,
+  value,
+  multiline,
+  className,
+  style,
+  error,
+  onBlur,
+  autoComplete,
+  required,
+  maxLength,
+  type,
+  onChange,
+  ...rest
+}: InputProps) => {
   const [focused, setFocused] = useState(false)
   const generatedId = useId()
   const errorRef = useRef<HTMLDivElement>(null)
@@ -30,9 +52,20 @@ export const Input = ({id, label, value, multiline, className, style, error, onB
   const InputElement = multiline ? TextArea : 'input'
 
   return (
-    <div className={classes(styles.container, className)} data-error={!!error} style={style} {...(rest as object)}>
+    <div
+      className={classes(styles.container, className)}
+      data-error={!!error}
+      style={style}
+      {...(rest as object)}
+    >
       <div className={styles.content}>
-        <label className={styles.label} data-focused={focused} data-filled={!!value} id={labelId} htmlFor={inputId}>
+        <label
+          className={styles.label}
+          data-focused={focused}
+          data-filled={!!value}
+          id={labelId}
+          htmlFor={inputId}
+        >
           {label}
         </label>
         <InputElement
@@ -41,7 +74,12 @@ export const Input = ({id, label, value, multiline, className, style, error, onB
           aria-labelledby={labelId}
           aria-describedby={error ? errorId : undefined}
           onFocus={() => setFocused(true)}
-          onBlur={event => { setFocused(false); onBlur?.(event as FocusEvent<HTMLInputElement | HTMLTextAreaElement>) }}
+          onBlur={event => {
+            setFocused(false)
+            onBlur?.(
+              event as FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+            )
+          }}
           value={value}
           onChange={onChange}
           autoComplete={autoComplete}
@@ -58,7 +96,11 @@ export const Input = ({id, label, value, multiline, className, style, error, onB
             data-visible={visible}
             id={errorId}
             role='alert'
-            style={cssProps({height: visible ? errorRef.current?.getBoundingClientRect().height ?? 0 : 0})}
+            style={cssProps({
+              height: visible
+                ? (errorRef.current?.getBoundingClientRect().height ?? 0)
+                : 0,
+            })}
           >
             <div className={styles.errorMessage} ref={errorRef}>
               <Icon icon='error' />

@@ -62,7 +62,9 @@
   font-weight: var(--fontWeightMedium);
   font-size: var(--fontSizeBodyXS);
   font-family: var(--systemFontStack);
-  text-shadow: 0 0 3px rgb(var(--rgbBlack)), 0 0 5px rgb(var(--rgbBlack)),
+  text-shadow:
+    0 0 3px rgb(var(--rgbBlack)),
+    0 0 5px rgb(var(--rgbBlack)),
     0 0 20px rgb(var(--rgbBlack));
   transform: translate3d(-50%, -50%, 0) translate3d(var(--posX), var(--posY), 0);
   transition: opacity var(--durationM) ease;

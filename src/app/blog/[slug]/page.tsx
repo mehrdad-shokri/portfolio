@@ -25,13 +25,21 @@ export async function generateStaticParams() {
     .map(slug => ({slug}))
 }
 
-export async function generateMetadata({params}: {params: Promise<{slug: string}>}) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{slug: string}>
+}) {
   const {slug} = await params
   const {data} = loadPost(slug)
   return {title: data.title as string, description: data.abstract as string}
 }
 
-export default async function BlogPostPage({params}: {params: Promise<{slug: string}>}) {
+export default async function BlogPostPage({
+  params,
+}: {
+  params: Promise<{slug: string}>
+}) {
   const {slug} = await params
   const {data: frontmatter, content} = loadPost(slug)
 
@@ -47,7 +55,17 @@ export default async function BlogPostPage({params}: {params: Promise<{slug: str
   }).catch(() => null)
 
   return (
-    <Post timecode={timecode} ogImage={ogImage ?? undefined} {...(frontmatter as {title: string; date: string; abstract: string; banner: string; draft?: boolean})}>
+    <Post
+      timecode={timecode}
+      ogImage={ogImage ?? undefined}
+      {...(frontmatter as {
+        title: string
+        date: string
+        abstract: string
+        banner: string
+        draft?: boolean
+      })}
+    >
       <MDXRemote
         source={content}
         components={postMarkdown}

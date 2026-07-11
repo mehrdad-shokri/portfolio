@@ -17,14 +17,29 @@ interface TransitionProps {
 }
 
 interface TransitionContentProps extends TransitionProps {
-  enterTimeout: React.MutableRefObject<ReturnType<typeof setTimeout> | undefined>
+  enterTimeout: React.MutableRefObject<
+    ReturnType<typeof setTimeout> | undefined
+  >
   exitTimeout: React.MutableRefObject<ReturnType<typeof setTimeout> | undefined>
   show?: boolean
 }
 
-export const Transition = ({children, timeout = 0, onEnter, onEntered, onExit, onExited, in: show, unmount}: TransitionProps) => {
-  const enterTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
-  const exitTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+export const Transition = ({
+  children,
+  timeout = 0,
+  onEnter,
+  onEntered,
+  onExit,
+  onExited,
+  in: show,
+  unmount,
+}: TransitionProps) => {
+  const enterTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  )
+  const exitTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  )
 
   useEffect(() => {
     if (show) clearTimeout(exitTimeout.current)
@@ -51,7 +66,17 @@ export const Transition = ({children, timeout = 0, onEnter, onEntered, onExit, o
   )
 }
 
-const TransitionContent = ({children, timeout = 0, enterTimeout, exitTimeout, onEnter, onEntered, onExit, onExited, show}: TransitionContentProps) => {
+const TransitionContent = ({
+  children,
+  timeout = 0,
+  enterTimeout,
+  exitTimeout,
+  onEnter,
+  onEntered,
+  onExit,
+  onExited,
+  show,
+}: TransitionContentProps) => {
   const [status, setStatus] = useState<TransitionStatus>('exited')
   const [isPresent, safeToRemove] = usePresence()
   const [hasEntered, setHasEntered] = useState(false)
@@ -59,24 +84,35 @@ const TransitionContent = ({children, timeout = 0, enterTimeout, exitTimeout, on
 
   useEffect(() => {
     if (hasEntered || !show) return
-    const actualTimeout = splitTimeout ? (timeout as {enter: number}).enter : timeout as number
+    const actualTimeout = splitTimeout
+      ? (timeout as {enter: number}).enter
+      : (timeout as number)
     clearTimeout(enterTimeout.current)
     clearTimeout(exitTimeout.current)
     setHasEntered(true)
     setStatus('entering')
     onEnter?.()
-    enterTimeout.current = setTimeout(() => { setStatus('entered'); onEntered?.() }, actualTimeout)
+    enterTimeout.current = setTimeout(() => {
+      setStatus('entered')
+      onEntered?.()
+    }, actualTimeout)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onEnter, onEntered, timeout, status, show])
 
   useEffect(() => {
     if (isPresent && show) return
-    const actualTimeout = splitTimeout ? (timeout as {exit: number}).exit : timeout as number
+    const actualTimeout = splitTimeout
+      ? (timeout as {exit: number}).exit
+      : (timeout as number)
     clearTimeout(enterTimeout.current)
     clearTimeout(exitTimeout.current)
     setStatus('exiting')
     onExit?.()
-    exitTimeout.current = setTimeout(() => { setStatus('exited'); safeToRemove?.(); onExited?.() }, actualTimeout)
+    exitTimeout.current = setTimeout(() => {
+      setStatus('exited')
+      safeToRemove?.()
+      onExited?.()
+    }, actualTimeout)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPresent, onExit, safeToRemove, timeout, onExited, show])
 

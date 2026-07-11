@@ -13,16 +13,16 @@
   display: inline;
   padding-bottom: var(--lineStrokeWidth);
   color: rgb(var(--linkColor));
-  background: var(--filledLineGradient) no-repeat 100% 100% / 0
-      var(--lineStrokeWidth),
+  background:
+    var(--filledLineGradient) no-repeat 100% 100% / 0 var(--lineStrokeWidth),
     var(--unfilledLineGradient) no-repeat 0 100% / 100% var(--lineStrokeWidth);
 
   cursor: pointer;
 
   &:hover,
   &:focus {
-    background: var(--filledLineGradient) no-repeat 0 100% / 100%
-        var(--lineStrokeWidth),
+    background:
+      var(--filledLineGradient) no-repeat 0 100% / 100% var(--lineStrokeWidth),
       var(--unfilledLineGradient) no-repeat 0 100% / 100% var(--lineStrokeWidth);
   }
 

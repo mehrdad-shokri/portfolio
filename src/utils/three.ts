@@ -17,7 +17,9 @@ export const cleanScene = (scene: Scene): void => {
     if (!('isMesh' in object && object.isMesh)) return
     const mesh = object as Mesh
     mesh.geometry.dispose()
-    const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
+    const materials = Array.isArray(mesh.material)
+      ? mesh.material
+      : [mesh.material]
     for (const material of materials) cleanMaterial(material)
   })
 }
@@ -27,8 +29,10 @@ export const cleanMaterial = (material: Material): void => {
   for (const key of Object.keys(material)) {
     const value = (material as unknown as Record<string, unknown>)[key]
     if (value && typeof value === 'object' && 'minFilter' in value) {
-      ((value as unknown) as {dispose: () => void}).dispose()
-      const source = (value as unknown as {source?: {data?: {close?: () => void}}}).source
+      ;(value as unknown as {dispose: () => void}).dispose()
+      const source = (
+        value as unknown as {source?: {data?: {close?: () => void}}}
+      ).source
       source?.data?.close?.()
     }
   }
@@ -42,8 +46,13 @@ export const removeLights = (lights: Light[]): void => {
   for (const light of lights) light.parent?.remove(light)
 }
 
-export const getChild = (name: string, object: Object3D): Object3D | undefined => {
+export const getChild = (
+  name: string,
+  object: Object3D
+): Object3D | undefined => {
   let node: Object3D | undefined
-  object.traverse(child => { if (child.name === name) node = child })
+  object.traverse(child => {
+    if (child.name === name) node = child
+  })
   return node
 }

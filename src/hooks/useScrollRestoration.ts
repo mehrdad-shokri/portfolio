@@ -1,7 +1,9 @@
 import {useEffect} from 'react'
 
 export function useScrollRestoration(): void {
-  useEffect(() => { window.history.scrollRestoration = 'manual' }, [])
+  useEffect(() => {
+    window.history.scrollRestoration = 'manual'
+  }, [])
 
   useEffect(() => {
     const hash = window.location.hash.slice(1)

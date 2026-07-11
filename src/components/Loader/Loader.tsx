@@ -17,20 +17,32 @@ interface LoaderProps {
   [key: string]: unknown
 }
 
-export const Loader = ({className, style, size = 32, text = 'Loading...', ...rest}: LoaderProps) => {
+export const Loader = ({
+  className,
+  style,
+  size = 32,
+  text = 'Loading...',
+  ...rest
+}: LoaderProps) => {
   const reduceMotion = useReducedMotion()
   const hasMounted = useHasMounted()
 
   const screenReaderPortal = hasMounted
     ? createPortal(
-        <VisuallyHidden className='loader-announcement' aria-live='assertive'>{text}</VisuallyHidden>,
+        <VisuallyHidden className='loader-announcement' aria-live='assertive'>
+          {text}
+        </VisuallyHidden>,
         document.getElementById('portal-root')!
       )
     : null
 
   if (reduceMotion) {
     return (
-      <Text className={classes(styles.text, className)} weight='medium' {...rest}>
+      <Text
+        className={classes(styles.text, className)}
+        weight='medium'
+        {...rest}
+      >
         {text}
         {screenReaderPortal}
       </Text>

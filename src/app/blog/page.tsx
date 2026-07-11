@@ -27,7 +27,11 @@ export default async function BlogPage() {
     const source = fs.readFileSync(path.join(POSTS_PATH, filePath))
     const {data, content} = matter(source)
     const {time} = readingTime(content)
-    return {...data, timecode: formatTimecode(time), slug: filePath.replace(/\.mdx?$/, '')} as Post
+    return {
+      ...data,
+      timecode: formatTimecode(time),
+      slug: filePath.replace(/\.mdx?$/, ''),
+    } as Post
   })
 
   const featured = allPosts.find(post => post.featured)

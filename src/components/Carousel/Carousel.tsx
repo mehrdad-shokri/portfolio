@@ -64,7 +64,13 @@ function determineIndex(
   return finalIndex
 }
 
-export const Carousel = ({width, height, images, placeholder, ...rest}: CarouselProps) => {
+export const Carousel = ({
+  width,
+  height,
+  images,
+  placeholder,
+  ...rest
+}: CarouselProps) => {
   const [dragging, setDragging] = useState(false)
   const [imageIndex, setImageIndex] = useState(0)
   const [loaded, setLoaded] = useState(false)
@@ -142,7 +148,9 @@ export const Carousel = ({width, height, images, placeholder, ...rest}: Carousel
 
       const texturePromises = images.map(async (image: CarouselImage) => {
         const imageSrc = image.srcSet
-          ? await resolveSrcFromSrcSet({srcSet: image.srcSet as import('utils/image').SrcSetItem[]})
+          ? await resolveSrcFromSrcSet({
+              srcSet: image.srcSet as import('utils/image').SrcSetItem[],
+            })
           : image.src.src
         const imageTexture = await textureLoader.loadAsync(imageSrc)
         await renderer.current!.initTexture(imageTexture)
@@ -240,7 +248,12 @@ export const Carousel = ({width, height, images, placeholder, ...rest}: Carousel
         return
       }
 
-      const finalIndex = determineIndex(imageIndex, index ?? null, textures!, direction)
+      const finalIndex = determineIndex(
+        imageIndex,
+        index ?? null,
+        textures!,
+        direction
+      )
       goToIndex({index: finalIndex, direction: direction, ...rest})
     },
     [goToIndex, imageIndex, loaded, textures]

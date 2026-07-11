@@ -11,9 +11,21 @@ interface ListProps {
 
 export const List = ({ordered, children, className, ...rest}: ListProps) => {
   const Element = (ordered ? 'ol' : 'ul') as 'ol' | 'ul'
-  return <Element className={classes(styles.list, className)} {...rest}>{children}</Element>
+  return (
+    <Element className={classes(styles.list, className)} {...rest}>
+      {children}
+    </Element>
+  )
 }
 
-export const ListItem = ({children, ...rest}: {children?: ReactNode; [key: string]: unknown}) => (
-  <li className={styles.item} {...rest}>{children}</li>
+export const ListItem = ({
+  children,
+  ...rest
+}: {
+  children?: ReactNode
+  [key: string]: unknown
+}) => (
+  <li className={styles.item} {...rest}>
+    {children}
+  </li>
 )

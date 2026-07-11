@@ -1,7 +1,10 @@
 import {useReducedMotion} from 'framer-motion'
 import {useEffect} from 'react'
 
-export function useParallax(multiplier: number, onChange: (value: number) => void): void {
+export function useParallax(
+  multiplier: number,
+  onChange: (value: number) => void
+): void {
   const reduceMotion = useReducedMotion()
 
   useEffect(() => {

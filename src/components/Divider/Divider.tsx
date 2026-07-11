@@ -29,7 +29,16 @@ export const Divider = ({
 }: DividerProps) => (
   <div
     className={classes(styles.divider, className)}
-    style={cssProps({lineWidth, lineHeight, notchWidth, notchHeight, collapseDelay: numToMs(collapseDelay)}, style)}
+    style={cssProps(
+      {
+        lineWidth,
+        lineHeight,
+        notchWidth,
+        notchHeight,
+        collapseDelay: numToMs(collapseDelay),
+      },
+      style
+    )}
     {...rest}
   >
     <div className={styles.line} data-collapsed={collapsed} />

@@ -13,7 +13,9 @@ export const Code = (props: HTMLAttributes<HTMLPreElement>) => {
   const [copied, setCopied] = useState(false)
   const theme = useTheme()
   const elementRef = useRef<HTMLPreElement>(null)
-  const copyTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const copyTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  )
   const lang = (props.className as string | undefined)?.split('-')[1]
 
   const handleCopy = () => {
@@ -26,14 +28,25 @@ export const Code = (props: HTMLAttributes<HTMLPreElement>) => {
   }
 
   return (
-    <div className={styles.code} data-theme={(theme as Record<string, unknown>).themeId as string}>
-      {!!lang && <Text secondary size='s' className={styles.lang}>{lang}</Text>}
+    <div
+      className={styles.code}
+      data-theme={(theme as Record<string, unknown>).themeId as string}
+    >
+      {!!lang && (
+        <Text secondary size='s' className={styles.lang}>
+          {lang}
+        </Text>
+      )}
       <pre ref={elementRef} {...props} />
       <div className={styles.actions}>
         <Button iconOnly onClick={handleCopy} aria-label='Copy'>
           <span className={styles.copyIcon}>
-            <Transition in={!copied}>{visible => <Icon icon='copy' data-visible={visible} />}</Transition>
-            <Transition in={copied}>{visible => <Icon icon='check' data-visible={visible} />}</Transition>
+            <Transition in={!copied}>
+              {visible => <Icon icon='copy' data-visible={visible} />}
+            </Transition>
+            <Transition in={copied}>
+              {visible => <Icon icon='check' data-visible={visible} />}
+            </Transition>
           </span>
         </Button>
       </div>

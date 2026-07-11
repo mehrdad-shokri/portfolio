@@ -33,7 +33,9 @@ export const Navbar = () => {
   const isMobile = windowSize.width <= media.mobile || windowSize.height <= 696
   const scrollToHash = useScrollToHash()
 
-  useEffect(() => { setCurrent(pathname) }, [pathname])
+  useEffect(() => {
+    setCurrent(pathname)
+  }, [pathname])
 
   useEffect(() => {
     if (!target || pathname !== '/') return
@@ -52,23 +54,30 @@ export const Navbar = () => {
       !(r1.bottom - scrollY < r2.top || r1.top - scrollY > r2.bottom)
 
     const resetNavTheme = () => {
-      for (const m of navItemMeasurements) (m.element as HTMLElement).dataset.theme = ''
+      for (const m of navItemMeasurements)
+        (m.element as HTMLElement).dataset.theme = ''
     }
 
     const handleInversion = () => {
-      const invertedElements = document.querySelectorAll(`[data-theme='${inverseTheme}'][data-invert]`)
+      const invertedElements = document.querySelectorAll(
+        `[data-theme='${inverseTheme}'][data-invert]`
+      )
       if (!invertedElements) return
       inverseMeasurements = Array.from(invertedElements).map(item => ({
         element: item,
         top: (item as HTMLElement).offsetTop,
-        bottom: (item as HTMLElement).offsetTop + (item as HTMLElement).offsetHeight,
+        bottom:
+          (item as HTMLElement).offsetTop + (item as HTMLElement).offsetHeight,
       }))
       const {scrollY} = window
       resetNavTheme()
       for (const inv of inverseMeasurements) {
-        if (inv.top - scrollY > innerHeight || inv.bottom - scrollY < 0) continue
+        if (inv.top - scrollY > innerHeight || inv.bottom - scrollY < 0)
+          continue
         for (const m of navItemMeasurements) {
-          (m.element as HTMLElement).dataset.theme = isOverlap(inv, m, scrollY) ? inverseTheme : ''
+          ;(m.element as HTMLElement).dataset.theme = isOverlap(inv, m, scrollY)
+            ? inverseTheme
+            : ''
         }
       }
     }
@@ -82,7 +91,10 @@ export const Navbar = () => {
       handleInversion()
     }
 
-    return () => { document.removeEventListener('scroll', handleInversion); resetNavTheme() }
+    return () => {
+      document.removeEventListener('scroll', handleInversion)
+      resetNavTheme()
+    }
   }, [themeId, windowSize, pathname])
 
   const getCurrent = (url = '') => {
@@ -93,7 +105,10 @@ export const Navbar = () => {
   const handleNavItemClick = (event: MouseEvent<HTMLAnchorElement>) => {
     const hash = (event.currentTarget as HTMLAnchorElement).href.split('#')[1]
     setTarget(null)
-    if (hash && pathname === '/') { setTarget(`#${hash}`); event.preventDefault() }
+    if (hash && pathname === '/') {
+      setTarget(`#${hash}`)
+      event.preventDefault()
+    }
   }
 
   const handleMobileNavClick = (event: MouseEvent<HTMLAnchorElement>) => {
@@ -103,21 +118,43 @@ export const Navbar = () => {
 
   return (
     <header className={styles.navbar} ref={headerRef}>
-      <RouterLink href={pathname === '/' ? '/#intro' : '/'} scroll={false} data-navbar-item className={styles.logo} aria-label='Mehrdad Shokri, Developer' onClick={handleMobileNavClick as unknown as React.MouseEventHandler}>
+      <RouterLink
+        href={pathname === '/' ? '/#intro' : '/'}
+        scroll={false}
+        data-navbar-item
+        className={styles.logo}
+        aria-label='Mehrdad Shokri, Developer'
+        onClick={handleMobileNavClick as unknown as React.MouseEventHandler}
+      >
         <Monogram highlight />
       </RouterLink>
-      <NavToggle onClick={() => dispatch({type: 'toggleMenu'})} menuOpen={menuOpen} />
+      <NavToggle
+        onClick={() => dispatch({type: 'toggleMenu'})}
+        menuOpen={menuOpen}
+      />
       <nav className={styles.nav}>
         <div className={styles.navList}>
           {navLinks.map(({label, pathname: navPath}) => (
-            <RouterLink href={navPath} scroll={false} key={label} data-navbar-item className={styles.navLink} aria-current={getCurrent(navPath) as 'page' | undefined} onClick={handleNavItemClick as unknown as React.MouseEventHandler}>
+            <RouterLink
+              href={navPath}
+              scroll={false}
+              key={label}
+              data-navbar-item
+              className={styles.navLink}
+              aria-current={getCurrent(navPath) as 'page' | undefined}
+              onClick={handleNavItemClick as unknown as React.MouseEventHandler}
+            >
               {label}
             </RouterLink>
           ))}
         </div>
         <NavbarIcons desktop />
       </nav>
-      <Transition unmount in={menuOpen} timeout={msToNum(tokens.base.durationL)}>
+      <Transition
+        unmount
+        in={menuOpen}
+        timeout={msToNum(tokens.base.durationL)}
+      >
         {visible => (
           <nav className={styles.mobileNav} data-visible={visible}>
             {navLinks.map(({label, pathname: navPath}, index) => (
@@ -128,8 +165,14 @@ export const Navbar = () => {
                 className={styles.mobileNavLink}
                 data-visible={visible}
                 aria-current={getCurrent(navPath) as 'page' | undefined}
-                onClick={handleMobileNavClick as unknown as React.MouseEventHandler}
-                style={cssProps({transitionDelay: numToMs(Number(msToNum(tokens.base.durationS)) + index * 50)})}
+                onClick={
+                  handleMobileNavClick as unknown as React.MouseEventHandler
+                }
+                style={cssProps({
+                  transitionDelay: numToMs(
+                    Number(msToNum(tokens.base.durationS)) + index * 50
+                  ),
+                })}
               >
                 {label}
               </RouterLink>
@@ -147,7 +190,15 @@ export const Navbar = () => {
 const NavbarIcons = ({desktop}: {desktop?: boolean}) => (
   <div className={styles.navIcons}>
     {socialLinks.map(({label, url, icon}) => (
-      <a key={label} data-navbar-item={desktop || undefined} className={styles.navIconLink} aria-label={label} href={url} target='_blank' rel='noopener noreferrer'>
+      <a
+        key={label}
+        data-navbar-item={desktop || undefined}
+        className={styles.navIconLink}
+        aria-label={label}
+        href={url}
+        target='_blank'
+        rel='noopener noreferrer'
+      >
         <Icon className={styles.navIcon} icon={icon} />
       </a>
     ))}

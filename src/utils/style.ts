@@ -13,7 +13,8 @@ export type MediaBreakpoint = keyof typeof media
 export const pxToNum = (px: string): number => Number(px.replace('px', ''))
 export const numToPx = (num: number): string => `${num}px`
 export const pxToRem = (px: number): string => `${px / 16}rem`
-export const msToNum = (msString: string): number => Number(msString.replace('ms', ''))
+export const msToNum = (msString: string): number =>
+  Number(msString.replace('ms', ''))
 export const numToMs = (num: number): string => `${num}ms`
 
 export const rgbToThreeColor = (rgb?: string): number[] =>
@@ -35,6 +36,8 @@ export function cssProps(
   return {...result, ...style} as CSSProperties
 }
 
-export function classes(...classNames: (string | undefined | null | false)[]): string {
+export function classes(
+  ...classNames: (string | undefined | null | false)[]
+): string {
   return classNames.filter(Boolean).join(' ')
 }

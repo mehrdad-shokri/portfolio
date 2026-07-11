@@ -50,5 +50,11 @@ interface IconProps extends SVGProps<SVGSVGElement> {
 
 export const Icon = ({icon, className, ...rest}: IconProps) => {
   const IconComponent = icons[icon]
-  return <IconComponent aria-hidden className={classes(styles.icon, className)} {...rest} />
+  return (
+    <IconComponent
+      aria-hidden
+      className={classes(styles.icon, className)}
+      {...rest}
+    />
+  )
 }

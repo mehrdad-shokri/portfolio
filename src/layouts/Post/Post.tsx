@@ -46,12 +46,19 @@ export const Post = ({
 
   useParallax(0.004, value => {
     if (!imageRef.current) return
-    imageRef.current.style.setProperty('--blurOpacity', clamp(value, 0, 1).toString())
+    imageRef.current.style.setProperty(
+      '--blurOpacity',
+      clamp(value, 0, 1).toString()
+    )
   })
 
-  const handleScrollIndicatorClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleScrollIndicatorClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     event.preventDefault()
-    const target = event.currentTarget as HTMLButtonElement & {'data-href'?: string}
+    const target = event.currentTarget as HTMLButtonElement & {
+      'data-href'?: string
+    }
     const href = target.dataset.href
     if (href) scrollToHash(href)
   }

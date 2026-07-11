@@ -82,7 +82,10 @@ interface ProjectContainerProps {
   [key: string]: unknown
 }
 
-export const ProjectContainer = ({className, ...rest}: ProjectContainerProps) => (
+export const ProjectContainer = ({
+  className,
+  ...rest
+}: ProjectContainerProps) => (
   <article className={classes(styles.project, className)} {...rest} />
 )
 
@@ -139,7 +142,11 @@ interface ProjectBackgroundProps {
   [key: string]: unknown
 }
 
-export const ProjectBackground = ({opacity = 0.7, className, ...rest}: ProjectBackgroundProps) => {
+export const ProjectBackground = ({
+  opacity = 0.7,
+  className,
+  ...rest
+}: ProjectBackgroundProps) => {
   const imageRef = useRef<HTMLDivElement>(null)
 
   useParallax(0.6, value => {
@@ -183,7 +190,11 @@ interface ProjectSectionContentProps {
   [key: string]: unknown
 }
 
-export const ProjectSectionContent = ({className, width = 'l', ...rest}: ProjectSectionContentProps) => (
+export const ProjectSectionContent = ({
+  className,
+  width = 'l',
+  ...rest
+}: ProjectSectionContentProps) => (
   <div
     className={classes(styles.sectionContent, className)}
     data-width={width}
@@ -220,7 +231,10 @@ interface ProjectSectionTextProps {
   [key: string]: unknown
 }
 
-export const ProjectSectionText = ({className, ...rest}: ProjectSectionTextProps) => (
+export const ProjectSectionText = ({
+  className,
+  ...rest
+}: ProjectSectionTextProps) => (
   <Text
     className={classes(styles.sectionText, className)}
     size='l'
@@ -270,7 +284,11 @@ interface ProjectSectionColumnsProps {
   [key: string]: unknown
 }
 
-export const ProjectSectionColumns = ({className, centered, ...rest}: ProjectSectionColumnsProps) => (
+export const ProjectSectionColumns = ({
+  className,
+  centered,
+  ...rest
+}: ProjectSectionColumnsProps) => (
   <ProjectSectionContent
     className={classes(styles.sectionColumns, className)}
     data-centered={centered}

@@ -73,7 +73,8 @@
   font-size: 0.9em;
   background: rgb(var(--rgbText) / 0.08);
 
-  mask: conic-gradient(white 0 25%, #0000 0 50%, white 0 75%, white 0 75%),
+  mask:
+    conic-gradient(white 0 25%, #0000 0 50%, white 0 75%, white 0 75%),
     conic-gradient(
         from calc(var(--angle) / -2 + 135deg) at bottom var(--size) right
           var(--size),

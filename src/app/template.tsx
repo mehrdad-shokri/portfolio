@@ -6,7 +6,7 @@ import {tokens} from 'components/ThemeProvider/theme'
 import {msToNum} from 'utils/style'
 import styles from 'layouts/App/App.module.css'
 
-import type {ReactNode} from "react"
+import type {ReactNode} from 'react'
 export default function Template({children}: {children: ReactNode}) {
   useScrollRestoration()
 

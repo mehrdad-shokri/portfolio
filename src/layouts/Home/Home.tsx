@@ -74,7 +74,6 @@ export const Home = () => {
 
   return (
     <div className={styles.home}>
-
       <Intro
         id='intro'
         sectionRef={intro}

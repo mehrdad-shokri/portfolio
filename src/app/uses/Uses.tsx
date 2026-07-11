@@ -28,7 +28,6 @@ import styles from './Uses.module.css'
 export const Uses = () => {
   return (
     <Fragment>
-      
       <ProjectContainer className={styles.uses}>
         <ProjectBackground
           src={{src: usesBackground}}
@@ -45,6 +44,17 @@ export const Uses = () => {
               <ProjectSectionHeading>Development</ProjectSectionHeading>
               <ProjectSectionText as='div'>
                 <List>
+                  <ListItem>
+                    I use{' '}
+                    <Link
+                      target={'_blank'}
+                      href='https://code.claude.com/docs/en/overview/'
+                    >
+                      Claude Code
+                    </Link>{' '}
+                    for my agentic software development.
+                  </ListItem>
+
                   <ListItem>
                     I use{' '}
                     <Link target={'_blank'} href='https://www.jetbrains.com/'>
@@ -114,9 +124,8 @@ export const Uses = () => {
                     >
                       Typescript
                     </Link>{' '}
-                    because of it&apos;s type(surprise) system, generics and
-                    assistance in code readability and maintenance. Since I
-                    learnt it back in{' '}
+                    because of it&apos;s type safety, generics and assistance in
+                    code readability and maintenance. Since I learnt it back in{' '}
                     <Link
                       href={
                         'https://github.com/mehrdad-shokri/ashojash-web/blob/master/resources/assets/js/src/components/hoc/Panel.jsx'
@@ -130,7 +139,7 @@ export const Uses = () => {
                     it&apos;s hook mental model which all are really empowering.
                     Before React, I&apos;ve used KnockoutJS, BackboneJs and of
                     course JQuery! I might try another framework in the future;
-                    the most prominent one under my radar;{' '}
+                    the most prominent one under my radar,{' '}
                     <Link href={'https://svelte.dev/'} target={'_blank'}>
                       Svelte
                     </Link>
@@ -149,10 +158,10 @@ export const Uses = () => {
                     <Link href={'https://nextjs.org/'} target={'_blank'}>
                       Next.js
                     </Link>{' '}
-                    on top of React because of SSR needs(maybe until React
-                    server components are a thing) and data flows. I&apos;ve
-                    also come to have a resistant feeling towards Redux (after
-                    many years using it); my preferred alternative is{' '}
+                    on top of React because of SSR needs and data flows.
+                    I&apos;ve also come to have a resistant feeling towards
+                    Redux (after many years using it); my preferred alternative
+                    is{' '}
                     <Link
                       href={'https://tanstack.com/query/v4'}
                       target={'_blank'}
@@ -160,12 +169,6 @@ export const Uses = () => {
                       React Query
                     </Link>{' '}
                     combined with React&apos;s own states, effects and contexts!
-                    I might also give{' '}
-                    <Link href={'https://remix.run'} target={'_blank'}>
-                      Remix
-                    </Link>{' '}
-                    a try in the near future because it seems to have a cleaner
-                    data flow approach!
                   </ListItem>
                   <ListItem>
                     After using bare metal VPS servers for years, configuring
@@ -177,27 +180,18 @@ export const Uses = () => {
                     </Link>{' '}
                     and never think of infrastructure maintenance again. (Yeah
                     shut up and take my money) I&apos;m now a servile of AWS and
-                    services like Lambda, Amplify, AppSync, API Gateways,
-                    DynamoDB, RDS, Cognito, VPC, SQS, SNS, SES, S3 and others!
+                    services like Lambda, AWS CDK, Fargate, API Gateway,
+                    DynamoDB, RDS, Cognito, SQS, SNS, SES, S3 and others!
                   </ListItem>
                   <ListItem>
-                    I use PHP and Node.js for backend development. I still love{' '}
-                    <Link href={'https://laravel.com'} target={'_blank'}>
-                      Laravel
-                    </Link>{' '}
-                    for it&apos;s simplicity and ease of use; and would use it
-                    if I wanted to implement a monolith application (which is a
-                    good choice for MVPs in my opinion) but these days I prefer{' '}
-                    <Link href={'https://expressjs.com/'} target={'_blank'}>
-                      Express.js
+                    I use Node.js for backend development. Mostly deployed as
+                    Lambda behind API Gateway. I also use StepFunctions and for
+                    long running service, I use ECS using Express.js or{' '}
+                    <Link target={'_blank'} href={'https://elysiajs.com/'}>
+                      {' '}
+                      Elysia
                     </Link>
-                    /<Link href={'https://docs.nestjs.com/'}>NestJS</Link>{' '}
-                    applications deployed as lambda functions . Also I love to
-                    learn about{' '}
-                    <Link href={'https://go.dev/'} target={'_blank'}>
-                      Go
-                    </Link>
-                    , which I think will be my next programming language.
+                    .
                   </ListItem>
                   <ListItem>
                     I&apos;ve developed{' '}
@@ -226,7 +220,7 @@ export const Uses = () => {
                     <Link href={'https://flutter.dev/'} target={'_blank'}>
                       Flutter
                     </Link>{' '}
-                    a try and fell in L❤️VE with it. I love Dart and Flutter{' '}
+                    a try and fell in Love with it. I love Dart and Flutter{' '}
                     <Link
                       href={
                         'https://dart.dev/guides/language/language-tour#generics'
@@ -341,6 +335,10 @@ export const Uses = () => {
                     <Link href='https://www.cypress.io/' target={'_blank'}>
                       Cypress
                     </Link>{' '}
+                    and{' '}
+                    <Link target={'_blank'} href={'https://pptr.dev/'}>
+                      Puppeteer
+                    </Link>
                     for e2e testing,{' '}
                     <Link
                       href={'https://testing-library.com/'}
@@ -366,8 +364,9 @@ export const Uses = () => {
                     <Link href={'https://chakra-ui.com/'} target='_blank'>
                       chakra-ui
                     </Link>
-                    , <Link href={'https://semantic-ui.com/'}>semantic ui</Link>
-                    ) and <span style={{whiteSpace: 'nowrap'}}>css-in-js</span>{' '}
+                    , <Link href={'https://ui.shadcn.com//'}>Shadcn</Link>,{' '}
+                    <Link href={'https://semantic-ui.com/'}>semantic ui</Link>)
+                    and <span style={{whiteSpace: 'nowrap'}}>css-in-js</span>{' '}
                     solutions (
                     <Link href={'https://cssinjs.org/'} target={'_blank'}>
                       JSS
@@ -384,7 +383,8 @@ export const Uses = () => {
                       styled components
                     </Link>
                     ) These days I like to use styled components wherever
-                    possible and tailwind for a quick up and running.
+                    possible and tailwind for a quick up and running. I don't
+                    have a strong opinion here.
                   </ListItem>
                 </List>
               </ProjectSectionText>
@@ -413,8 +413,8 @@ export const Uses = () => {
                   </ListItem>
                   <ListItem>
                     For animating stuff on front end, I use{' '}
-                    <Link href={'https://framer.com/motion'} target={'_blank'}>
-                      Framer motion
+                    <Link href={'https://motion.dev/'} target={'_blank'}>
+                      Motion
                     </Link>{' '}
                     and{' '}
                     <Link href={'https://lottiefiles.com/'} target={'_blank'}>
@@ -427,6 +427,7 @@ export const Uses = () => {
             </ProjectTextRow>
           </ProjectSectionContent>
         </ProjectSection>
+        {/*
         <ProjectSection padding='none' className={styles.section}>
           <ProjectSectionContent>
             <ProjectTextRow stretch width='m'>
@@ -436,7 +437,7 @@ export const Uses = () => {
                   <TableRow>
                     <TableHeadCell>Monitor</TableHeadCell>
                     <TableCell>
-                      2 *{' '}
+                      1 *{' '}
                       <Link
                         href={
                           'https://www.lg.com/us/monitors/lg-22MP58VQ-P-led-monitor'
@@ -499,6 +500,7 @@ export const Uses = () => {
             </ProjectTextRow>
           </ProjectSectionContent>
         </ProjectSection>
+*/}
       </ProjectContainer>
       <Footer />
     </Fragment>

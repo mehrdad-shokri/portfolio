@@ -69,10 +69,7 @@ const PostParagraph = ({children, ...rest}: ParagraphProps) => {
   const firstChild = Children.toArray(children)[0]
 
   // Prevent `img` being wrapped in `p`
-  if (
-    hasSingleChild &&
-    (firstChild as ReactElement).type === PostImage
-  ) {
+  if (hasSingleChild && (firstChild as ReactElement).type === PostImage) {
     return <>{children}</>
   }
 
@@ -122,15 +119,30 @@ const PostPre = (props: Record<string, unknown>) => {
 }
 
 const PostBlockquote = (props: Record<string, unknown>) => {
-  return <blockquote className={styles.blockquote} {...(props as React.BlockquoteHTMLAttributes<HTMLElement>)} />
+  return (
+    <blockquote
+      className={styles.blockquote}
+      {...(props as React.BlockquoteHTMLAttributes<HTMLElement>)}
+    />
+  )
 }
 
 const PostHr = (props: Record<string, unknown>) => {
-  return <hr className={styles.hr} {...(props as React.HTMLAttributes<HTMLHRElement>)} />
+  return (
+    <hr
+      className={styles.hr}
+      {...(props as React.HTMLAttributes<HTMLHRElement>)}
+    />
+  )
 }
 
 const PostStrong = (props: Record<string, unknown>) => {
-  return <strong className={styles.strong} {...(props as React.HTMLAttributes<HTMLElement>)} />
+  return (
+    <strong
+      className={styles.strong}
+      {...(props as React.HTMLAttributes<HTMLElement>)}
+    />
+  )
 }
 
 interface PostImageProps {
@@ -151,7 +163,10 @@ const PostImage = ({src, alt, width, height, ...rest}: PostImageProps) => {
       alt={alt ?? ''}
       width={width ?? 0}
       height={height ?? 0}
-      {...(rest as Omit<React.ComponentProps<typeof Img>, 'src' | 'alt' | 'width' | 'height'>)}
+      {...(rest as Omit<
+        React.ComponentProps<typeof Img>,
+        'src' | 'alt' | 'width' | 'height'
+      >)}
     />
   )
 }

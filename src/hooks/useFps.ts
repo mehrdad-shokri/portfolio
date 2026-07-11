@@ -20,7 +20,8 @@ export function useFps(running = true) {
     const currentTime = performance.now()
     frames.current += 1
     if (currentTime >= prevTime.current + 100) {
-      fps.current = ((frames.current * 100) / (currentTime - prevTime.current)) * 10
+      fps.current =
+        ((frames.current * 100) / (currentTime - prevTime.current)) * 10
       frameHistory.current.push(fps.current)
       prevTime.current = currentTime
       frames.current = 0

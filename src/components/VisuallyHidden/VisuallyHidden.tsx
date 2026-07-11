@@ -13,7 +13,17 @@ interface VisuallyHiddenProps {
 }
 
 export const VisuallyHidden = forwardRef<HTMLElement, VisuallyHiddenProps>(
-  ({className, showOnFocus, as: Component = 'span', children, visible, ...rest}, ref) => {
+  (
+    {
+      className,
+      showOnFocus,
+      as: Component = 'span',
+      children,
+      visible,
+      ...rest
+    },
+    ref
+  ) => {
     const Tag = Component as ElementType
     return (
       <Tag

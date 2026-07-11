@@ -89,7 +89,8 @@
   background: rgb(var(--rgbBlack) / 0.6);
   transform: none;
   opacity: 0;
-  transition: opacity var(--durationM) ease var(--durationXL),
+  transition:
+    opacity var(--durationM) ease var(--durationXL),
     color var(--durationM) ease;
 
   &:hover,

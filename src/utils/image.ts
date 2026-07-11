@@ -74,7 +74,9 @@ export async function resolveSrcFromSrcSet({
       return {src, image, width}
     })
   )
-  const fakeSrcSet = sources.map(({image, width}) => `${image} ${width}`).join(', ')
+  const fakeSrcSet = sources
+    .map(({image, width}) => `${image} ${width}`)
+    .join(', ')
   const fakeSrc = await loadImageFromSrcSet({srcSet: fakeSrcSet, sizes})
   const output = sources.find(s => s.image === fakeSrc)
   return output!.src

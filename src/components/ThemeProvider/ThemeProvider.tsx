@@ -7,7 +7,14 @@ import {classes} from 'utils/style'
 import {theme} from './theme'
 import {useTheme} from './useTheme'
 
-export {tokenStyles, fontStyles, squish, createThemeProperties, createThemeStyleObject, createMediaTokenProperties} from './styles'
+export {
+  tokenStyles,
+  fontStyles,
+  squish,
+  createThemeProperties,
+  createThemeStyleObject,
+  createMediaTokenProperties,
+} from './styles'
 
 export type ThemeId = 'dark' | 'light'
 export type ThemeContextValue = Record<string, string | number>
@@ -31,7 +38,10 @@ export const ThemeProvider = ({
   as: Component = 'div',
   ...rest
 }: ThemeProviderProps) => {
-  const currentTheme = {...theme[themeId], ...themeOverrides} as ThemeContextValue
+  const currentTheme = {
+    ...theme[themeId],
+    ...themeOverrides,
+  } as ThemeContextValue
   const parentTheme = useTheme()
   const isRootProvider = !parentTheme.themeId
   const hasMounted = useHasMounted()
@@ -41,7 +51,10 @@ export const ThemeProvider = ({
       window.localStorage.setItem('theme', JSON.stringify(themeId))
       document.body.dataset.theme = themeId
       const metaThemeColor = document.querySelector('meta[name="theme-color"]')
-      metaThemeColor?.setAttribute('content', `rgb(${currentTheme.rgbBackground})`)
+      metaThemeColor?.setAttribute(
+        'content',
+        `rgb(${currentTheme.rgbBackground})`
+      )
     }
   }, [themeId, isRootProvider, hasMounted, currentTheme.rgbBackground])
 
@@ -49,7 +62,11 @@ export const ThemeProvider = ({
     <ThemeContext.Provider value={currentTheme}>
       {isRootProvider && children}
       {!isRootProvider && (
-        <Component className={classes('theme-provider', className)} data-theme={themeId} {...rest}>
+        <Component
+          className={classes('theme-provider', className)}
+          data-theme={themeId}
+          {...rest}
+        >
           {children}
         </Component>
       )}

@@ -69,7 +69,8 @@ export function Intro({
 
   const handleScrollClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
-    const href = (event.currentTarget as HTMLButtonElement & {href?: string}).href
+    const href = (event.currentTarget as HTMLButtonElement & {href?: string})
+      .href
     if (href) scrollToHash(href)
   }
 

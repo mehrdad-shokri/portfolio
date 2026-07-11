@@ -6,7 +6,8 @@ export const ModelAnimationType = {
   LaptopOpen: 'laptop-open',
 } as const
 
-export type ModelAnimationTypeValue = (typeof ModelAnimationType)[keyof typeof ModelAnimationType]
+export type ModelAnimationTypeValue =
+  (typeof ModelAnimationType)[keyof typeof ModelAnimationType]
 
 export interface DeviceModel {
   url: string

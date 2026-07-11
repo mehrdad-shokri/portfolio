@@ -13,7 +13,6 @@ import styles from './404.module.css'
 export function Page404() {
   return (
     <section className={styles.page}>
-      
       <Transition in>
         {visible => (
           <Fragment>

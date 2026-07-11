@@ -14,7 +14,11 @@ export const Section = forwardRef<HTMLElement, SectionProps>(
   ({as: Component = 'div', children, className, ...rest}, ref) => {
     const Tag = Component as ElementType
     return (
-      <Tag className={classes(styles.section, className as string)} ref={ref} {...rest}>
+      <Tag
+        className={classes(styles.section, className as string)}
+        ref={ref}
+        {...rest}
+      >
         {children}
       </Tag>
     )

@@ -22,7 +22,9 @@ export function createThemeProperties(themeObj: ThemeRecord): string {
   )
 }
 
-export function createThemeStyleObject(themeObj: ThemeRecord): Record<string, string | number> {
+export function createThemeStyleObject(
+  themeObj: ThemeRecord
+): Record<string, string | number> {
   const style: Record<string, string | number> = {}
   for (const key of Object.keys(themeObj)) {
     if (key !== 'themeId') style[`--${key}`] = themeObj[key]
@@ -34,7 +36,10 @@ export function createMediaTokenProperties(): string {
   return squish(
     (Object.keys(media) as MediaBreakpoint[])
       .filter(key => key in tokens)
-      .map(key => `@media (max-width: ${media[key]}px) { :root { ${createThemeProperties((tokens as unknown as Record<string, ThemeRecord>)[key])} } }`)
+      .map(
+        key =>
+          `@media (max-width: ${media[key]}px) { :root { ${createThemeProperties((tokens as unknown as Record<string, ThemeRecord>)[key])} } }`
+      )
       .join('\n')
   )
 }

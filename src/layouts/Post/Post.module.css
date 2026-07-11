@@ -78,7 +78,8 @@
   transition: opacity var(--durationXL) ease;
 
   @media (--mediaUseMotion) {
-    transition: opacity var(--durationXL) ease,
+    transition:
+      opacity var(--durationXL) ease,
       transform var(--durationXL) var(--bezierFastoutSlowin);
   }
 
