@@ -1,8 +1,6 @@
 module.exports = {
   reactStrictMode: true,
   trailingSlash: true,
-  output: 'export',
-  distDir: 'build',
   webpack(config, {isServer}) {
     if (isServer) {
       require('./scripts/generate-sitemap')
@@ -33,6 +31,6 @@ module.exports = {
     return config
   },
   images: {
-    unoptimized: true,
+    unoptimized: false,
   },
 }
