@@ -6,7 +6,9 @@ import 'layouts/App/global.css'
 import {Providers} from './providers'
 
 export const metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_WEBSITE_URL || 'https://shokri.dev'),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_WEBSITE_URL || 'https://mehrdad.ai'
+  ),
   title: 'Mehrdad Shokri',
   description: 'Designer + Developer',
   authors: [{name: 'Mehrdad Shokri'}],
@@ -15,11 +17,6 @@ export const metadata = {
     url: process.env.NEXT_PUBLIC_WEBSITE_URL,
     siteName: 'Mehrdad Shokri',
     images: [{url: '/social-image.png', width: 1280, height: 675}],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    creator: '@mehrdad_shokri',
-    site: '@mehrdad_shokri',
   },
   icons: {
     icon: [
@@ -31,14 +28,24 @@ export const metadata = {
   manifest: '/manifest.json',
 }
 
-import type {ReactNode} from "react"
+import type {ReactNode} from 'react'
 export default function RootLayout({children}: {children: ReactNode}) {
   return (
     <html lang='en'>
       <head>
         <meta charSet='utf-8' />
-        <link rel='preload' href={GothamMedium} as='font' crossOrigin='anonymous' />
-        <link rel='preload' href={GothamBook} as='font' crossOrigin='anonymous' />
+        <link
+          rel='preload'
+          href={GothamMedium}
+          as='font'
+          crossOrigin='anonymous'
+        />
+        <link
+          rel='preload'
+          href={GothamBook}
+          as='font'
+          crossOrigin='anonymous'
+        />
         <style dangerouslySetInnerHTML={{__html: fontStyles}} />
         <style dangerouslySetInnerHTML={{__html: tokenStyles}} />
       </head>

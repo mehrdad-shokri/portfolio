@@ -34,20 +34,16 @@ export const Contact = () => {
     try {
       setSending(true)
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/message`,
-        {
-          method: 'POST',
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: email.value,
-            message: message.value,
-          }),
-        }
-      )
+      const response = await fetch('/api/message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email.value,
+          message: message.value,
+        }),
+      })
 
       const responseMessage = await response.json()
 
@@ -69,7 +65,6 @@ export const Contact = () => {
 
   return (
     <Section className={styles.contact}>
-      
       <Transition unmount in={!complete} timeout={1600}>
         {(visible, status) => (
           <form className={styles.form} method='post' onSubmit={onSubmit}>
@@ -122,7 +117,9 @@ export const Contact = () => {
                   className={styles.formError}
                   data-status={errorStatus}
                   style={cssProps({
-                    height: errorStatus ? (errorRef.current?.offsetHeight ?? 0) : 0,
+                    height: errorStatus
+                      ? (errorRef.current?.offsetHeight ?? 0)
+                      : 0,
                   })}
                 >
                   <div className={styles.formErrorContent} ref={errorRef}>
@@ -193,7 +190,11 @@ function getStatusError({
   status,
   errorMessage,
   fallback = 'There was a problem with your request',
-}: {status: number; errorMessage?: string; fallback?: string}): string | false {
+}: {
+  status: number
+  errorMessage?: string
+  fallback?: string
+}): string | false {
   if (status === 200) return false
 
   const statuses: Record<number, string> = {

@@ -1,8 +1,8 @@
 # Personal portfolio
 
-[![Site preview](/public/site-preview.png)](https://shokri.dev)
+[![Site preview](/public/site-preview.png)](https://mehrdad.ai)
 
-My design portfolio, originally forked from [here](https://github.com/HamishMW/portfolio) to showcase a few projects. Built with [Next.js](https://nextjs.org/), [Three.js](https://threejs.org/), and [Framer Motion](https://www.framer.com/motion/). View the [live site here](https://shokri.dev).
+My design portfolio, originally forked from [here](https://github.com/HamishMW/portfolio) to showcase a few projects. Built with [Next.js](https://nextjs.org/), [Three.js](https://threejs.org/), and [Framer Motion](https://www.framer.com/motion/). View the [live site here](https://mehrdad.ai).
 
 ## Install & run
 
@@ -67,5 +67,5 @@ I do not give permission to present any of my projects as your own (this is bein
 <details>
   <summary>How do I get the contact form to work?</summary>
   
-  It's set up using a serverless function with AWS Lambda. You'll need to set up an AWS account and deploy the function. [Refer to this issue for more details](https://github.com/HamishMW/portfolio/issues/21#issuecomment-958727113).
+  It's set up using a Vercel function with Resend. You'll need to set up an Resend API key.
 </details>
