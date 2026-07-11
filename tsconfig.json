@@ -27,7 +27,7 @@
         "layouts/*"
       ],
       "hooks": [
-        "hooks/index.js"
+        "hooks/index.ts"
       ],
       "hooks/*": [
         "hooks/*"
@@ -38,16 +38,25 @@
       "assets/*": [
         "assets/*"
       ],
-      "pages/*": [
-        "pages/*"
+      "app/*": [
+        "app/*"
       ]
     },
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "src",
     ".storybook/StoryContainer.js",
-    "next.config.js"
+    "next.config.js",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "build/types/**/*.ts",
+    "build/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

@@ -83,7 +83,8 @@
     --background2: rgb(var(--rgbBackground) / var(--opacity));
     --background3: rgb(var(--rgbBackground) / 0);
     position: absolute;
-    background: linear-gradient(
+    background:
+      linear-gradient(
         var(--background1) 0%,
         var(--background2) 20%,
         var(--background3) 100%
