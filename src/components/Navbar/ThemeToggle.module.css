@@ -1,4 +1,9 @@
-.toggle {
+/* `button.toggle` (not `.toggle`) so these positioning rules out-specify the
+   shared `.button` styles from the Button component. With equal specificity the
+   winner depends on CSS-module bundle order, which differs between dev and the
+   production build — there `.button { position: relative }` was overriding
+   `position: fixed` and dropping the toggle into normal flow. */
+button.toggle {
   --offset: 6px;
   --inset: calc(var(--spaceOuter) - var(--offset));
 
