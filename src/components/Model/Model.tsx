@@ -351,24 +351,36 @@ export const Model = ({
 
   // Handle mouse move animation
   useEffect(() => {
-    const onMouseMove = (event: MouseEvent) => {
+    const rotateToPoint = (clientX: number, clientY: number) => {
       const {innerWidth, innerHeight} = window
 
       const position = {
-        x: (event.clientX - innerWidth / 2) / innerWidth,
-        y: (event.clientY - innerHeight / 2) / innerHeight,
+        x: (clientX - innerWidth / 2) / innerWidth,
+        y: (clientY - innerHeight / 2) / innerHeight,
       }
 
       rotationY.set((position.x / 2) * rotationFactor)
       rotationX.set((position.y / 2) * rotationFactor)
     }
 
+    const onMouseMove = (event: MouseEvent) =>
+      rotateToPoint(event.clientX, event.clientY)
+
+    // Touch equivalent for phones/tablets: dragging a finger tilts the model
+    // just like the cursor does. Passive so it never blocks page scrolling.
+    const onTouchMove = (event: TouchEvent) => {
+      const touch = event.touches[0]
+      if (touch) rotateToPoint(touch.clientX, touch.clientY)
+    }
+
     if (isInViewport && !reduceMotion) {
       window.addEventListener('mousemove', onMouseMove)
+      window.addEventListener('touchmove', onTouchMove, {passive: true})
     }
 
     return () => {
       window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('touchmove', onTouchMove)
     }
   }, [isInViewport, reduceMotion, rotationX, rotationY, rotationFactor])
 
