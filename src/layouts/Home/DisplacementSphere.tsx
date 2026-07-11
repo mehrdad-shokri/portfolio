@@ -8,7 +8,6 @@ import {useFps} from 'hooks/useFps'
 import {startTransition, useEffect, useRef} from 'react'
 import {
   AmbientLight,
-  Color,
   DirectionalLight,
   Light,
   Mesh,
@@ -21,7 +20,7 @@ import {
   Vector2,
   WebGLRenderer,
 } from 'three'
-import {media, rgbToThreeColor} from 'utils/style'
+import {media} from 'utils/style'
 import {cleanRenderer, cleanScene, removeLights} from 'utils/three'
 import styles from './DisplacementSphere.module.css'
 import fragShader from './displacementSphereFragment.glsl'
@@ -43,8 +42,7 @@ interface DisplacementSphereProps {
 
 export const DisplacementSphere = (props: DisplacementSphereProps) => {
   const theme = useTheme()
-  const {rgbBackground, themeId, colorWhite} = theme as {
-    rgbBackground: string
+  const {themeId, colorWhite} = theme as {
     themeId: string
     colorWhite: string
   }
@@ -129,15 +127,15 @@ export const DisplacementSphere = (props: DisplacementSphereProps) => {
     dirLight.position.y = 100
 
     lights.current = [dirLight, ambientLight]
-    scene.current!.background = new Color(
-      ...(rgbToThreeColor(rgbBackground) as [number, number, number])
-    )
+    // Transparent scene background so the MatrixRain canvas behind it shows
+    // through — only the sphere mesh is drawn, letting the rain sit behind it.
+    scene.current!.background = null
     lights.current.forEach(light => scene.current!.add(light))
 
     return () => {
       removeLights(lights.current!)
     }
-  }, [rgbBackground, colorWhite, themeId])
+  }, [colorWhite, themeId])
 
   useEffect(() => {
     const {width, height} = windowSize

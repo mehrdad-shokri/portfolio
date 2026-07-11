@@ -15,9 +15,11 @@ import RouterLink from 'next/link'
 import {Fragment, useEffect, useMemo, useState} from 'react'
 import {cssProps} from 'utils/style'
 import styles from './Intro.module.css'
+import {DisplacementSphere} from './DisplacementSphere'
 
-const DisplacementSphere = dynamic(() =>
-  import('layouts/Home/DisplacementSphere').then(mod => mod.DisplacementSphere)
+const MatrixRain = dynamic(
+  () => import('layouts/Home/MatrixRain').then(mod => mod.MatrixRain),
+  {ssr: false}
 )
 
 interface IntroProps {
@@ -87,6 +89,7 @@ export function Intro({
       <Transition in key={theme.themeId as string} timeout={3000}>
         {(visible, status) => (
           <Fragment>
+            <MatrixRain />
             <DisplacementSphere />
             <header className={styles.text}>
               <h1 className={styles.name} data-visible={visible} id={titleId}>
