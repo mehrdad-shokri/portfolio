@@ -71,6 +71,9 @@ export default ({ regl, config }, inputs) => {
 			cursorIntensity,
 			glintIntensity,
 			ditherMagnitude,
+			// PORT PATCH: light-theme compositing (see palettePass.frag.glsl).
+			invertRain: config.invertRain ? 1 : 0,
+			glyphColor: colorToRGB(config.glyphColor ?? { space: "rgb", values: [0, 0, 0] }),
 			tex: inputs.primary,
 			bloomTex: inputs.bloom,
 			paletteTex,

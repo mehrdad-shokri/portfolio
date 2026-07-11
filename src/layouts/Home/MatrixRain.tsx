@@ -1,5 +1,6 @@
 'use client'
 
+import {useTheme} from 'components/ThemeProvider'
 import {Transition} from 'components/Transition'
 import {useReducedMotion} from 'framer-motion'
 import {useEffect, useRef} from 'react'
@@ -21,6 +22,7 @@ interface MatrixRainProps {
 export const MatrixRain = (props: MatrixRainProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const reduceMotion = useReducedMotion()
+  const {themeId} = useTheme() as {themeId: string}
 
   useEffect(() => {
     let teardown: (() => void) | undefined
@@ -50,6 +52,15 @@ export const MatrixRain = (props: MatrixRainProps) => {
         ...(reduceMotion ? {once: 'true'} : {}),
       })
 
+      // On the light theme, composite dark-green rain over a light background
+      // (see the `invertRain` branch in public/matrix/…/palettePass). The
+      // default dark-theme look is the engine's native additive glow on black.
+      if (themeId === 'light') {
+        config.invertRain = true
+        config.backgroundColor = {space: 'rgb', values: [0.95, 0.95, 0.95]}
+        config.glyphColor = {space: 'hsl', values: [0.33, 0.9, 0.22]}
+      }
+
       teardown = await makeRain(canvas, config)
 
       // Unmounted while the engine was still booting — tear it down now.
@@ -65,7 +76,7 @@ export const MatrixRain = (props: MatrixRainProps) => {
       cancelled = true
       teardown?.()
     }
-  }, [reduceMotion])
+  }, [reduceMotion, themeId])
 
   return (
     <Transition in timeout={3000}>
