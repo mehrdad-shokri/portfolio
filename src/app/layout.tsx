@@ -4,6 +4,8 @@ import {fontStyles, tokenStyles} from 'components/ThemeProvider/styles'
 import 'layouts/App/reset.css'
 import 'layouts/App/global.css'
 import {Providers} from './providers'
+import type {ReactNode} from 'react'
+import {SpeedInsights} from '@vercel/speed-insights/next'
 
 export const metadata = {
   metadataBase: new URL(
@@ -28,7 +30,6 @@ export const metadata = {
   manifest: '/manifest.json',
 }
 
-import type {ReactNode} from 'react'
 export default function RootLayout({children}: {children: ReactNode}) {
   return (
     <html lang='en'>
@@ -56,6 +57,7 @@ export default function RootLayout({children}: {children: ReactNode}) {
           }}
         />
         <Providers>{children}</Providers>
+        <SpeedInsights />
         <div id='portal-root' />
       </body>
     </html>
