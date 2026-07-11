@@ -6,6 +6,7 @@ import 'layouts/App/global.css'
 import {Providers} from './providers'
 import type {ReactNode} from 'react'
 import {SpeedInsights} from '@vercel/speed-insights/next'
+import {Analytics} from '@vercel/analytics/next'
 
 export const metadata = {
   metadataBase: new URL(
@@ -58,6 +59,7 @@ export default function RootLayout({children}: {children: ReactNode}) {
         />
         <Providers>{children}</Providers>
         <SpeedInsights />
+        <Analytics />
         <div id='portal-root' />
       </body>
     </html>
