@@ -87,7 +87,7 @@ export const Home = () => {
         sectionRef={projectVolvo}
         visible={visibleSections.includes(projectVolvo.current!)}
         index={1}
-        title='Volvo Group Connected Soloutions'
+        title='Volvo Group Connected Solutions'
         description='Trucks connectivity and Fleet management'
         buttonText='View project'
         buttonLink='/projects/volvo'
