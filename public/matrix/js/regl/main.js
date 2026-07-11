@@ -23,8 +23,6 @@ const effects = {
 	mirror: makeMirrorPass,
 };
 
-const dimensions = { width: 1, height: 1 };
-
 // PORT PATCH: resolve bundled libs against this vendored folder (…/public/matrix/).
 const RESOURCE_BASE = new URL("../../", import.meta.url).href;
 
@@ -39,6 +37,11 @@ const loadJS = (src) =>
 
 export default async (canvas, config) => {
 	await Promise.all([loadJS(RESOURCE_BASE + "lib/regl.min.js"), loadJS(RESOURCE_BASE + "lib/gl-matrix.js")]);
+
+	// PORT PATCH: per-instance (was module-level). The dynamic import is cached,
+	// so a shared object let a remount (e.g. theme switch) skip setSize on its
+	// fresh pipeline — leaving buffers at 1×1 and the animation frozen.
+	const dimensions = { width: 1, height: 1 };
 
 	const resize = () => {
 		const devicePixelRatio = window.devicePixelRatio ?? 1;
