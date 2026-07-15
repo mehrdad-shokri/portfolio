@@ -80,6 +80,9 @@ export interface ModelConfig {
   rotation?: {x: number; y: number; z: number}
   // Keep the glTF's own materials instead of the dark device-frame override.
   keepMaterials?: boolean
+  // Continuous vitrine-style spin around Y in rad/s, composed with the
+  // pointer-driven tilt. Disabled when unset or when motion is reduced.
+  autoRotate?: number
 }
 
 interface ModelProps {
@@ -128,6 +131,7 @@ export const Model = ({
   const reduceMotion = useReducedMotion()
   const rotationX = useSpring(0, rotationSpringConfig)
   const rotationY = useSpring(0, rotationSpringConfig)
+  const autoRotateY = useRef(0)
   const {measureFps, isLowFps} = useFps(isInViewport)
 
   useEffect(() => {
@@ -337,7 +341,7 @@ export const Model = ({
     scene.current!.background = initialBackground
 
     modelGroup.current!.rotation.x = rotationX.get()
-    modelGroup.current!.rotation.y = rotationY.get()
+    modelGroup.current!.rotation.y = rotationY.get() + autoRotateY.current
 
     renderer.current!.render(scene.current!, camera.current!)
     measureFps()
@@ -348,6 +352,30 @@ export const Model = ({
       renderer.current!.setPixelRatio(2)
     }
   }, [blurShadow, isLowFps, measureFps, rotationX, rotationY])
+
+  // Continuous showcase rotation: advance the yaw offset every frame so the
+  // model spins like a shop vitrine, while the pointer springs still tilt it.
+  const autoRotateSpeed = models.reduce(
+    (max, {autoRotate}) => Math.max(max, autoRotate ?? 0),
+    0
+  )
+
+  useEffect(() => {
+    if (!autoRotateSpeed || !loaded || !isInViewport || reduceMotion) return
+
+    let frame = 0
+    let last = performance.now()
+
+    const tick = (now: number) => {
+      autoRotateY.current += autoRotateSpeed * ((now - last) / 1000)
+      last = now
+      renderFrame()
+      frame = requestAnimationFrame(tick)
+    }
+
+    frame = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frame)
+  }, [autoRotateSpeed, loaded, isInViewport, reduceMotion, renderFrame])
 
   // Handle mouse move animation
   useEffect(() => {

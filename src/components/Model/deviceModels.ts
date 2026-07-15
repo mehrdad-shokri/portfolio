@@ -19,6 +19,7 @@ export interface DeviceModel {
   scale?: number
   rotation?: {x: number; y: number; z: number}
   keepMaterials?: boolean
+  autoRotate?: number
 }
 
 export const deviceModels: Record<string, DeviceModel> = {
@@ -48,5 +49,7 @@ export const deviceModels: Record<string, DeviceModel> = {
     rotation: {x: 0, y: Math.PI, z: 0},
     // Keep the model's own paint/materials instead of the dark device frame.
     keepMaterials: true,
+    // Vitrine-style spin: one full turn every ~18s.
+    autoRotate: (2 * Math.PI) / 18,
   },
 }
