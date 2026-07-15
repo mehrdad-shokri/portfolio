@@ -438,11 +438,23 @@ export const Model = ({
     if (interactionMode !== 'drag' || !isInViewport) return
 
     const element = container.current!
+    const maxTilt = MathUtils.degToRad(20)
     let lastX = 0
+    let lastY = 0
+    let tilt = 0
 
     const onPointerMove = (event: PointerEvent) => {
       autoRotateY.current += (event.clientX - lastX) * 0.008
+      // Vertical drag tilts within a clamp; the spring returns it to level
+      // on release so the vitrine always settles back to its clean pose.
+      tilt = MathUtils.clamp(
+        tilt + (event.clientY - lastY) * 0.004,
+        -maxTilt,
+        maxTilt
+      )
+      rotationX.set(tilt)
       lastX = event.clientX
+      lastY = event.clientY
       renderFrame()
     }
 
@@ -450,11 +462,14 @@ export const Model = ({
       window.removeEventListener('pointermove', onPointerMove)
       window.removeEventListener('pointerup', endDrag)
       window.removeEventListener('pointercancel', endDrag)
+      rotationX.set(0)
       setIsDragging(false)
     }
 
     const onPointerDown = (event: PointerEvent) => {
       lastX = event.clientX
+      lastY = event.clientY
+      tilt = rotationX.get()
       setIsDragging(true)
       window.addEventListener('pointermove', onPointerMove)
       window.addEventListener('pointerup', endDrag)
@@ -467,7 +482,7 @@ export const Model = ({
       element.removeEventListener('pointerdown', onPointerDown)
       endDrag()
     }
-  }, [interactionMode, isInViewport, renderFrame])
+  }, [interactionMode, isInViewport, renderFrame, rotationX])
 
   // Handle window resize
   useEffect(() => {
