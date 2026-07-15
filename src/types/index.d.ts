@@ -41,6 +41,9 @@ declare module '*.woff2' {
   export default src
 }
 
+// NOTE: at runtime these resolve to Next's StaticImageData object (they are
+// not covered by the asset/resource rule in next.config.js), so the actual
+// value is {src, width, height, blurDataURL} — access .src for the URL.
 declare module '*.jpg' {
   const src: string
   export default src

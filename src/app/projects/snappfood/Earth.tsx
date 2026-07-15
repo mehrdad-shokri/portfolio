@@ -481,7 +481,11 @@ export const Earth = ({
     }
 
     const loadBackground = async () => {
-      const backgroundTexture = await textureLoader.loadAsync(milkywayBg)
+      // Despite the *.jpg type declaration, Next resolves image imports to
+      // StaticImageData at runtime, so the URL lives on .src.
+      const backgroundTexture = await textureLoader.loadAsync(
+        (milkywayBg as unknown as {src: string}).src
+      )
       backgroundTexture.mapping = EquirectangularReflectionMapping
       backgroundTexture.encoding = sRGBEncoding
       if (scene.current) scene.current.background = backgroundTexture
