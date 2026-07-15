@@ -373,7 +373,10 @@ export const Model = ({
   )
 
   useEffect(() => {
+    // Pause the auto-spin while the user is dragging; it resumes from the
+    // dragged angle on release.
     if (!autoRotateSpeed || !loaded || !isInViewport || reduceMotion) return
+    if (isDragging) return
 
     let frame = 0
     let last = performance.now()
@@ -387,7 +390,14 @@ export const Model = ({
 
     frame = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frame)
-  }, [autoRotateSpeed, loaded, isInViewport, reduceMotion, renderFrame])
+  }, [
+    autoRotateSpeed,
+    loaded,
+    isInViewport,
+    reduceMotion,
+    isDragging,
+    renderFrame,
+  ])
 
   // Handle mouse move animation
   useEffect(() => {
