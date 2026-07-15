@@ -45,7 +45,7 @@ export const deviceModels: Record<string, DeviceModel> = {
     url: volvoTruck,
     width: 1280,
     height: 800,
-    position: {x: 0, y: -0.5, z: 0},
+    position: {x: 0, y: -0.6, z: 0},
     animation: ModelAnimationType.SpringUp,
     // ~half the laptop's on-screen size (truck is ~7.2u vs laptop ~3.46u).
     scale: 0.5,

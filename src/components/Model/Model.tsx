@@ -102,6 +102,9 @@ interface ModelProps {
   // 'drag': pointer drags spin the model around Y (grab cursor), for models
   // that also auto-rotate like the truck.
   interactionMode?: 'tilt' | 'drag'
+  // Direction the key light shines from (toward the origin). Defaults to
+  // almost head-on from the front.
+  keyLightPosition?: {x: number; y: number; z: number}
   style?: React.CSSProperties
   className?: string
   alt?: string
@@ -115,6 +118,7 @@ export const Model = ({
   cameraPosition = {x: 0, y: 0, z: 8},
   rotationFactor = 1,
   interactionMode = 'tilt',
+  keyLightPosition = {x: 0.5, y: 0, z: 0.866},
   style,
   className,
   alt,
@@ -184,7 +188,11 @@ export const Model = ({
     const fillLight = new DirectionalLight(0xffffff, 0.8)
 
     fillLight.position.set(-6, 2, 2)
-    keyLight.position.set(0.5, 0, 0.866)
+    keyLight.position.set(
+      keyLightPosition.x,
+      keyLightPosition.y,
+      keyLightPosition.z
+    )
     lights.current = [ambientLight, keyLight, fillLight]
     lights.current.forEach(light => scene.current!.add(light))
 
@@ -584,11 +592,12 @@ const Device = ({
     createRef<Mesh | null>() as React.MutableRefObject<Mesh | null>
   const modelScene = useRef<Group | null>(null)
   const modelScale = useRef(model.scale)
+  const modelPosition = useRef(model.position)
 
-  // The window size is only measured after mount, so a scale derived from it
-  // (e.g. the mobile truck scale) arrives after the load effect has already
-  // captured its first-render props. Track the latest value in a ref for
-  // load() and re-apply it if it changes once the scene is loaded.
+  // The window size is only measured after mount, so scale/position derived
+  // from it (e.g. the truck's mobile scale and desktop offset) arrive after
+  // the load effect has already captured its first-render props. Track the
+  // latest values in refs for load() and re-apply on change once loaded.
   useEffect(() => {
     modelScale.current = model.scale
     if (modelScene.current && model.scale != null) {
@@ -596,6 +605,16 @@ const Device = ({
       renderFrame()
     }
   }, [model.scale, renderFrame])
+
+  const {x: positionX, y: positionY, z: positionZ} = model.position
+
+  useEffect(() => {
+    modelPosition.current = {x: positionX, y: positionY, z: positionZ}
+    if (modelScene.current) {
+      modelScene.current.position.set(positionX, positionY, positionZ)
+      renderFrame()
+    }
+  }, [positionX, positionY, positionZ, renderFrame])
 
   useEffect(() => {
     const applyScreenTexture = async (texture: Texture, node: Mesh) => {
@@ -615,7 +634,8 @@ const Device = ({
 
     // Generate promises to await when ready
     const load = async () => {
-      const {texture, position, url} = model
+      const {texture, url} = model
+      const position = modelPosition.current
       let loadFullResTexture: (() => Promise<void>) | undefined
       let playAnimation: (() => {stop: () => void} | void) | undefined
       const placeholder = await textureLoader.loadAsync(texture.placeholder.src)

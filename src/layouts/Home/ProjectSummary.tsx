@@ -89,6 +89,11 @@ export const ProjectSummary = ({
   const phoneSizes = `(max-width: ${media.tablet}px) 30vw, 20vw`
   const laptopSizes = `(max-width: ${media.tablet}px) 80vw, 40vw`
   const volvoTruckScale = isMobile ? 0.62 : deviceModels.volvoTruck.scale
+  // On desktop the truck sits too high in the section; drop it lower while
+  // keeping the original position on mobile.
+  const volvoTruckPosition = isMobile
+    ? deviceModels.volvoTruck.position
+    : {x: 0, y: -0.8, z: 0}
 
   const renderKatakana = (device: string, visible: boolean) => (
     <svg
@@ -195,10 +200,12 @@ export const ProjectSummary = ({
               showDelay={700}
               show={visible}
               interactionMode='drag'
+              keyLightPosition={{x: -4, y: 4, z: 3}}
               models={[
                 {
                   ...deviceModels.volvoTruck,
                   scale: volvoTruckScale,
+                  position: volvoTruckPosition,
                   texture: normalizeTexture(model.textures[0], phoneSizes),
                 },
               ]}
