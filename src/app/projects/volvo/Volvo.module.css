@@ -1,0 +1,16 @@
+.truck {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 8 / 5;
+  max-height: 80vh;
+}
+
+.truckModel {
+  position: absolute;
+  inset: 0;
+}
+
+.credit {
+  font-size: 0.875rem;
+  opacity: 0.6;
+}
