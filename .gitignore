@@ -68,3 +68,5 @@ public/og
 .idea
 .vscode/*
 */**/.DS_STORE
+# TypeScript incremental build cache
+tsconfig.tsbuildinfo

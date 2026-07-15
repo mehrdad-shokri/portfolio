@@ -20,6 +20,10 @@ export interface DeviceModel {
   rotation?: {x: number; y: number; z: number}
   keepMaterials?: boolean
   autoRotate?: number
+  materialOverrides?: Record<
+    string,
+    {color?: string; metalness?: number; roughness?: number}
+  >
 }
 
 export const deviceModels: Record<string, DeviceModel> = {
@@ -49,7 +53,13 @@ export const deviceModels: Record<string, DeviceModel> = {
     rotation: {x: 0, y: Math.PI, z: 0},
     // Keep the model's own paint/materials instead of the dark device frame.
     keepMaterials: true,
-    // Vitrine-style spin: one full turn every ~18s.
-    autoRotate: (2 * Math.PI) / 18,
+    // Vitrine-style spin: one full turn every ~16s.
+    autoRotate: (2 * Math.PI) / 16,
+    // Repaint by material name; VERMELHO_VOLVO is the cab's body paint.
+    // Light metallic teal: pale silvery green-blue that reads mint in the
+    // key light and seafoam in the shade as the truck rotates.
+    materialOverrides: {
+      VERMELHO_VOLVO: {color: '#a9d6c9', metalness: 0.55, roughness: 0.25},
+    },
   },
 }

@@ -21,6 +21,7 @@ import {
   Mesh,
   MeshBasicMaterial,
   MeshDepthMaterial,
+  MeshStandardMaterial,
   Object3D,
   OrthographicCamera,
   PerspectiveCamera,
@@ -83,6 +84,11 @@ export interface ModelConfig {
   // Continuous vitrine-style spin around Y in rad/s, composed with the
   // pointer-driven tilt. Disabled when unset or when motion is reduced.
   autoRotate?: number
+  // Restyle specific glTF materials by name, e.g. the truck's body paint.
+  materialOverrides?: Record<
+    string,
+    {color?: string; metalness?: number; roughness?: number}
+  >
 }
 
 interface ModelProps {
@@ -92,6 +98,10 @@ interface ModelProps {
   cameraPosition?: {x: number; y: number; z: number}
   // Multiplier for how much the model rotates with the mouse (defaults to 1).
   rotationFactor?: number
+  // 'tilt' (default): the model tilts as the pointer moves over the page.
+  // 'drag': pointer drags spin the model around Y (grab cursor), for models
+  // that also auto-rotate like the truck.
+  interactionMode?: 'tilt' | 'drag'
   style?: React.CSSProperties
   className?: string
   alt?: string
@@ -104,12 +114,14 @@ export const Model = ({
   showDelay = 0,
   cameraPosition = {x: 0, y: 0, z: 8},
   rotationFactor = 1,
+  interactionMode = 'tilt',
   style,
   className,
   alt,
   ...rest
 }: ModelProps) => {
   const [loaded, setLoaded] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
   const container = useRef<HTMLDivElement>(null)
   const canvas = useRef<HTMLCanvasElement>(null)
   const camera = useRef<PerspectiveCamera | null>(null)
@@ -401,7 +413,7 @@ export const Model = ({
       if (touch) rotateToPoint(touch.clientX, touch.clientY)
     }
 
-    if (isInViewport && !reduceMotion) {
+    if (interactionMode === 'tilt' && isInViewport && !reduceMotion) {
       window.addEventListener('mousemove', onMouseMove)
       window.addEventListener('touchmove', onTouchMove, {passive: true})
     }
@@ -410,7 +422,52 @@ export const Model = ({
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('touchmove', onTouchMove)
     }
-  }, [isInViewport, reduceMotion, rotationX, rotationY, rotationFactor])
+  }, [
+    interactionMode,
+    isInViewport,
+    reduceMotion,
+    rotationX,
+    rotationY,
+    rotationFactor,
+  ])
+
+  // Drag-to-rotate interaction: pointer drags spin the model around Y on top
+  // of the continuous rotation, instead of the page-wide hover tilt. Pointer
+  // events cover mouse and touch; touch-action pan-y keeps vertical scrolling.
+  useEffect(() => {
+    if (interactionMode !== 'drag' || !isInViewport) return
+
+    const element = container.current!
+    let lastX = 0
+
+    const onPointerMove = (event: PointerEvent) => {
+      autoRotateY.current += (event.clientX - lastX) * 0.008
+      lastX = event.clientX
+      renderFrame()
+    }
+
+    const endDrag = () => {
+      window.removeEventListener('pointermove', onPointerMove)
+      window.removeEventListener('pointerup', endDrag)
+      window.removeEventListener('pointercancel', endDrag)
+      setIsDragging(false)
+    }
+
+    const onPointerDown = (event: PointerEvent) => {
+      lastX = event.clientX
+      setIsDragging(true)
+      window.addEventListener('pointermove', onPointerMove)
+      window.addEventListener('pointerup', endDrag)
+      window.addEventListener('pointercancel', endDrag)
+    }
+
+    element.addEventListener('pointerdown', onPointerDown)
+
+    return () => {
+      element.removeEventListener('pointerdown', onPointerDown)
+      endDrag()
+    }
+  }, [interactionMode, isInViewport, renderFrame])
 
   // Handle window resize
   useEffect(() => {
@@ -438,7 +495,13 @@ export const Model = ({
     <div
       className={classes(styles.model, className)}
       data-loaded={loaded}
-      style={cssProps({delay: numToMs(showDelay)}, style)}
+      style={{
+        ...cssProps({delay: numToMs(showDelay)}, style),
+        ...(interactionMode === 'drag' && {
+          cursor: isDragging ? 'grabbing' : 'grab',
+          touchAction: 'pan-y',
+        }),
+      }}
       ref={container}
       role='img'
       aria-label={alt}
@@ -554,6 +617,16 @@ const Device = ({
         if (!model.keepMaterials && meshNode.material) {
           meshNode.material.color = new Color(0x161d25)
           meshNode.material.color.convertSRGBToLinear()
+        }
+        const paint = model.materialOverrides?.[meshNode.material?.name ?? '']
+        if (paint && meshNode.material) {
+          const mat = meshNode.material as unknown as MeshStandardMaterial
+          if (paint.color) {
+            mat.color = new Color(paint.color)
+            mat.color.convertSRGBToLinear()
+          }
+          if (paint.metalness != null) mat.metalness = paint.metalness
+          if (paint.roughness != null) mat.roughness = paint.roughness
         }
         if (node.name === MeshType.Screen) {
           const screenMesh = node as Mesh

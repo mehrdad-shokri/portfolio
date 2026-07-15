@@ -194,7 +194,7 @@ export const ProjectSummary = ({
               cameraPosition={{x: 0, y: 0, z: 8}}
               showDelay={700}
               show={visible}
-              rotationFactor={2}
+              interactionMode='drag'
               models={[
                 {
                   ...deviceModels.volvoTruck,
