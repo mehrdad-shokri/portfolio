@@ -88,6 +88,7 @@ export const ProjectSummary = ({
   const indexText = index < 10 ? `0${index}` : index
   const phoneSizes = `(max-width: ${media.tablet}px) 30vw, 20vw`
   const laptopSizes = `(max-width: ${media.tablet}px) 80vw, 40vw`
+  const volvoTruckScale = isMobile ? 0.62 : deviceModels.volvoTruck.scale
 
   const renderKatakana = (device: string, visible: boolean) => (
     <svg
@@ -197,6 +198,7 @@ export const ProjectSummary = ({
               models={[
                 {
                   ...deviceModels.volvoTruck,
+                  scale: volvoTruckScale,
                   texture: normalizeTexture(model.textures[0], phoneSizes),
                 },
               ]}

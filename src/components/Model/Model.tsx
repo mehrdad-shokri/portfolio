@@ -466,6 +466,20 @@ const Device = ({
   const reduceMotion = useReducedMotion()
   const placeholderScreen =
     createRef<Mesh | null>() as React.MutableRefObject<Mesh | null>
+  const modelScene = useRef<Group | null>(null)
+  const modelScale = useRef(model.scale)
+
+  // The window size is only measured after mount, so a scale derived from it
+  // (e.g. the mobile truck scale) arrives after the load effect has already
+  // captured its first-render props. Track the latest value in a ref for
+  // load() and re-apply it if it changes once the scene is loaded.
+  useEffect(() => {
+    modelScale.current = model.scale
+    if (modelScene.current && model.scale != null) {
+      modelScene.current.scale.setScalar(model.scale)
+      renderFrame()
+    }
+  }, [model.scale, renderFrame])
 
   useEffect(() => {
     const applyScreenTexture = async (texture: Texture, node: Mesh) => {
@@ -491,6 +505,7 @@ const Device = ({
       const placeholder = await textureLoader.loadAsync(texture.placeholder.src)
       const gltf = await modelLoader.loadAsync(url)
       modelGroup.current!.add(gltf.scene)
+      modelScene.current = gltf.scene
 
       // Per-model base orientation (e.g. face the truck forward) and scale.
       if (model.rotation) {
@@ -500,8 +515,8 @@ const Device = ({
           model.rotation.z
         )
       }
-      if (model.scale != null) {
-        gltf.scene.scale.setScalar(model.scale)
+      if (modelScale.current != null) {
+        gltf.scene.scale.setScalar(modelScale.current)
       }
 
       gltf.scene.traverse(async (node: Object3D) => {
