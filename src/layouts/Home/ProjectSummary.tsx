@@ -200,7 +200,7 @@ export const ProjectSummary = ({
               showDelay={700}
               show={visible}
               interactionMode='drag'
-              keyLightPosition={{x: -4, y: 4, z: 3}}
+              keyLightPosition={{x: -2.5, y: 2.5, z: 4.5}}
               models={[
                 {
                   ...deviceModels.volvoTruck,
