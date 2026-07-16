@@ -46,9 +46,11 @@
 
   &[data-padding='top'] {
     padding-top: var(--sectionPadding);
+    padding-bottom: 0;
   }
 
   &[data-padding='bottom'] {
+    padding-top: 0;
     padding-bottom: var(--sectionPadding);
   }
 
