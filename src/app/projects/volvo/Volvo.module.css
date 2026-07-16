@@ -12,7 +12,7 @@
      sticky canvas it overlaps. */
   position: relative;
   z-index: 1;
-  margin-top: -20vh;
+  margin-top: -25vh;
 }
 
 .credit {
