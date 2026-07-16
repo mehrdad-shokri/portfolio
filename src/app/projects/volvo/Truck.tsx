@@ -145,6 +145,8 @@ export const Truck = ({
   const spinTarget = useRef(0)
   // When set, the truck eases its heading to this yaw instead of spinning.
   const yawTarget = useRef<number | null>(null)
+  // Last section whose labels/spin were applied; -1 forces the first apply.
+  const activeSectionIndex = useRef(-1)
   const {width: windowWidth, height: windowHeight} = useWindowSize()
   const reduceMotion = useReducedMotion()
   const cameraXSpring = useSpring(0, cameraSpringConfig)
@@ -458,7 +460,6 @@ export const Truck = ({
     // Sections register from dynamically imported children; bail until at
     // least one exists so the index math below can't go negative.
     if (sectionRefs.current.length === 0) return
-    let prevTarget: {x: number; y: number; z: number} | undefined
 
     const updateLabels = (index: number) => {
       labelElements.current.forEach(label => {
@@ -536,15 +537,13 @@ export const Truck = ({
       )
 
       if (
-        prevTarget !== currentTarget &&
-        sectionRefs.current.length &&
-        currentSection
+        currentSection &&
+        activeSectionIndex.current !== currentSectionIndex
       ) {
+        activeSectionIndex.current = currentSectionIndex
         updateLabels(currentSectionIndex)
         updateSpin(currentSectionIndex)
       }
-
-      prevTarget = currentTarget
 
       if (reduceMotion) {
         if (!grabbingRef.current) {

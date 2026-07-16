@@ -89,8 +89,6 @@ interface EarthSectionData {
   sectionRef: React.RefObject<HTMLDivElement | null>
 }
 
-type CameraTarget = {x: number; y: number; z: number}
-
 const nullTarget = {x: 0, y: 0, z: 2}
 
 const interpolatePosition = (
@@ -187,6 +185,9 @@ export const Earth = ({
   // State drives the cursor; the ref gates scroll logic without waiting for
   // a re-render (the release handler re-targets the camera synchronously).
   const grabbingRef = useRef(false)
+  // Last section whose meshes/animations/labels were applied; -1 forces the
+  // first apply.
+  const activeSectionIndex = useRef(-1)
   const [visible, setVisible] = useState(false)
   const [loaderVisible, setLoaderVisible] = useState(false)
   const sectionRefs = useRef<EarthSectionData[]>([])
@@ -596,7 +597,6 @@ export const Earth = ({
     // Sections register from dynamically imported children; bail until at
     // least one exists so the index math below can't go negative.
     if (sectionRefs.current.length === 0) return
-    let prevTarget: CameraTarget | undefined
 
     const updateMeshes = (index: number) => {
       const visibleMeshes = sectionRefs.current[index].meshes
@@ -734,16 +734,14 @@ export const Earth = ({
       )
 
       if (
-        prevTarget !== currentTarget &&
-        sectionRefs.current.length &&
-        currentSection
+        currentSection &&
+        activeSectionIndex.current !== currentSectionIndex
       ) {
+        activeSectionIndex.current = currentSectionIndex
         updateMeshes(currentSectionIndex)
         updateAnimation(currentSectionIndex)
         updateLabels(currentSectionIndex)
       }
-
-      prevTarget = currentTarget
 
       if (grabbingRef.current) return
 
