@@ -220,66 +220,65 @@ export const SnappFood = () => {
             </ProjectTextRow>
           </ProjectSectionContent>
         </ProjectSection>
-        <ThemeProvider themeId='dark' data-invert>
-          <ProjectSection
-            backgroundOverlayOpacity={0.5}
-            backgroundElement={
-              <Image
-                srcSet={[
-                  {src: imageSprBackgroundVolcanism as string, width: 800},
-                  {
-                    src: imageSprBackgroundVolcanismLarge as string,
-                    width: 1600,
-                  },
-                ]}
-                placeholder={{
-                  src: imageSprBackgroundVolcanismPlaceholder as string,
-                }}
-                alt='A dramatic ocean scene with lava forming a new land mass.'
-                sizes='100vw'
-              />
-            }
-          >
-            <ProjectSectionColumns width='full'>
-              <ProjectSectionContent width='full'>
-                <ProjectTextRow width='s'>
-                  <ProjectSectionHeading>Testing</ProjectSectionHeading>
-                  <ProjectSectionText>
-                    Used{' '}
-                    <Link href={'https://www.cypress.io/'} target={'_blank'}>
-                      Cypress
-                    </Link>{' '}
-                    to test our workflow and features thoroughly. Also used{' '}
-                    <Link href={'https://jestjs.io/'} target={'_blank'}>
-                      Jest
-                    </Link>{' '}
-                    and{' '}
-                    <Link
-                      href={
-                        'https://testing-library.com/docs/react-testing-library/intro/'
-                      }
-                      target={'_blank'}
-                    >
-                      React Testing Library
-                    </Link>{' '}
-                    for unit testing our components in isolation.
-                  </ProjectSectionText>
-                </ProjectTextRow>
-              </ProjectSectionContent>
-              <Image
-                raised
-                className={styles.video}
-                srcSet={[
-                  {src: videoSnappfoodTest, width: 1280},
-                  {src: videoSnappfoodTestLarge, width: 2560},
-                ]}
-                placeholder={{src: videoSnappfoodTestPlaceholder as string}}
-                alt='A learning designer building and deploying an interactive lesson on volcanism using the app.'
-                sizes={`(max-width: ${media.mobile}px) 100vw, 50vw`}
-              />
-            </ProjectSectionColumns>
-          </ProjectSection>
-        </ThemeProvider>
+        <ProjectSection
+          backgroundOverlayOpacity={0.5}
+          backgroundElement={
+            <Image
+              srcSet={[
+                {src: imageSprBackgroundVolcanism as string, width: 800},
+                {
+                  src: imageSprBackgroundVolcanismLarge as string,
+                  width: 1600,
+                },
+              ]}
+              placeholder={{
+                src: imageSprBackgroundVolcanismPlaceholder as string,
+              }}
+              alt='A dramatic ocean scene with lava forming a new land mass.'
+              sizes='100vw'
+            />
+          }
+        >
+          <ProjectSectionColumns width='full'>
+            <ProjectSectionContent width='full'>
+              <ProjectTextRow width='s'>
+                <ProjectSectionHeading>Testing</ProjectSectionHeading>
+                <ProjectSectionText>
+                  Used{' '}
+                  <Link href={'https://www.cypress.io/'} target={'_blank'}>
+                    Cypress
+                  </Link>{' '}
+                  to test our workflow and features thoroughly. Also used{' '}
+                  <Link href={'https://jestjs.io/'} target={'_blank'}>
+                    Jest
+                  </Link>{' '}
+                  and{' '}
+                  <Link
+                    href={
+                      'https://testing-library.com/docs/react-testing-library/intro/'
+                    }
+                    target={'_blank'}
+                  >
+                    React Testing Library
+                  </Link>{' '}
+                  for unit testing our components in isolation.
+                </ProjectSectionText>
+              </ProjectTextRow>
+            </ProjectSectionContent>
+            <Image
+              raised
+              className={styles.video}
+              srcSet={[
+                {src: videoSnappfoodTest, width: 1280},
+                {src: videoSnappfoodTestLarge, width: 2560},
+              ]}
+              placeholder={{src: videoSnappfoodTestPlaceholder as string}}
+              alt='A learning designer building and deploying an interactive lesson on volcanism using the app.'
+              sizes={`(max-width: ${media.mobile}px) 100vw, 50vw`}
+            />
+          </ProjectSectionColumns>
+        </ProjectSection>
+
         <ProjectSection>
           <ProjectSectionContent>
             <ProjectTextRow>
