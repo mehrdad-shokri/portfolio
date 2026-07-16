@@ -184,6 +184,9 @@ export const Earth = ({
 }) => {
   const [loaded, setLoaded] = useState(false)
   const [grabbing, setGrabbing] = useState(false)
+  // State drives the cursor; the ref gates scroll logic without waiting for
+  // a re-render (the release handler re-targets the camera synchronously).
+  const grabbingRef = useRef(false)
   const [visible, setVisible] = useState(false)
   const [loaderVisible, setLoaderVisible] = useState(false)
   const sectionRefs = useRef<EarthSectionData[]>([])
@@ -330,30 +333,6 @@ export const Earth = ({
   }, [])
 
   useEffect(() => {
-    const handleControlStart = () => {
-      setGrabbing(true)
-      cameraXSpring.stop()
-      cameraYSpring.stop()
-      cameraZSpring.stop()
-    }
-
-    const handleControlEnd = () => {
-      cameraXSpring.set(camera.current!.position.x)
-      cameraYSpring.set(camera.current!.position.y)
-      cameraZSpring.set(camera.current!.position.z)
-      setGrabbing(false)
-    }
-
-    controls.current?.addEventListener('start', handleControlStart)
-    controls.current?.addEventListener('end', handleControlEnd)
-
-    return () => {
-      controls.current?.removeEventListener('start', handleControlStart)
-      controls.current?.removeEventListener('end', handleControlEnd)
-    }
-  }, [cameraXSpring, cameraYSpring, cameraZSpring])
-
-  useEffect(() => {
     if (!loaded) return
 
     const chunk = getChild('Chunk', sceneModel.current!)
@@ -417,9 +396,10 @@ export const Earth = ({
   ])
 
   useEffect(() => {
-    if (windowWidth <= media.tablet) {
-      controls.current!.enabled = false
-    }
+    if (!controls.current) return
+    // Dragging competes with scrolling on touch layouts; re-enable when the
+    // viewport grows back past the breakpoint.
+    controls.current.enabled = windowWidth > media.tablet
   }, [windowWidth])
 
   useEffect(() => {
@@ -510,13 +490,19 @@ export const Earth = ({
       }
     }
 
+    let loaderTimer: ReturnType<typeof setTimeout> | undefined
+
     startTransition(() => {
       handleLoad()
 
-      setTimeout(() => {
+      loaderTimer = setTimeout(() => {
         setLoaderVisible(true)
       }, 1000)
     })
+
+    return () => {
+      clearTimeout(loaderTimer)
+    }
   }, [loaded, position, scale])
 
   useEffect(() => {
@@ -607,6 +593,9 @@ export const Earth = ({
     const {innerHeight} = window
 
     const currentScrollY = window.scrollY - offsetTop
+    // Sections register from dynamically imported children; bail until at
+    // least one exists so the index math below can't go negative.
+    if (sectionRefs.current.length === 0) return
     let prevTarget: CameraTarget | undefined
 
     const updateMeshes = (index: number) => {
@@ -756,7 +745,7 @@ export const Earth = ({
 
       prevTarget = currentTarget
 
-      if (grabbing) return
+      if (grabbingRef.current) return
 
       if (reduceMotion) {
         camera.current!.position.set(currentX, currentY, currentZ)
@@ -776,7 +765,6 @@ export const Earth = ({
     chunkXSpring,
     chunkYSpring,
     chunkZSpring,
-    grabbing,
     hideMeshes,
     opacitySpring,
     reduceMotion,
@@ -793,6 +781,35 @@ export const Earth = ({
       window.removeEventListener('scroll', throttledScroll)
     }
   }, [handleScroll, inViewport, loaded, opacitySpring])
+
+  useEffect(() => {
+    const handleControlStart = () => {
+      grabbingRef.current = true
+      setGrabbing(true)
+      cameraXSpring.stop()
+      cameraYSpring.stop()
+      cameraZSpring.stop()
+    }
+
+    const handleControlEnd = () => {
+      // Sync the springs to where the drag released (no snap-back), then
+      // re-target the active section so the camera glides home from there.
+      cameraXSpring.jump(camera.current!.position.x)
+      cameraYSpring.jump(camera.current!.position.y)
+      cameraZSpring.jump(camera.current!.position.z)
+      grabbingRef.current = false
+      setGrabbing(false)
+      handleScroll()
+    }
+
+    controls.current?.addEventListener('start', handleControlStart)
+    controls.current?.addEventListener('end', handleControlEnd)
+
+    return () => {
+      controls.current?.removeEventListener('start', handleControlStart)
+      controls.current?.removeEventListener('end', handleControlEnd)
+    }
+  }, [cameraXSpring, cameraYSpring, cameraZSpring, handleScroll])
 
   const registerSection = useCallback((section: EarthSectionData): void => {
     sectionRefs.current = [...sectionRefs.current, section]

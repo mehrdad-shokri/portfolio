@@ -385,7 +385,7 @@ export const SnappFood = () => {
                 },
                 {
                   position: [0.16, -0.06, 0.58],
-                  text: 'Peer programming',
+                  text: 'Pair programming',
                   hidden: true,
                 },
                 {
@@ -476,7 +476,7 @@ export const SnappFood = () => {
                 'Chapter meetings',
                 'Code review',
                 'Onboarding',
-                'Peer programming',
+                'Pair programming',
                 'Knowledge sharing',
                 'Teamplayer',
               ]}
@@ -504,7 +504,7 @@ export const SnappFood = () => {
                 'Chapter meetings',
                 'Code review',
                 'Onboarding',
-                'Peer programming',
+                'Pair programming',
                 'Knowledge sharing',
                 'Teamplayer',
               ]}
