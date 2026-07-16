@@ -95,8 +95,7 @@ export const Volvo = () => {
                     Every truck like this one is a rolling data source: its
                     telematics unit streams ECU readings, positions and fuel
                     data over the air. We turned that raw stream into the
-                    connectivity services fleet operators rely on. Drag the
-                    truck to take a closer look at where the data starts.
+                    connectivity services fleet operators rely on.
                   </ProjectSectionText>
                 </ProjectTextRow>
               </ProjectSectionContent>
