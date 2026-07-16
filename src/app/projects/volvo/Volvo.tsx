@@ -39,6 +39,8 @@ const roles = [
 
 // One full turntable rotation every ~16s, matching the home-page vitrine.
 const turntableSpin = (2 * Math.PI) / 16
+// Heading for the drive-off exit: nose pointing screen-right (+x).
+const driveOffYaw = (3 * Math.PI) / 2
 
 export const Volvo = () => {
   const {themeId} = useTheme()
@@ -127,7 +129,7 @@ export const Volvo = () => {
                 </ProjectSectionContent>
               </ProjectSection>
             </TruckSection>
-            <TruckSection camera={[0, 6, 16]} spin={turntableSpin / 2}>
+            <TruckSection camera={[0, 6, 16]} yaw={driveOffYaw}>
               <ProjectSection>
                 <ProjectSectionContent width='xl'>
                   <ProjectTextRow justify='start' width='s'>
@@ -147,8 +149,9 @@ export const Volvo = () => {
             </TruckSection>
             <TruckSection
               scrimReverse
-              camera={[0, 0.4, 6]}
-              spin={turntableSpin}
+              camera={[0, 1, 9]}
+              yaw={driveOffYaw}
+              offset={[16, 0, 0]}
             />
           </Truck>
         </ThemeProvider>

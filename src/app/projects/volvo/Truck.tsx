@@ -60,6 +60,10 @@ interface TruckSectionData {
   camera: number[]
   labels: string[]
   spin: number
+  // Ease the truck's heading to this angle (rad) instead of spinning.
+  yaw?: number
+  // Model translation from its base position, interpolated with scroll.
+  offset: number[]
   sectionRef: React.RefObject<HTMLDivElement | null>
 }
 
@@ -136,11 +140,16 @@ export const Truck = ({
   // Turntable spin: current speed eases toward the active section's target.
   const spinSpeed = useRef(0)
   const spinTarget = useRef(0)
+  // When set, the truck eases its heading to this yaw instead of spinning.
+  const yawTarget = useRef<number | null>(null)
   const {width: windowWidth, height: windowHeight} = useWindowSize()
   const reduceMotion = useReducedMotion()
   const cameraXSpring = useSpring(0, cameraSpringConfig)
   const cameraYSpring = useSpring(0, cameraSpringConfig)
   const cameraZSpring = useSpring(0, cameraSpringConfig)
+  const offsetXSpring = useSpring(0, cameraSpringConfig)
+  const offsetYSpring = useSpring(0, cameraSpringConfig)
+  const offsetZSpring = useSpring(0, cameraSpringConfig)
   const {measureFps, isLowFps} = useFps(inViewport)
 
   const renderFrame = useCallback(() => {
@@ -153,11 +162,23 @@ export const Truck = ({
     animationFrame.current = requestAnimationFrame(renderFrame)
     const delta = clock.current?.getDelta() ?? 0
 
-    // Ease the turntable toward the active section's speed and advance it.
-    spinSpeed.current +=
-      (spinTarget.current - spinSpeed.current) * Math.min(1, delta * 2)
     if (sceneModel.current) {
-      sceneModel.current.rotation.y += spinSpeed.current * delta
+      if (yawTarget.current != null) {
+        // Ease the heading to the target via the shortest arc.
+        const twoPi = Math.PI * 2
+        let diff =
+          (((yawTarget.current - sceneModel.current.rotation.y) % twoPi) +
+            twoPi) %
+          twoPi
+        if (diff > Math.PI) diff -= twoPi
+        sceneModel.current.rotation.y += diff * Math.min(1, delta * 2.5)
+        spinSpeed.current = 0
+      } else {
+        // Ease the turntable toward the active section's speed, advance it.
+        spinSpeed.current +=
+          (spinTarget.current - spinSpeed.current) * Math.min(1, delta * 2)
+        sceneModel.current.rotation.y += spinSpeed.current * delta
+      }
     }
 
     controls.current?.update()
@@ -301,12 +322,40 @@ export const Truck = ({
       handleCameraChange('z', value)
     )
 
+    const handleOffsetChange = (axis: 0 | 1 | 2, value: number) => {
+      if (!sceneModel.current) return
+      const key = (['x', 'y', 'z'] as const)[axis]
+      sceneModel.current.position[key] = position[axis] + value
+    }
+
+    const unsubscribeOffsetX = offsetXSpring.on('change', value =>
+      handleOffsetChange(0, value)
+    )
+    const unsubscribeOffsetY = offsetYSpring.on('change', value =>
+      handleOffsetChange(1, value)
+    )
+    const unsubscribeOffsetZ = offsetZSpring.on('change', value =>
+      handleOffsetChange(2, value)
+    )
+
     return () => {
       unsubscribeCameraX()
       unsubscribeCameraY()
       unsubscribeCameraZ()
+      unsubscribeOffsetX()
+      unsubscribeOffsetY()
+      unsubscribeOffsetZ()
     }
-  }, [cameraXSpring, cameraYSpring, cameraZSpring, loaded])
+  }, [
+    cameraXSpring,
+    cameraYSpring,
+    cameraZSpring,
+    offsetXSpring,
+    offsetYSpring,
+    offsetZSpring,
+    position,
+    loaded,
+  ])
 
   useEffect(() => {
     if (windowWidth <= media.tablet) {
@@ -445,6 +494,7 @@ export const Truck = ({
 
     const updateSpin = (index: number) => {
       spinTarget.current = reduceMotion ? 0 : sectionRefs.current[index].spin
+      yawTarget.current = sectionRefs.current[index].yaw ?? null
     }
 
     const update = () => {
@@ -455,7 +505,12 @@ export const Truck = ({
       const nextSection = sectionRefs.current[currentSectionIndex + 1]
 
       const currentTarget = getPositionValues(currentSection) || nullTarget
-      const nextTarget = getPositionValues(nextSection) || nullTarget
+      // Hold the final section's values instead of drifting to a null target.
+      const nextTarget = nextSection
+        ? getPositionValues(nextSection)
+        : currentTarget
+      const currentOffset = currentSection?.offset ?? [0, 0, 0]
+      const nextOffset = nextSection?.offset ?? currentOffset
       const sectionScrolled =
         (currentScrollY - innerHeight * currentSectionIndex) / innerHeight
 
@@ -475,6 +530,21 @@ export const Truck = ({
         nextTarget.z,
         scrollPercent
       )
+      const offsetX = interpolatePosition(
+        currentOffset[0],
+        nextOffset[0],
+        scrollPercent
+      )
+      const offsetY = interpolatePosition(
+        currentOffset[1],
+        nextOffset[1],
+        scrollPercent
+      )
+      const offsetZ = interpolatePosition(
+        currentOffset[2],
+        nextOffset[2],
+        scrollPercent
+      )
 
       if (
         prevTarget !== currentTarget &&
@@ -487,12 +557,23 @@ export const Truck = ({
 
       prevTarget = currentTarget
 
-      if (grabbing) return
-
       if (reduceMotion) {
-        camera.current!.position.set(currentX, currentY, currentZ)
+        if (!grabbing) {
+          camera.current!.position.set(currentX, currentY, currentZ)
+        }
+        sceneModel.current?.position.set(
+          position[0] + offsetX,
+          position[1] + offsetY,
+          position[2] + offsetZ
+        )
         return
       }
+
+      offsetXSpring.set(offsetX)
+      offsetYSpring.set(offsetY)
+      offsetZSpring.set(offsetZ)
+
+      if (grabbing) return
 
       cameraXSpring.set(currentX)
       cameraYSpring.set(currentY)
@@ -500,7 +581,17 @@ export const Truck = ({
     }
 
     requestAnimationFrame(update)
-  }, [cameraXSpring, cameraYSpring, cameraZSpring, grabbing, reduceMotion])
+  }, [
+    cameraXSpring,
+    cameraYSpring,
+    cameraZSpring,
+    offsetXSpring,
+    offsetYSpring,
+    offsetZSpring,
+    position,
+    grabbing,
+    reduceMotion,
+  ])
 
   useEffect(() => {
     const throttledScroll = throttle(handleScroll, 100)
@@ -567,6 +658,8 @@ export const TruckSection = memo(
     camera = [0, 0, 6],
     labels = [],
     spin = 0,
+    yaw,
+    offset = [0, 0, 0],
   }: {
     children?: React.ReactNode
     scrim?: boolean
@@ -575,17 +668,25 @@ export const TruckSection = memo(
     camera?: number[]
     labels?: string[]
     spin?: number
+    yaw?: number
+    offset?: number[]
   }) => {
     const {registerSection, unregisterSection} = useContext(TruckContext)
     const sectionRef = useRef<HTMLDivElement>(null)
     const stringifiedDeps =
-      JSON.stringify(camera) + JSON.stringify(labels) + JSON.stringify(spin)
+      JSON.stringify(camera) +
+      JSON.stringify(labels) +
+      JSON.stringify(spin) +
+      JSON.stringify(yaw) +
+      JSON.stringify(offset)
 
     useEffect(() => {
       const section = {
         camera,
         labels,
         spin,
+        yaw,
+        offset,
         sectionRef,
       }
 
