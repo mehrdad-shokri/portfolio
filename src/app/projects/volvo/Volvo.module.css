@@ -6,6 +6,15 @@
   }
 }
 
+.outcomes {
+  /* Pull the section up into the empty tail of the drive-off viewport so
+     the heading arrives as the scene fades out. z-index lifts it above the
+     sticky canvas it overlaps. */
+  position: relative;
+  z-index: 1;
+  margin-top: -25vh;
+}
+
 .credit {
   font-size: 0.875rem;
   opacity: 0.6;
