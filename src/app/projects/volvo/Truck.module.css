@@ -58,14 +58,14 @@
   position: absolute;
   top: 0;
   left: 0;
-  color: white;
+  color: rgb(var(--rgbText));
   font-weight: var(--fontWeightMedium);
   font-size: var(--fontSizeBodyXS);
   font-family: var(--systemFontStack);
   text-shadow:
-    0 0 3px rgb(var(--rgbBlack)),
-    0 0 5px rgb(var(--rgbBlack)),
-    0 0 20px rgb(var(--rgbBlack));
+    0 0 3px rgb(var(--rgbBackground)),
+    0 0 5px rgb(var(--rgbBackground)),
+    0 0 20px rgb(var(--rgbBackground));
   transform: translate3d(-50%, -50%, 0) translate3d(var(--posX), var(--posY), 0);
   transition: opacity var(--durationM) ease;
   transition-delay: var(--delay);
@@ -108,7 +108,7 @@
   width: 100%;
   height: 100vh;
   overflow-x: hidden;
-  text-shadow: 0 0 6px rgb(var(--rgbBlack));
+  text-shadow: 0 0 6px rgb(var(--rgbBackground));
 
   &[data-scrim='true'] {
     background: linear-gradient(

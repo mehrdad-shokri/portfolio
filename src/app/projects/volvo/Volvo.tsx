@@ -4,7 +4,7 @@ import backgroundVolvoPlaceholder from 'assets/volvo-background-placeholder.jpg'
 import backgroundVolvo from 'assets/volvo-background.jpg'
 import {Footer} from 'components/Footer'
 import {Link} from 'components/Link'
-import {ThemeProvider, useTheme} from 'components/ThemeProvider'
+import {useTheme} from 'components/ThemeProvider'
 import {
   ProjectBackground,
   ProjectContainer,
@@ -57,104 +57,97 @@ export const Volvo = () => {
           placeholder={{src: backgroundVolvoPlaceholder as string}}
         />
         <ProjectHeader title={title} description={description} roles={roles} />
-        <ThemeProvider themeId='dark' data-invert>
-          <Truck
-            position={useMemo(() => [0, -0.8, 0], [])}
-            scale={0.6}
-            labels={useMemo(
-              () => [
-                {
-                  position: [0.25, 1.2, 0.8],
-                  text: 'Connectivity',
-                  hidden: true,
-                },
-                {
-                  position: [1, -0.5, 0.7],
-                  text: 'ECU data',
-                  hidden: true,
-                },
-                {
-                  position: [-1, -0.65, 0],
-                  text: 'Fuel telemetry',
-                  hidden: true,
-                },
-                {
-                  position: [0, 0.5, -1.7],
-                  text: 'Position',
-                  hidden: true,
-                },
-              ],
-              []
-            )}
+        <Truck
+          position={useMemo(() => [0, -0.8, 0], [])}
+          scale={0.6}
+          labels={useMemo(
+            () => [
+              {
+                position: [0.25, 1.2, 0.8],
+                text: 'Connectivity',
+                hidden: true,
+              },
+              {
+                position: [1, -0.5, 0.7],
+                text: 'ECU data',
+                hidden: true,
+              },
+              {
+                position: [-1, -0.65, 0],
+                text: 'Fuel telemetry',
+                hidden: true,
+              },
+              {
+                position: [0, 0.5, -1.7],
+                text: 'Position',
+                hidden: true,
+              },
+            ],
+            []
+          )}
+        >
+          <TruckSection scrim camera={[0, 0.4, 6]} spin={turntableSpin}>
+            <ProjectSection>
+              <ProjectSectionContent>
+                <ProjectTextRow center>
+                  <ProjectSectionHeading>The vehicle</ProjectSectionHeading>
+                  <ProjectSectionText>
+                    Every truck like this one is a rolling data source: its
+                    telematics unit streams ECU readings, positions and fuel
+                    data over the air. We turned that raw stream into the
+                    connectivity services fleet operators rely on. Drag the
+                    truck to take a closer look at where the data starts.
+                  </ProjectSectionText>
+                </ProjectTextRow>
+              </ProjectSectionContent>
+            </ProjectSection>
+          </TruckSection>
+          <TruckSection
+            camera={[2.2, 0.8, 3.4]}
+            labels={['Connectivity', 'ECU data', 'Fuel telemetry', 'Position']}
           >
-            <TruckSection scrim camera={[0, 0.4, 6]} spin={turntableSpin}>
-              <ProjectSection>
-                <ProjectSectionContent>
-                  <ProjectTextRow center>
-                    <ProjectSectionHeading>The vehicle</ProjectSectionHeading>
-                    <ProjectSectionText>
-                      Every truck like this one is a rolling data source: its
-                      telematics unit streams ECU readings, positions and fuel
-                      data over the air. We turned that raw stream into the
-                      connectivity services fleet operators rely on. Drag the
-                      truck to take a closer look at where the data starts.
-                    </ProjectSectionText>
-                  </ProjectTextRow>
-                </ProjectSectionContent>
-              </ProjectSection>
-            </TruckSection>
-            <TruckSection
-              camera={[2.2, 0.8, 3.4]}
-              labels={[
-                'Connectivity',
-                'ECU data',
-                'Fuel telemetry',
-                'Position',
-              ]}
-            >
-              <ProjectSection>
-                <ProjectSectionContent width='xl'>
-                  <ProjectTextRow justify='end' width='s'>
-                    <ProjectSectionHeading level={4} as='h3'>
-                      One truck, every signal
-                    </ProjectSectionHeading>
-                    <ProjectSectionText>
-                      A connected truck reports on everything from its ECUs to
-                      its connectivity status. I built the frontend of the
-                      vehicle overview product — the single place where all of a
-                      vehicle&apos;s data comes together, tab by tab, for the
-                      people who need to understand one specific truck.
-                    </ProjectSectionText>
-                  </ProjectTextRow>
-                </ProjectSectionContent>
-              </ProjectSection>
-            </TruckSection>
-            <TruckSection camera={[0, 6, 16]} yaw={driveOffYaw}>
-              <ProjectSection>
-                <ProjectSectionContent width='xl'>
-                  <ProjectTextRow justify='start' width='s'>
-                    <ProjectSectionHeading level={4} as='h3'>
-                      The fleet
-                    </ProjectSectionHeading>
-                    <ProjectSectionText>
-                      For a fleet operator the unit is never one truck — it is
-                      hundreds. I built the frontend of the fleet management
-                      page: every vehicle&apos;s status at a glance, with
-                      actions an operator can take on any single truck — down to
-                      pinging it — without losing the fleet-wide picture.
-                    </ProjectSectionText>
-                  </ProjectTextRow>
-                </ProjectSectionContent>
-              </ProjectSection>
-            </TruckSection>
-            <TruckSection
-              scrimReverse
-              camera={[0, 1, 9]}
-              yaw={driveOffYaw}
-              offset={[16, 0, 0]}
-            />
-          </Truck>
-        </ThemeProvider>
+            <ProjectSection>
+              <ProjectSectionContent width='xl'>
+                <ProjectTextRow justify='end' width='s'>
+                  <ProjectSectionHeading level={4} as='h3'>
+                    One truck, every signal
+                  </ProjectSectionHeading>
+                  <ProjectSectionText>
+                    A connected truck reports on everything from its ECUs to its
+                    connectivity status. I built the frontend of the vehicle
+                    overview product — the single place where all of a
+                    vehicle&apos;s data comes together, tab by tab, for the
+                    people who need to understand one specific truck.
+                  </ProjectSectionText>
+                </ProjectTextRow>
+              </ProjectSectionContent>
+            </ProjectSection>
+          </TruckSection>
+          <TruckSection camera={[0, 6, 16]} yaw={driveOffYaw}>
+            <ProjectSection>
+              <ProjectSectionContent width='xl'>
+                <ProjectTextRow justify='start' width='s'>
+                  <ProjectSectionHeading level={4} as='h3'>
+                    The fleet
+                  </ProjectSectionHeading>
+                  <ProjectSectionText>
+                    For a fleet operator the unit is never one truck — it is
+                    hundreds. I built the frontend of the fleet management page:
+                    every vehicle&apos;s status at a glance, with actions an
+                    operator can take on any single truck — down to pinging it —
+                    without losing the fleet-wide picture.
+                  </ProjectSectionText>
+                </ProjectTextRow>
+              </ProjectSectionContent>
+            </ProjectSection>
+          </TruckSection>
+          <TruckSection
+            scrimReverse
+            camera={[0, 1, 9]}
+            yaw={driveOffYaw}
+            offset={[16, 0, 0]}
+          />
+        </Truck>
         <ProjectSection>
           <ProjectSectionContent>
             <ProjectTextRow center centerMobile noMargin>
