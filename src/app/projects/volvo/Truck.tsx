@@ -337,9 +337,10 @@ export const Truck = ({
   ])
 
   useEffect(() => {
-    if (windowWidth <= media.tablet) {
-      controls.current!.enabled = false
-    }
+    if (!controls.current) return
+    // Dragging competes with scrolling on touch layouts; re-enable when the
+    // viewport grows back past the breakpoint.
+    controls.current.enabled = windowWidth > media.tablet
   }, [windowWidth])
 
   useEffect(() => {
@@ -387,13 +388,19 @@ export const Truck = ({
       }
     }
 
+    let loaderTimer: ReturnType<typeof setTimeout> | undefined
+
     startTransition(() => {
       handleLoad()
 
-      setTimeout(() => {
+      loaderTimer = setTimeout(() => {
         setLoaderVisible(true)
       }, 1000)
     })
+
+    return () => {
+      clearTimeout(loaderTimer)
+    }
   }, [loaded, position, scale])
 
   useEffect(() => {
@@ -448,6 +455,9 @@ export const Truck = ({
     const {innerHeight} = window
 
     const currentScrollY = window.scrollY - offsetTop
+    // Sections register from dynamically imported children; bail until at
+    // least one exists so the index math below can't go negative.
+    if (sectionRefs.current.length === 0) return
     let prevTarget: {x: number; y: number; z: number} | undefined
 
     const updateLabels = (index: number) => {
