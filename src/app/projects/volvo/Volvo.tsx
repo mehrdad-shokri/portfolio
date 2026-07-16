@@ -148,7 +148,7 @@ export const Volvo = () => {
             offset={[16, 0, 0]}
           />
         </Truck>
-        <ProjectSection>
+        <ProjectSection padding='bottom' className={styles.outcomes}>
           <ProjectSectionContent>
             <ProjectTextRow center centerMobile noMargin>
               <ProjectSectionHeading>Project outcomes</ProjectSectionHeading>
