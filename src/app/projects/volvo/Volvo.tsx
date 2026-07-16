@@ -51,7 +51,7 @@ export const Volvo = () => {
       <ProjectContainer className='volvo'>
         <ProjectBackground
           className={styles.background}
-          opacity={isDark ? 0.4 : 0.8}
+          opacity={isDark ? 0.4 : 0.2}
           src={backgroundVolvo}
           srcSet={[{src: backgroundVolvo as string, width: 1280}]}
           placeholder={{src: backgroundVolvoPlaceholder as string}}
