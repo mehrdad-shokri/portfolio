@@ -1,0 +1,12 @@
+.background {
+  /* The photo is ~60% sky with the truck in the lower third; anchor the
+     cover-crop to the bottom so wide viewports crop sky, not the truck. */
+  & img {
+    object-position: center bottom;
+  }
+}
+
+.credit {
+  font-size: 0.875rem;
+  opacity: 0.6;
+}

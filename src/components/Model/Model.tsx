@@ -366,10 +366,10 @@ export const Model = ({
     renderer.current!.render(scene.current!, camera.current!)
     measureFps()
 
-    if (isLowFps.current) {
-      renderer.current!.setPixelRatio(1)
-    } else {
-      renderer.current!.setPixelRatio(2)
+    // setPixelRatio resizes the canvas buffer; only touch it on change.
+    const targetPixelRatio = isLowFps.current ? 1 : 2
+    if (renderer.current!.getPixelRatio() !== targetPixelRatio) {
+      renderer.current!.setPixelRatio(targetPixelRatio)
     }
   }, [blurShadow, isLowFps, measureFps, rotationX, rotationY])
 

@@ -1,15 +1,9 @@
 'use client'
 
 import React from 'react'
-import earthModel from 'assets/earth.glb'
-import mwnx from 'assets/milkyway-nx.hdr'
-import mwny from 'assets/milkyway-ny.hdr'
-import mwnz from 'assets/milkyway-nz.hdr'
-import mwpx from 'assets/milkyway-px.hdr'
-import mwpy from 'assets/milkyway-py.hdr'
-import mwpz from 'assets/milkyway-pz.hdr'
-import milkywayBg from 'assets/milkyway.jpg'
+import truckModel from 'assets/volvo.glb'
 import {Loader} from 'components/Loader'
+import {deviceModels} from 'components/Model/deviceModels'
 import {Section} from 'components/Section'
 import {tokens} from 'components/ThemeProvider/theme'
 import {Transition} from 'components/Transition'
@@ -26,54 +20,35 @@ import {
   useRef,
   useState,
 } from 'react'
-import {HDRCubeTextureLoader, OrbitControls} from 'three-stdlib'
+import {OrbitControls} from 'three-stdlib'
 import {
-  ACESFilmicToneMapping,
   AmbientLight,
-  AnimationClip,
-  AnimationMixer,
   Clock,
-  CubeTexture,
+  Color,
   DirectionalLight,
-  LoopOnce,
   Mesh,
   MeshStandardMaterial,
-  PMREMGenerator,
+  Object3D,
   PerspectiveCamera,
-  Raycaster,
   Scene,
   Sprite,
-  Vector2,
   Vector3,
   WebGLRenderer,
-  Object3D,
-  Texture,
   sRGBEncoding,
 } from 'three'
-import {LinearFilter} from 'three'
-import {EquirectangularReflectionMapping} from 'three'
 import {clamp} from 'utils/clamp'
 import {classes, media, msToNum, numToPx} from 'utils/style'
-import {
-  cleanRenderer,
-  cleanScene,
-  getChild,
-  modelLoader,
-  removeLights,
-  textureLoader,
-} from 'utils/three'
+import {cleanRenderer, cleanScene, modelLoader, removeLights} from 'utils/three'
 import {throttle} from 'utils/throttle'
-import styles from './Earth.module.css'
+import styles from './Truck.module.css'
 
 interface LabelData {
   position: number[]
-  content?: string
   text?: string
   delay?: number
   hidden?: boolean
   sprite?: Sprite
   element?: HTMLElement
-  [key: string]: unknown
 }
 
 interface LabelElement extends LabelData {
@@ -81,15 +56,18 @@ interface LabelElement extends LabelData {
   sprite: Sprite
 }
 
-interface EarthSectionData {
+interface TruckSectionData {
   camera: number[]
-  animations: string[]
-  meshes: string[]
   labels: string[]
+  spin: number
+  // Ease the truck's heading to this angle (rad) instead of spinning.
+  yaw?: number
+  // Model translation from its base position, interpolated with scroll.
+  offset: number[]
   sectionRef: React.RefObject<HTMLDivElement | null>
 }
 
-const nullTarget = {x: 0, y: 0, z: 2}
+const nullTarget = {x: 0, y: 0, z: 6}
 
 // Scratch vector reused across frames when projecting labels.
 const labelVector = new Vector3()
@@ -99,13 +77,6 @@ const interpolatePosition = (
   nextValue: number,
   percent: number
 ): number => value + percent * (nextValue - value)
-
-/*
-const positionToString = value =>
-  Object.keys(value)
-    .map(key => parseFloat(Math.round(value[key] * 100) / 100).toFixed(2))
-    .join(', ');
-*/
 
 const getPositionValues = (section?: {
   camera?: number[]
@@ -119,19 +90,6 @@ const getPositionValues = (section?: {
   }
 }
 
-const isEqualPosition = (
-  position1?: {x?: number; y?: number; z?: number},
-  position2?: {x?: number; y?: number; z?: number}
-): boolean => {
-  const round = (num = 0) => Math.round((num + Number.EPSILON) * 100) / 100
-
-  return (
-    round(position1?.x) === round(position2?.x) &&
-    round(position1?.y) === round(position2?.y) &&
-    round(position1?.z) === round(position2?.z)
-  )
-}
-
 const cameraSpringConfig = {
   stiffness: 80,
   damping: 40,
@@ -140,60 +98,36 @@ const cameraSpringConfig = {
   restDelta: 0.001,
 }
 
-const chunkSpringConfig = {
-  stiffness: 40,
-  damping: 30,
-  mass: 2,
-  restSpeed: 0.001,
-  restDelta: 0.001,
+interface TruckContextValue {
+  registerSection: (section: TruckSectionData) => void
+  unregisterSection: (section: TruckSectionData) => void
 }
-
-const opacitySpringConfig = {
-  stiffness: 40,
-  damping: 30,
-}
-
-interface EarthContextValue {
-  registerSection: (section: EarthSectionData) => void
-  unregisterSection: (section: EarthSectionData) => void
-}
-const EarthContext = createContext<EarthContextValue>({
+const TruckContext = createContext<TruckContextValue>({
   registerSection: () => {},
   unregisterSection: () => {},
 })
 
-export const Earth = ({
+export const Truck = ({
   position = [0, 0, 0],
   scale = 1,
-  hideMeshes = [],
   labels = [],
   className,
   children,
 }: {
   position?: number[]
   scale?: number
-  hideMeshes?: string[]
   labels?: LabelData[]
   className?: string
   children?: React.ReactNode
-  scrim?: boolean
-  scrimReverse?: boolean
-  camera?: number[]
-  animations?: string | string[]
-  meshes?: unknown
-  [key: string]: unknown
 }) => {
   const [loaded, setLoaded] = useState(false)
   const [grabbing, setGrabbing] = useState(false)
   // State drives the cursor; the ref gates scroll logic without waiting for
   // a re-render (the release handler re-targets the camera synchronously).
   const grabbingRef = useRef(false)
-  // Last section whose meshes/animations/labels were applied; -1 forces the
-  // first apply.
-  const activeSectionIndex = useRef(-1)
   const [visible, setVisible] = useState(false)
   const [loaderVisible, setLoaderVisible] = useState(false)
-  const sectionRefs = useRef<EarthSectionData[]>([])
+  const sectionRefs = useRef<TruckSectionData[]>([])
   const container = useRef<HTMLDivElement>(null)
   const labelContainer = useRef<HTMLDivElement>(null)
   const canvas = useRef<HTMLCanvasElement>(null)
@@ -201,28 +135,29 @@ export const Earth = ({
   const renderer = useRef<WebGLRenderer | undefined>(undefined)
   const camera = useRef<PerspectiveCamera | undefined>(undefined)
   const clock = useRef<Clock | undefined>(undefined)
-  const mouse = useRef<Vector2 | undefined>(undefined)
-  const raycaster = useRef<Raycaster | undefined>(undefined)
   const sceneModel = useRef<Object3D | undefined>(undefined)
-  const animations = useRef<AnimationClip[] | undefined>(undefined)
-  const mixer = useRef<AnimationMixer | undefined>(undefined)
   const inViewport = useInViewport(canvas)
   const animationFrame = useRef<number | undefined>(undefined)
   const initCameraPosition = useRef(getPositionValues(sectionRefs.current[0]))
   const labelElements = useRef<LabelElement[]>([])
   const controls = useRef<OrbitControls | undefined>(undefined)
-  const envMap = useRef<Texture | undefined>(undefined)
   const contentAdded = useRef<boolean>(false)
   const mounted = useRef<boolean>(false)
+  // Turntable spin: current speed eases toward the active section's target.
+  const spinSpeed = useRef(0)
+  const spinTarget = useRef(0)
+  // When set, the truck eases its heading to this yaw instead of spinning.
+  const yawTarget = useRef<number | null>(null)
+  // Last section whose labels/spin were applied; -1 forces the first apply.
+  const activeSectionIndex = useRef(-1)
   const {width: windowWidth, height: windowHeight} = useWindowSize()
   const reduceMotion = useReducedMotion()
   const cameraXSpring = useSpring(0, cameraSpringConfig)
   const cameraYSpring = useSpring(0, cameraSpringConfig)
   const cameraZSpring = useSpring(0, cameraSpringConfig)
-  const chunkXSpring = useSpring(0, chunkSpringConfig)
-  const chunkYSpring = useSpring(0, chunkSpringConfig)
-  const chunkZSpring = useSpring(0, chunkSpringConfig)
-  const opacitySpring = useSpring(0, opacitySpringConfig)
+  const offsetXSpring = useSpring(0, cameraSpringConfig)
+  const offsetYSpring = useSpring(0, cameraSpringConfig)
+  const offsetZSpring = useSpring(0, cameraSpringConfig)
   const {measureFps, isLowFps} = useFps(inViewport)
 
   const renderFrame = useCallback(() => {
@@ -234,14 +169,33 @@ export const Earth = ({
 
     animationFrame.current = requestAnimationFrame(renderFrame)
     const delta = clock.current?.getDelta() ?? 0
-    mixer.current?.update(delta)
+
+    if (sceneModel.current) {
+      if (yawTarget.current != null) {
+        // Ease the heading to the target via the shortest arc.
+        const twoPi = Math.PI * 2
+        let diff =
+          (((yawTarget.current - sceneModel.current.rotation.y) % twoPi) +
+            twoPi) %
+          twoPi
+        if (diff > Math.PI) diff -= twoPi
+        sceneModel.current.rotation.y += diff * Math.min(1, delta * 2.5)
+        spinSpeed.current = 0
+      } else {
+        // Ease the turntable toward the active section's speed, advance it.
+        spinSpeed.current +=
+          (spinTarget.current - spinSpeed.current) * Math.min(1, delta * 2)
+        sceneModel.current.rotation.y += spinSpeed.current * delta
+      }
+    }
+
     controls.current?.update()
     renderer.current?.render(scene.current!, camera.current!)
 
     // Render labels
     labelElements.current.forEach(label => {
-      const {element, position, sprite} = label
-      labelVector.fromArray(position)
+      const {element, position: labelPosition, sprite} = label
+      labelVector.fromArray(labelPosition)
       const meshDistance = camera.current!.position.distanceTo(
         sceneModel.current!.position
       )
@@ -249,7 +203,6 @@ export const Earth = ({
         sprite.position
       )
       const spriteBehindObject = spriteDistance > meshDistance
-      void spriteBehindObject
 
       labelVector.project(camera.current!)
       const posX = Math.round((0.5 + labelVector.x / 2) * window.innerWidth)
@@ -287,7 +240,6 @@ export const Earth = ({
     renderer.current!.setPixelRatio(1)
     renderer.current!.outputEncoding = sRGBEncoding
     renderer.current!.physicallyCorrectLights = true
-    renderer.current!.toneMapping = ACESFilmicToneMapping
 
     camera.current = new PerspectiveCamera(
       54,
@@ -306,12 +258,14 @@ export const Earth = ({
 
     scene.current = new Scene()
     clock.current = new Clock()
-    raycaster.current = new Raycaster()
 
-    const ambientLight = new AmbientLight(0x222222, 0.05)
-    const dirLight = new DirectionalLight(0xffffff, 1.5)
-    dirLight.position.set(3, 0, 1)
-    const lights = [ambientLight, dirLight]
+    // Match the home-page vitrine lighting so the teal paint reads the same.
+    const ambientLight = new AmbientLight(0xffffff, 1.2)
+    const keyLight = new DirectionalLight(0xffffff, 1.1)
+    const fillLight = new DirectionalLight(0xffffff, 0.8)
+    keyLight.position.set(-2.5, 2.5, 4.5)
+    fillLight.position.set(-6, 2, 2)
+    const lights = [ambientLight, keyLight, fillLight]
     lights.forEach(light => scene.current!.add(light))
 
     controls.current = new OrbitControls(
@@ -330,17 +284,13 @@ export const Earth = ({
 
       removeLights(lights)
       if (scene.current) cleanScene(scene.current)
-      if (renderer.current)
-        if (renderer.current) cleanRenderer(renderer.current)
+      if (renderer.current) cleanRenderer(renderer.current)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     if (!loaded) return
-
-    const chunk = getChild('Chunk', sceneModel.current!)
-    const atmosphere = getChild('Atmosphere', sceneModel.current!)
 
     const handleCameraChange = (axis: 'x' | 'y' | 'z', value: number) => {
       camera.current!.position[axis] = value
@@ -356,47 +306,39 @@ export const Earth = ({
       handleCameraChange('z', value)
     )
 
-    const handleChunkChange = (axis: 'x' | 'y' | 'z', value: number) => {
-      if (chunk) {
-        chunk.position[axis] = value
-      }
+    const handleOffsetChange = (axis: 0 | 1 | 2, value: number) => {
+      if (!sceneModel.current) return
+      const key = (['x', 'y', 'z'] as const)[axis]
+      sceneModel.current.position[key] = position[axis] + value
     }
 
-    const unsubscribeChunkX = chunkXSpring.on('change', value =>
-      handleChunkChange('x', value)
+    const unsubscribeOffsetX = offsetXSpring.on('change', value =>
+      handleOffsetChange(0, value)
     )
-    const unsubscribeChunkY = chunkYSpring.on('change', value =>
-      handleChunkChange('y', value)
+    const unsubscribeOffsetY = offsetYSpring.on('change', value =>
+      handleOffsetChange(1, value)
     )
-    const unsubscribeChunkZ = chunkZSpring.on('change', value =>
-      handleChunkChange('z', value)
+    const unsubscribeOffsetZ = offsetZSpring.on('change', value =>
+      handleOffsetChange(2, value)
     )
-
-    const unsubscribeOpacity = opacitySpring.on('change', value => {
-      if (atmosphere) {
-        const material = (atmosphere as Mesh).material as MeshStandardMaterial
-        material.opacity = value
-      }
-    })
 
     return () => {
       unsubscribeCameraX()
       unsubscribeCameraY()
       unsubscribeCameraZ()
-      unsubscribeChunkX()
-      unsubscribeChunkY()
-      unsubscribeChunkZ()
-      unsubscribeOpacity()
+      unsubscribeOffsetX()
+      unsubscribeOffsetY()
+      unsubscribeOffsetZ()
     }
   }, [
     cameraXSpring,
     cameraYSpring,
     cameraZSpring,
-    chunkXSpring,
-    chunkYSpring,
-    chunkZSpring,
+    offsetXSpring,
+    offsetYSpring,
+    offsetZSpring,
+    position,
     loaded,
-    opacitySpring,
   ])
 
   useEffect(() => {
@@ -409,30 +351,30 @@ export const Earth = ({
   useEffect(() => {
     if (loaded) return
 
-    const hdrLoader = new HDRCubeTextureLoader()
-    const pmremGenerator = new PMREMGenerator(renderer.current!)
-    pmremGenerator.compileCubemapShader()
-
     const loadModel = async () => {
-      const gltf = await modelLoader.loadAsync(earthModel)
+      const gltf = await modelLoader.loadAsync(truckModel)
 
       sceneModel.current = gltf.scene
-      animations.current = gltf.animations
-      mixer.current = new AnimationMixer(sceneModel.current)
-      mixer.current.timeScale = 0.1
 
-      sceneModel.current?.traverse(async child => {
+      // Base orientation (face the camera) and the teal paint overrides
+      // shared with the home-page vitrine.
+      sceneModel.current.rotation.y = Math.PI
+      const overrides = deviceModels.volvoTruck.materialOverrides ?? {}
+
+      sceneModel.current.traverse(child => {
         const material = (child as Mesh).material as
           | MeshStandardMaterial
           | undefined
         if (!material) return
 
-        if (child.name === 'Atmosphere') {
-          material.alphaMap = material.map
-        }
-
-        if (material.map) {
-          await renderer.current!.initTexture(material.map)
+        const paint = overrides[material.name]
+        if (paint) {
+          if (paint.color) {
+            material.color = new Color(paint.color)
+            material.color.convertSRGBToLinear()
+          }
+          if (paint.metalness != null) material.metalness = paint.metalness
+          if (paint.roughness != null) material.roughness = paint.roughness
         }
       })
 
@@ -440,54 +382,11 @@ export const Earth = ({
       sceneModel.current!.position.y = position[1]
       sceneModel.current!.position.z = position[2]
 
-      sceneModel.current.scale.x = scale
-      sceneModel.current.scale.y = scale
-      sceneModel.current.scale.z = scale
-    }
-
-    const loadEnv = async () => {
-      // HDRCubeTextureLoader.load takes the 6 cube faces; three-stdlib mistypes
-      // its loadAsync override as single-url, so use the callback form here.
-      const hdrTexture = await new Promise<CubeTexture>((resolve, reject) => {
-        hdrLoader.load(
-          [mwnx, mwny, mwnz, mwpx, mwpy, mwpz],
-          resolve,
-          undefined,
-          reject
-        )
-      })
-
-      hdrTexture.magFilter = LinearFilter
-      const envTexture = pmremGenerator.fromCubemap(hdrTexture).texture
-      envMap.current = envTexture
-      pmremGenerator.dispose()
-      await renderer.current!.initTexture(envTexture)
-    }
-
-    const loadBackground = async () => {
-      // Despite the *.jpg type declaration, Next resolves image imports to
-      // StaticImageData at runtime, so the URL lives on .src.
-      const backgroundTexture = await textureLoader.loadAsync(
-        (milkywayBg as unknown as {src: string}).src
-      )
-      backgroundTexture.mapping = EquirectangularReflectionMapping
-      backgroundTexture.encoding = sRGBEncoding
-      if (scene.current) scene.current.background = backgroundTexture
-      await renderer.current!.initTexture(backgroundTexture)
+      sceneModel.current.scale.setScalar(scale)
     }
 
     const handleLoad = async () => {
-      await Promise.all([loadBackground(), loadEnv(), loadModel()])
-
-      sceneModel.current!.traverse(child => {
-        const material = (child as Mesh).material as
-          | MeshStandardMaterial
-          | undefined
-        if (material) {
-          material.envMap = envMap.current ?? null
-          material.needsUpdate = true
-        }
-      })
+      await loadModel()
 
       if (mounted.current) {
         setLoaded(true)
@@ -510,7 +409,7 @@ export const Earth = ({
   }, [loaded, position, scale])
 
   useEffect(() => {
-    // Add models and textures once visible
+    // Add the model once loaded
     if (loaded && !contentAdded.current) {
       if (scene.current && sceneModel.current)
         scene.current.add(sceneModel.current)
@@ -554,42 +453,6 @@ export const Earth = ({
     camera.current!.updateProjectionMatrix()
   }, [windowWidth, windowHeight])
 
-  useEffect(() => {
-    const currentCanvas = canvas.current
-
-    // Log readouts for dev in console
-    const handleMouseUp = (event: MouseEvent) => {
-      const {innerWidth, innerHeight} = window
-      // Set a camera position property to help with defining camera angles
-      // const _cameraPosition = positionToString(camera.current!.position);
-
-      // Set a surface position to help with defining annotations
-      mouse.current = new Vector2(
-        (event.clientX / innerWidth) * 2 - 1,
-        -(event.clientY / innerHeight) * 2 + 1
-      )
-      raycaster.current?.setFromCamera(mouse.current!, camera.current!)
-      const intersects = raycaster.current?.intersectObjects(
-        scene.current?.children ?? [],
-        true
-      )
-
-      if (intersects && intersects.length > 0) {
-        // const _clickPosition = positionToString(intersects[0].point);
-      }
-    }
-
-    if (!currentCanvas) return
-
-    if (process.env.NODE_ENV === 'development') {
-      currentCanvas.addEventListener('click', handleMouseUp)
-    }
-
-    return () => {
-      currentCanvas.removeEventListener('click', handleMouseUp)
-    }
-  }, [])
-
   const handleScroll = useCallback(() => {
     if (!container.current) return
 
@@ -600,91 +463,6 @@ export const Earth = ({
     // Sections register from dynamically imported children; bail until at
     // least one exists so the index math below can't go negative.
     if (sectionRefs.current.length === 0) return
-
-    const updateMeshes = (index: number) => {
-      const visibleMeshes = sectionRefs.current[index].meshes
-
-      sceneModel.current?.traverse(child => {
-        const {name} = child
-        const chunk = getChild('Chunk', sceneModel.current!)
-        const isVisible = visibleMeshes?.includes(name)
-        const isHidden = hideMeshes?.includes(name)
-
-        if (isVisible) {
-          if (name === 'Atmosphere') {
-            child.visible = true
-
-            opacitySpring.set(1)
-          } else if (name === 'Chunk') {
-            const chunkTarget = new Vector3(-0.4, 0.4, 0.4)
-
-            child.visible = true
-
-            if (reduceMotion) {
-              child.position.set(...chunkTarget.toArray())
-            } else {
-              chunkXSpring.set(chunkTarget.x)
-              chunkYSpring.set(chunkTarget.y)
-              chunkZSpring.set(chunkTarget.z)
-            }
-          } else if (name === 'EarthFull' && chunk?.visible) {
-            child.visible = false
-          } else {
-            child.visible = true
-          }
-        } else if (isHidden && !isVisible) {
-          if (name === 'Atmosphere') {
-            opacitySpring.set(0)
-          } else if (name === 'Chunk') {
-            const chunkTarget = new Vector3(0, 0, 0)
-
-            if (isEqualPosition(chunkTarget, chunk?.position ?? {})) {
-              child.visible = false
-            }
-
-            chunkXSpring.set(chunkTarget.x)
-            chunkYSpring.set(chunkTarget.y)
-            chunkZSpring.set(chunkTarget.z)
-          } else if (name === 'EarthPartial' && chunk?.visible) {
-            child.visible = true
-          } else {
-            child.visible = false
-          }
-        }
-      })
-    }
-
-    const updateAnimation = (index: number) => {
-      const sectionAnimations = sectionRefs.current[index].animations
-
-      if (reduceMotion) return
-
-      animations.current?.forEach((clip: AnimationClip, index: number) => {
-        if (
-          !sectionAnimations.find((section: string) =>
-            section.includes(index.toString())
-          )
-        ) {
-          const animation = mixer.current?.clipAction(clip)
-          animation?.reset().stop()
-        }
-      })
-
-      if (animations.current?.length && sectionRefs.current[index].animations) {
-        sectionAnimations.forEach((animItem: string) => {
-          const values = animItem.split(':')
-          const clip = animations.current![Number(values[0])]
-          const animation = mixer.current?.clipAction(clip)
-
-          if (!animation) return
-          if (!values[1] || values[1] !== 'loop') {
-            animation.clampWhenFinished = true
-            animation.loop = LoopOnce
-          }
-          animation.play()
-        })
-      }
-    }
 
     const updateLabels = (index: number) => {
       labelElements.current.forEach(label => {
@@ -707,15 +485,33 @@ export const Earth = ({
       })
     }
 
+    const updateSpin = (index: number) => {
+      spinTarget.current = reduceMotion ? 0 : sectionRefs.current[index].spin
+      yawTarget.current = sectionRefs.current[index].yaw ?? null
+    }
+
     const update = () => {
       const sectionCount = sectionRefs.current.length - 1
       const absoluteSection = Math.floor(currentScrollY / innerHeight)
       const currentSectionIndex = clamp(absoluteSection, 0, sectionCount)
       const currentSection = sectionRefs.current[currentSectionIndex]
       const nextSection = sectionRefs.current[currentSectionIndex + 1]
+      // Section side effects (labels/spin/yaw) fire with a lookahead: the
+      // incoming section takes over once it is ~70% arrived, so labels have
+      // faded in by the time its text reaches the middle of the viewport.
+      const effectsIndex = clamp(
+        Math.floor(currentScrollY / innerHeight + 0.3),
+        0,
+        sectionCount
+      )
 
       const currentTarget = getPositionValues(currentSection) || nullTarget
-      const nextTarget = getPositionValues(nextSection) || nullTarget
+      // Hold the final section's values instead of drifting to a null target.
+      const nextTarget = nextSection
+        ? getPositionValues(nextSection)
+        : currentTarget
+      const currentOffset = currentSection?.offset ?? [0, 0, 0]
+      const nextOffset = nextSection?.offset ?? currentOffset
       const sectionScrolled =
         (currentScrollY - innerHeight * currentSectionIndex) / innerHeight
 
@@ -735,23 +531,48 @@ export const Earth = ({
         nextTarget.z,
         scrollPercent
       )
+      const offsetX = interpolatePosition(
+        currentOffset[0],
+        nextOffset[0],
+        scrollPercent
+      )
+      const offsetY = interpolatePosition(
+        currentOffset[1],
+        nextOffset[1],
+        scrollPercent
+      )
+      const offsetZ = interpolatePosition(
+        currentOffset[2],
+        nextOffset[2],
+        scrollPercent
+      )
 
       if (
-        currentSection &&
-        activeSectionIndex.current !== currentSectionIndex
+        sectionRefs.current[effectsIndex] &&
+        activeSectionIndex.current !== effectsIndex
       ) {
-        activeSectionIndex.current = currentSectionIndex
-        updateMeshes(currentSectionIndex)
-        updateAnimation(currentSectionIndex)
-        updateLabels(currentSectionIndex)
+        activeSectionIndex.current = effectsIndex
+        updateLabels(effectsIndex)
+        updateSpin(effectsIndex)
       }
-
-      if (grabbingRef.current) return
 
       if (reduceMotion) {
-        camera.current!.position.set(currentX, currentY, currentZ)
+        if (!grabbingRef.current) {
+          camera.current!.position.set(currentX, currentY, currentZ)
+        }
+        sceneModel.current?.position.set(
+          position[0] + offsetX,
+          position[1] + offsetY,
+          position[2] + offsetZ
+        )
         return
       }
+
+      offsetXSpring.set(offsetX)
+      offsetYSpring.set(offsetY)
+      offsetZSpring.set(offsetZ)
+
+      if (grabbingRef.current) return
 
       cameraXSpring.set(currentX)
       cameraYSpring.set(currentY)
@@ -763,11 +584,10 @@ export const Earth = ({
     cameraXSpring,
     cameraYSpring,
     cameraZSpring,
-    chunkXSpring,
-    chunkYSpring,
-    chunkZSpring,
-    hideMeshes,
-    opacitySpring,
+    offsetXSpring,
+    offsetYSpring,
+    offsetZSpring,
+    position,
     reduceMotion,
   ])
 
@@ -776,12 +596,14 @@ export const Earth = ({
 
     if (loaded && inViewport) {
       window.addEventListener('scroll', throttledScroll)
+      // Sync camera/labels/spin to the current scroll position immediately.
+      throttledScroll()
     }
 
     return () => {
       window.removeEventListener('scroll', throttledScroll)
     }
-  }, [handleScroll, inViewport, loaded, opacitySpring])
+  }, [handleScroll, inViewport, loaded])
 
   useEffect(() => {
     const handleControlStart = () => {
@@ -812,17 +634,17 @@ export const Earth = ({
     }
   }, [cameraXSpring, cameraYSpring, cameraZSpring, handleScroll])
 
-  const registerSection = useCallback((section: EarthSectionData): void => {
+  const registerSection = useCallback((section: TruckSectionData): void => {
     sectionRefs.current = [...sectionRefs.current, section]
   }, [])
 
-  const unregisterSection = useCallback((section: EarthSectionData): void => {
+  const unregisterSection = useCallback((section: TruckSectionData): void => {
     sectionRefs.current = sectionRefs.current.filter(item => item !== section)
   }, [])
 
   return (
-    <EarthContext.Provider value={{registerSection, unregisterSection}}>
-      <div className={classes(styles.earth, className)} ref={container}>
+    <TruckContext.Provider value={{registerSection, unregisterSection}}>
+      <div className={classes(styles.truck, className)} ref={container}>
         <div className={styles.viewport}>
           <canvas
             className={styles.canvas}
@@ -850,44 +672,48 @@ export const Earth = ({
           )}
         </Transition>
       </div>
-    </EarthContext.Provider>
+    </TruckContext.Provider>
   )
 }
 
-export const EarthSection = memo(
+export const TruckSection = memo(
   ({
     children,
     scrim,
     scrimReverse,
     className,
-    camera = [0, 0, 0],
-    animations = [],
-    meshes = [],
+    camera = [0, 0, 6],
     labels = [],
+    spin = 0,
+    yaw,
+    offset = [0, 0, 0],
   }: {
     children?: React.ReactNode
     scrim?: boolean
     scrimReverse?: boolean
     className?: string
     camera?: number[]
-    animations?: string[]
-    meshes?: string[]
     labels?: string[]
+    spin?: number
+    yaw?: number
+    offset?: number[]
   }) => {
-    const {registerSection, unregisterSection} = useContext(EarthContext)
+    const {registerSection, unregisterSection} = useContext(TruckContext)
     const sectionRef = useRef<HTMLDivElement>(null)
     const stringifiedDeps =
-      JSON.stringify(animations) +
       JSON.stringify(camera) +
       JSON.stringify(labels) +
-      JSON.stringify(meshes)
+      JSON.stringify(spin) +
+      JSON.stringify(yaw) +
+      JSON.stringify(offset)
 
     useEffect(() => {
       const section = {
         camera,
-        animations,
-        meshes,
         labels,
+        spin,
+        yaw,
+        offset,
         sectionRef,
       }
 
@@ -911,3 +737,5 @@ export const EarthSection = memo(
     )
   }
 )
+
+TruckSection.displayName = 'TruckSection'
