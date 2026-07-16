@@ -153,31 +153,18 @@ export const Volvo = () => {
           </Truck>
         </ThemeProvider>
         <ProjectSection>
-          <ProjectTextRow>
-            <ProjectSectionHeading>The data behind it</ProjectSectionHeading>
-            <ProjectSectionText>
-              A vehicle&apos;s identity lived scattered across systems: one knew
-              its name, another which fleet owns it, another its ECU data, yet
-              another its connectivity and APN setup. I worked on the product
-              that brings all of it into one place — data pipelines feeding a
-              single search index, with an access model deciding exactly who
-              sees what. Fleet owners and Volvo&apos;s support teams use it to
-              find any vehicle by nearly any piece of data about it, across
-              roughly 9 million documents in about 100 milliseconds.
-            </ProjectSectionText>
-          </ProjectTextRow>
-        </ProjectSection>
-        <ProjectSection>
           <ProjectSectionContent>
             <ProjectTextRow center centerMobile noMargin>
               <ProjectSectionHeading>Project outcomes</ProjectSectionHeading>
               <ProjectSectionText>
-                What used to mean asking around the organisation now takes a
-                search box: any vehicle found in milliseconds, its full story on
-                one screen, its fleet context one page away. And for me, it was
-                the rare project that stretched both ends of the stack in one
-                job — from pixel-level frontend work to data engineering
-                millions of vehicle documents deep.
+                Vehicle data at this scale is owned by many teams, and no single
+                system held the whole truth. The work I shipped closed that gap:
+                a search that resolves any fragment of information to the right
+                vehicle in milliseconds, a vehicle overview that reads as one
+                coherent record, and a fleet view that extends the same clarity
+                across hundreds of trucks. The outcome is easy to state and hard
+                to overvalue — the people who run and support these fleets spend
+                their time acting on information instead of hunting for it.
               </ProjectSectionText>
             </ProjectTextRow>
           </ProjectSectionContent>
