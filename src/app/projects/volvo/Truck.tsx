@@ -119,6 +119,9 @@ export const Truck = ({
 }) => {
   const [loaded, setLoaded] = useState(false)
   const [grabbing, setGrabbing] = useState(false)
+  // State drives the cursor; the ref gates scroll logic without waiting for
+  // a re-render (the release handler re-targets the camera synchronously).
+  const grabbingRef = useRef(false)
   const [visible, setVisible] = useState(false)
   const [loaderVisible, setLoaderVisible] = useState(false)
   const sectionRefs = useRef<TruckSectionData[]>([])
@@ -280,30 +283,6 @@ export const Truck = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  useEffect(() => {
-    const handleControlStart = () => {
-      setGrabbing(true)
-      cameraXSpring.stop()
-      cameraYSpring.stop()
-      cameraZSpring.stop()
-    }
-
-    const handleControlEnd = () => {
-      cameraXSpring.set(camera.current!.position.x)
-      cameraYSpring.set(camera.current!.position.y)
-      cameraZSpring.set(camera.current!.position.z)
-      setGrabbing(false)
-    }
-
-    controls.current?.addEventListener('start', handleControlStart)
-    controls.current?.addEventListener('end', handleControlEnd)
-
-    return () => {
-      controls.current?.removeEventListener('start', handleControlStart)
-      controls.current?.removeEventListener('end', handleControlEnd)
-    }
-  }, [cameraXSpring, cameraYSpring, cameraZSpring])
 
   useEffect(() => {
     if (!loaded) return
@@ -558,7 +537,7 @@ export const Truck = ({
       prevTarget = currentTarget
 
       if (reduceMotion) {
-        if (!grabbing) {
+        if (!grabbingRef.current) {
           camera.current!.position.set(currentX, currentY, currentZ)
         }
         sceneModel.current?.position.set(
@@ -573,7 +552,7 @@ export const Truck = ({
       offsetYSpring.set(offsetY)
       offsetZSpring.set(offsetZ)
 
-      if (grabbing) return
+      if (grabbingRef.current) return
 
       cameraXSpring.set(currentX)
       cameraYSpring.set(currentY)
@@ -589,7 +568,6 @@ export const Truck = ({
     offsetYSpring,
     offsetZSpring,
     position,
-    grabbing,
     reduceMotion,
   ])
 
@@ -606,6 +584,35 @@ export const Truck = ({
       window.removeEventListener('scroll', throttledScroll)
     }
   }, [handleScroll, inViewport, loaded])
+
+  useEffect(() => {
+    const handleControlStart = () => {
+      grabbingRef.current = true
+      setGrabbing(true)
+      cameraXSpring.stop()
+      cameraYSpring.stop()
+      cameraZSpring.stop()
+    }
+
+    const handleControlEnd = () => {
+      // Sync the springs to where the drag released (no snap-back), then
+      // re-target the active section so the camera glides home from there.
+      cameraXSpring.jump(camera.current!.position.x)
+      cameraYSpring.jump(camera.current!.position.y)
+      cameraZSpring.jump(camera.current!.position.z)
+      grabbingRef.current = false
+      setGrabbing(false)
+      handleScroll()
+    }
+
+    controls.current?.addEventListener('start', handleControlStart)
+    controls.current?.addEventListener('end', handleControlEnd)
+
+    return () => {
+      controls.current?.removeEventListener('start', handleControlStart)
+      controls.current?.removeEventListener('end', handleControlEnd)
+    }
+  }, [cameraXSpring, cameraYSpring, cameraZSpring, handleScroll])
 
   const registerSection = useCallback((section: TruckSectionData): void => {
     sectionRefs.current = [...sectionRefs.current, section]
