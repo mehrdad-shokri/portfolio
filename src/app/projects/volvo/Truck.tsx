@@ -493,6 +493,14 @@ export const Truck = ({
       const currentSectionIndex = clamp(absoluteSection, 0, sectionCount)
       const currentSection = sectionRefs.current[currentSectionIndex]
       const nextSection = sectionRefs.current[currentSectionIndex + 1]
+      // Section side effects (labels/spin/yaw) fire with a lookahead: the
+      // incoming section takes over once it is ~70% arrived, so labels have
+      // faded in by the time its text reaches the middle of the viewport.
+      const effectsIndex = clamp(
+        Math.floor(currentScrollY / innerHeight + 0.3),
+        0,
+        sectionCount
+      )
 
       const currentTarget = getPositionValues(currentSection) || nullTarget
       // Hold the final section's values instead of drifting to a null target.
@@ -537,12 +545,12 @@ export const Truck = ({
       )
 
       if (
-        currentSection &&
-        activeSectionIndex.current !== currentSectionIndex
+        sectionRefs.current[effectsIndex] &&
+        activeSectionIndex.current !== effectsIndex
       ) {
-        activeSectionIndex.current = currentSectionIndex
-        updateLabels(currentSectionIndex)
-        updateSpin(currentSectionIndex)
+        activeSectionIndex.current = effectsIndex
+        updateLabels(effectsIndex)
+        updateSpin(effectsIndex)
       }
 
       if (reduceMotion) {
