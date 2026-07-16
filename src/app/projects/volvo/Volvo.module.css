@@ -1,13 +1,9 @@
-.truck {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 8 / 5;
-  max-height: 80vh;
-}
-
-.truckModel {
-  position: absolute;
-  inset: 0;
+.background {
+  /* The photo is ~60% sky with the truck in the lower third; anchor the
+     cover-crop to the bottom so wide viewports crop sky, not the truck. */
+  & img {
+    object-position: center bottom;
+  }
 }
 
 .credit {
