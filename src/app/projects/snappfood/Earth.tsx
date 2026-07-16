@@ -91,6 +91,9 @@ interface EarthSectionData {
 
 const nullTarget = {x: 0, y: 0, z: 2}
 
+// Scratch vector reused across frames when projecting labels.
+const labelVector = new Vector3()
+
 const interpolatePosition = (
   value: number,
   nextValue: number,
@@ -238,7 +241,7 @@ export const Earth = ({
     // Render labels
     labelElements.current.forEach(label => {
       const {element, position, sprite} = label
-      const vector = new Vector3().fromArray(position)
+      labelVector.fromArray(position)
       const meshDistance = camera.current!.position.distanceTo(
         sceneModel.current!.position
       )
@@ -248,11 +251,11 @@ export const Earth = ({
       const spriteBehindObject = spriteDistance > meshDistance
       void spriteBehindObject
 
-      vector.project(camera.current!)
-      vector.x = Math.round((0.5 + vector.x / 2) * window.innerWidth)
-      vector.y = Math.round((0.5 - vector.y / 2) * window.innerHeight)
-      element.style.setProperty('--posX', numToPx(vector.x))
-      element.style.setProperty('--posY', numToPx(vector.y))
+      labelVector.project(camera.current!)
+      const posX = Math.round((0.5 + labelVector.x / 2) * window.innerWidth)
+      const posY = Math.round((0.5 - labelVector.y / 2) * window.innerHeight)
+      element.style.setProperty('--posX', numToPx(posX))
+      element.style.setProperty('--posY', numToPx(posY))
 
       if (spriteBehindObject) {
         element.dataset.occluded = 'true'
@@ -263,10 +266,10 @@ export const Earth = ({
 
     measureFps()
 
-    if (isLowFps.current) {
-      renderer.current!.setPixelRatio(0.5)
-    } else {
-      renderer.current!.setPixelRatio(1)
+    // setPixelRatio resizes the canvas buffer; only touch it on change.
+    const targetPixelRatio = isLowFps.current ? 0.5 : 1
+    if (renderer.current!.getPixelRatio() !== targetPixelRatio) {
+      renderer.current!.setPixelRatio(targetPixelRatio)
     }
   }, [inViewport, measureFps, isLowFps])
 
